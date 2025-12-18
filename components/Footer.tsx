@@ -1,7 +1,6 @@
 import Container from "./Container";
 import Image from "next/image";
 import Link from "next/link";
-import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { FaLinkedin, FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
 
@@ -112,43 +111,26 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Newsletter */}
+            {/* Contact Us */}
             <div className="w-full lg:w-2/5">
-              <h3 className="mb-4 text-2xl font-semibold text-[#202020] leading-tight">
-                We&apos;d love to hear from you, let&apos;s have a conversation
-                about what we do and how we can help you
+              <h3 className="mb-6 text-2xl font-semibold text-[#202020] leading-tight">
+                Have something that we can collaborate on at our facility?
               </h3>
 
-              <p className="mb-6 text-sm text-[#767676]">
-                Join our newsletter for the latest updates and insights.
-              </p>
 
-              <form className="space-y-4">
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                  <div className="w-full sm:w-3/4">
-                    <Input
-                      type="email"
-                      placeholder="Your Email Here"
-                      className="border-[#c9c9c9] !bg-white placeholder:text-[#989898]"
-                    />
-                  </div>
 
-                  <div className="w-full sm:w-1/4">
-                    <Button
-                      type="submit"
-                      variant="outline"
-                      className="w-full border-[#767676] text-[#767676] hover:bg-[#767676] hover:text-white"
-                    >
-                      Subscribe
-                    </Button>
-                  </div>
-                </div>
-              </form>
+<div className="flex justify-center">
 
-              <p className="mt-4 text-xs text-[#767676]">
-                By subscribing, you agree to our Privacy Policy and receive
-                updates.
-              </p>
+  <Link href="/contact">
+                <Button
+                  variant="outline"
+                  className="border-[#767676] text-[#767676] hover:bg-[#767676] hover:text-white"
+                >
+                  Contact Us
+                </Button>
+              </Link>
+  </div>              
+
             </div>
           </div>
         </Container>

@@ -1,9 +1,39 @@
+"use client";
+
 import Image from "next/image";
 import Container from "@/components/Container";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import TestimonialSection from "@/components/shared/TestimonialSection";
+import { useState } from "react";
+
+const vraTeams = [
+  {
+    id: "vra1",
+    label: "VRA 1",
+    heading: "VRA 1",
+    imageSrc: "/assets/350-3166.webp",
+    imageAlt: "VRA 1 team celebrating by the water",
+  },
+  {
+    id: "vra2",
+    label: "VRA 2",
+    heading: "VRA 2",
+    imageSrc: "/assets/350-3166.webp",
+    imageAlt: "VRA 2 team on the field",
+  },
+  {
+    id: "vra3",
+    label: "VRA 3",
+    heading: "VRA 3",
+    imageSrc: "/assets/350-3166.webp",
+    imageAlt: "VRA 3 team group photo",
+  },
+] as const;
 
 export default function LandingPage() {
+  const [selectedTeamId, setSelectedTeamId] = useState<(typeof vraTeams)[number]["id"]>("vra1");
+  const selectedTeam = vraTeams.find((team) => team.id === selectedTeamId) ?? vraTeams[0];
+
   return (
     <>
       <section className="relative h-[100vh] w-full">
@@ -63,7 +93,7 @@ export default function LandingPage() {
         </div>
 
         {/* Bottom Fade - Smooth blend to next section */}
-        <div className="absolute bottom-0 left-0 right-0 h-[300px] bg-gradient-to-b from-transparent via-transparent to-background pointer-events-none" />
+        <div className="absolute bottom-0 left-0 right-0 h-[300px] bg-linear-to-b from-transparent via-transparent to-background pointer-events-none" />
 
         {/* WhatsApp Button */}
         <div className="fixed right-8 bottom-8 w-[68px] h-[68px] z-2">
@@ -91,57 +121,63 @@ export default function LandingPage() {
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-1" />
 
             <div className="flex flex-col gap-4">
-              <Image
-                src="/assets/350-795.webp"
-                alt=""
-                width={400}
-                height={338}
-                className="rounded-lg object-cover"
-              />
+              <div className="w-full md:w-[400px] h-[338px] relative rounded-lg overflow-hidden">
+                <Image
+                  src="/assets/home/home-collage/1.jpg"
+                  alt=""
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
 
-              <Image
-                src="/assets/350-796.webp"
-                alt=""
-                width={400}
-                height={462}
-                className="rounded-lg object-cover"
-              />
+              <div className="w-full md:w-[400px] h-[462px] relative rounded-lg overflow-hidden">
+                <Image
+                  src="/assets/home/home-collage/2.jpg"
+                  alt=""
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col gap-4">
-              <Image
-                src="/assets/350-802.webp"
-                alt=""
-                width={400}
-                height={528}
-                className="rounded-lg object-cover"
-              />
+              <div className="w-full md:w-[400px] h-[528px] relative rounded-lg overflow-hidden">
+                <Image
+                  src="/assets/home/home-collage/3.jpg"
+                  alt=""
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
 
-              <Image
-                src="/assets/350-803.webp"
-                alt=""
-                width={400}
-                height={272}
-                className="rounded-lg object-cover"
-              />
+              <div className="w-full md:w-[400px] h-[272px] relative rounded-lg overflow-hidden">
+                <Image
+                  src="/assets/home/home-collage/4.jpg"
+                  alt=""
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
             </div>
 
             <div className="flex flex-col gap-4">
-              <Image
-                src="/assets/350-814.webp"
-                alt=""
-                width={400}
-                height={400}
-                className="rounded-lg object-cover"
-              />
+              <div className="w-full md:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
+                <Image
+                  src="/assets/home/home-collage/5.jpg"
+                  alt=""
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
 
-              <Image
-                src="/assets/350-815.webp"
-                alt=""
-                width={400}
-                height={400}
-                className="rounded-lg object-cover"
-              />
+              <div className="w-full md:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
+                <Image
+                  src="/assets/home/home-collage/6.jpg"
+                  alt=""
+                  fill
+                  className="rounded-lg object-cover"
+                />
+              </div>
             </div>
           </section>
         </Container>
@@ -149,25 +185,23 @@ export default function LandingPage() {
         {/* Crowd Image Section */}
         <Container className="px-4">
           <section className="flex flex-col items-center gap-20">
+            <div className="w-full md:w-[1280px] h-[650px] relative rounded-lg overflow-hidden">
+
             <Image
-              src="/assets/350-826.webp"
+              src="/assets/home/home-img.jpg"
               alt="Crowd"
               width={1280}
               height={483}
               className="rounded-lg object-cover"
-            />
+              />
 
+              </div>
             <div className="w-full max-w-2xl flex flex-col items-center gap-9">
               <div className="text-center text-[#767676] text-lg sm:text-2xl md:text-3xl font-normal">
-                Lorem ipsum dolor sitLorem ipsum dolor sitLorem ipsum dolor
-                sitLorem ipsum dolor r sitLorem ipsum dolor sitL sit
+              Join us for an exciting summer of international cricket in 2026. 
               </div>
 
-              <button className="px-6 py-3 bg-gradient-to-b from-[#141414] to-black rounded-lg border border-white/10 flex items-center justify-center gap-2.5">
-                <span className="text-white text-xl font-normal">
-                  Button Text
-                </span>
-              </button>
+            
             </div>
           </section>
         </Container>
@@ -308,44 +342,51 @@ export default function LandingPage() {
           </section>
         </Container>
 
-        {/* VRA 1 Section */}
+        {/* VRA Teams Section */}
         <Container className="px-4">
           <section className="py-10 bg-background rounded-lg flex flex-col gap-2.5">
             <div>
               <div className="w-full h-[62px] flex items-center justify-between mb-[41px]">
                 <h2 className="text-foreground text-3xl sm:text-4xl md:text-[51px] font-normal">
-                  VRA 1
+                  {selectedTeam.heading}
                 </h2>
 
                 <div className="flex items-center gap-2">
-                  <div className="px-5 py-[8.5px] rounded-[40px] border border-foreground/20 flex items-center justify-center text-foreground text-base font-bold">
-                    Lorem ipsum dolor sit
+                  <div className="relative">
+                    <select
+                      value={selectedTeamId}
+                      onChange={(e) =>
+                        setSelectedTeamId(e.target.value as (typeof vraTeams)[number]["id"])
+                      }
+                      className="pl-4 pr-10 py-[8.5px] rounded-[40px] border border-foreground/20 bg-background text-foreground text-base font-bold appearance-none cursor-pointer"
+                    >
+                      {vraTeams.map((team) => (
+                        <option key={team.id} value={team.id}>
+                          {team.label}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-foreground" />
                   </div>
-
-                  <button className="w-9 h-9 p-5 rounded-[40px] border border-foreground/20 flex items-center justify-center">
-                    <ChevronDown className="w-4 h-4 text-foreground" />
-                  </button>
                 </div>
               </div>
 
               <Image
-                src="/assets/350-3166.webp"
-                alt="VRA 1"
+                src={selectedTeam.imageSrc}
+                alt={selectedTeam.imageAlt}
                 width={1108}
                 height={643}
-                className="w-[90%] mx-auto rounded-lg object-cover"
+                className="w-full mx-auto rounded-lg object-cover"
               />
             </div>
           </section>
         </Container>
 
         {/* Statistics Cards Section */}
-        <Container className="px-4">
+        {/* <Container className="px-4">
           <section className="w-full flex flex-col lg:flex-row justify-between items-stretch gap-6">
             <div className="flex flex-col justify-center items-start gap-6 w-full">
-              {/* Orange Card with 99° */}
               <div className="w-full sm:max-w-[400px] h-[338px] bg-[#ff8164] rounded-lg border border-[#202020] p-6 flex flex-col">
-                {/* Top Section - Input and Button */}
                 <div className="flex items-center gap-3 mb-8">
                   <div className="px-4 py-2 rounded-lg border border-[#202020] bg-transparent text-[#202020] text-sm">
                     Lorem ipsum dolor sit
@@ -356,14 +397,11 @@ export default function LandingPage() {
                   </button>
                 </div>
 
-                {/* Center Section - Number with Circular Progress */}
                 <div className="flex-1 flex items-center justify-center relative">
-                  {/* Circular Progress Indicator */}
                   <svg
                     className="absolute inset-0 w-full h-full"
                     viewBox="0 0 200 200"
                   >
-                    {/* Background Circle - thin line */}
                     <circle
                       cx="100"
                       cy="100"
@@ -374,7 +412,6 @@ export default function LandingPage() {
                       className="opacity-30"
                     />
 
-                    {/* Progress Circle - starts from left, 75% complete */}
                     <circle
                       cx="100"
                       cy="100"
@@ -391,7 +428,6 @@ export default function LandingPage() {
                     />
                   </svg>
 
-                  {/* Number Display */}
                   <div className="relative flex items-center justify-center">
                     <span className="text-[56px] sm:text-[72px] md:text-[80px] font-thin leading-none tracking-normal text-center text-[#202020]">
                       99
@@ -404,7 +440,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Pink Card */}
               <div className="w-full sm:max-w-[400px] h-[462px] bg-[#e59ca3] rounded-lg relative p-6 flex flex-col justify-between">
                 <div className="flex items-center gap-3 mb-8">
                   <div className="px-4 py-2 rounded-lg border border-[#202020] bg-transparent text-[#202020] text-sm">
@@ -427,7 +462,6 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col justify-center items-start gap-6 w-full">
-              {/* Team Photo */}
               <Image
                 src="/assets/team-photo.jpg"
                 alt="Team"
@@ -436,7 +470,6 @@ export default function LandingPage() {
                 className="w-full sm:max-w-[400px] h-auto md:h-[528px] rounded-lg object-cover"
               />
 
-              {/* Yellow Card with 4x Chart */}
               <div className="w-full sm:max-w-[400px] h-[272px] bg-[#f4d35e] rounded-lg relative flex flex-col justify-between">
                 <div className="flex items-center gap-3 p-6">
                   <div className="px-4 py-2 rounded-lg border border-[#202020] bg-transparent text-[#202020] text-sm">
@@ -464,7 +497,6 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col justify-center items-start gap-6 w-full">
-              {/* Blue Card with 99% */}
               <div className="w-full sm:max-w-[400px] h-[400px] bg-[#5f7aa8] rounded-lg relative p-6 flex flex-col justify-between">
                 <div className="flex items-center gap-3">
                   <div className="px-4 py-2 rounded-lg border border-[#202020] bg-transparent text-[#202020] text-sm">
@@ -481,7 +513,6 @@ export default function LandingPage() {
                 </div>
               </div>
 
-              {/* Light Blue Card with 99% */}
               <div className="w-full sm:max-w-[400px] h-[400px] bg-[#b8c5d6] rounded-lg relative p-6 flex flex-col justify-between">
                 <div className="flex items-center gap-3">
                   <div className="px-4 py-2 rounded-lg border border-[#202020] bg-transparent text-[#202020] text-sm">
@@ -504,7 +535,7 @@ export default function LandingPage() {
               </div>
             </div>
           </section>
-        </Container>
+        </Container> */}
 
         {/* Our Sponsors Section */}
         <Container>
