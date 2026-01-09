@@ -30,6 +30,15 @@ export default function Footer() {
                 <ul className="space-y-4">
                   <li>
                     <Link
+                      href="/"
+                      className="text-[#767676] hover:text-[#202020]"
+                    >
+                      Home
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
                       href="/about"
                       className="text-[#767676] hover:text-[#202020]"
                     >
@@ -39,28 +48,19 @@ export default function Footer() {
 
                   <li>
                     <Link
-                      href="/contact"
+                      href="/vra-cricket"
                       className="text-[#767676] hover:text-[#202020]"
                     >
-                      Contact Us
+                      VRA Cricket
                     </Link>
                   </li>
 
                   <li>
                     <Link
-                      href="/support"
+                      href="/facility"
                       className="text-[#767676] hover:text-[#202020]"
                     >
-                      Support
-                    </Link>
-                  </li>
-
-                  <li>
-                    <Link
-                      href="/blog"
-                      className="text-[#767676] hover:text-[#202020]"
-                    >
-                      Blog
+                      Facility
                     </Link>
                   </li>
                 </ul>
@@ -68,43 +68,43 @@ export default function Footer() {
 
               <div className="text-center sm:text-left">
                 <h3 className="mb-6 text-lg font-semibold text-[#767676]">
-                  Resources
+                  Services
                 </h3>
 
                 <ul className="space-y-4">
                   <li>
                     <Link
-                      href="/faq"
+                      href="/membership"
                       className="text-[#767676] hover:text-[#202020]"
                     >
-                      FAQ
+                      Membership
                     </Link>
                   </li>
 
                   <li>
                     <Link
-                      href="/documentation"
+                      href="/net-booking"
                       className="text-[#767676] hover:text-[#202020]"
                     >
-                      Documentation
+                      Net Booking
                     </Link>
                   </li>
 
                   <li>
                     <Link
-                      href="/case-studies"
+                      href="/donations"
                       className="text-[#767676] hover:text-[#202020]"
                     >
-                      Case Studies
+                      Donations
                     </Link>
                   </li>
 
                   <li>
                     <Link
-                      href="/webinars"
+                      href="/contact"
                       className="text-[#767676] hover:text-[#202020]"
                     >
-                      Webinars
+                      Contact Us
                     </Link>
                   </li>
                 </ul>
