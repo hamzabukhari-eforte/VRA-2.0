@@ -95,18 +95,6 @@ export default function LandingPage() {
         {/* Bottom Fade - Smooth blend to next section */}
         <div className="absolute bottom-0 left-0 right-0 h-[300px] bg-linear-to-b from-transparent via-transparent to-background pointer-events-none" />
 
-        {/* WhatsApp Button */}
-        <div className="fixed right-8 bottom-8 w-[68px] h-[68px] z-2">
-          <div className="w-full h-full bg-[radial-gradient(ellipse_50%_50%_at_50%_50%,_#73FF44_0%,_#69D346_100%)] rounded-full backdrop-blur-[43.4px]" />
-
-          <Image
-            src="/assets/542-28735.svg"
-            alt="WhatsApp"
-            width={32}
-            height={32}
-            className="absolute left-[18px] top-[18px] w-8 h-8"
-          />
-        </div>
       </section>
 
       {/* Main Content */}

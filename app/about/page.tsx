@@ -24,9 +24,9 @@ export default function AboutPage() {
         <ImageTextSection
           imageLeft={false}
           sectionTitle="Our Mission"
-          mainHeading="Sport for everyone"
-          buttons={["Accessibility", "Fitness", "Growth", "Resources"]}
-          description="Lorem ipsum dolor sit amet consectetur. Mauris nulla vel sit nibh. Mauris nulla vel sit nibh. Mauris nulla vel sit nibh. Mauris nulla vel sit nibh."
+          mainHeading=""
+          buttons={["Diversity", "Community", "Growth", "Sustainability"]}
+          description="VRA Cricket Club is dedicated to delivering a premier cricket experience by fostering talent at all levels, promoting diversity, and maintaining the highest standards of sport and service. We aim to build a thriving community where excellence is standard, membership is sought after, and financial success ensures our growth and sustainability."
           imageSrc="/assets/350-1412.webp"
           imageAlt="Mission"
         />
@@ -34,11 +34,11 @@ export default function AboutPage() {
         <ImageTextSection
           imageLeft={true}
           sectionTitle="Our Vision"
-          mainHeading="Facilitating Ease"
-          buttons={["Comercial", "Durable", "Fast Charging", "Business Use"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque."
+          mainHeading=""
+          buttons={["Quality", "Excellence", "Passion", "Performance"]}
+          description="To be the leading cricket club in the Netherlands, recognized for excellence in sport and community. We strive to create a top-tier, multicultural environment that attracts top talent and passionate members, offering exceptional service, quality facilities, and financial sustainability for both the short and long term."
           imageSrc="/assets/350-1419.webp"
-          imageAlt="Facilitating Ease"
+          imageAlt="Vision"
         />
         <StadiumDescription />
         <OurBoard />
@@ -46,10 +46,10 @@ export default function AboutPage() {
         <History />
         <ImageTextSection
           imageLeft={false}
-          sectionTitle="Volunteer for us"
+          sectionTitle="Volunteer for Us"
           mainHeading=""
-          buttons={["Culture", "Experience", "Work", "opportunity"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
+          buttons={["Community", "Purpose", "Family", "Impact"]}
+          description="Volunteer with VRA Cricket Club and be part of something special. Contribute your skills, meet passionate people, and help build a vibrant, inclusive cricket community. Whether on match days, events, or behind the scenes, your time makes a real impact on players, members, and the future of the club."
           imageSrc="/assets/350-1879.webp"
           imageAlt="Volunteers"
         />

@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -59,6 +60,7 @@ export default function RootLayout({
                 <Header />
                 {children}
                 <Footer />
+                <WhatsAppFloatingButton />
               </div>
             </TooltipProvider>
           </ThemeProvider>

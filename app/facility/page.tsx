@@ -1,26 +1,31 @@
-import HeroBanner from "@/components/about/HeroBanner";
 import ImageTextSection from "@/components/about/ImageTextSection";
-import FacilityImageCarousel from "@/components/facility/FacilityImageCarousel";
-import NetsSection from "@/components/facility/NetsSection";
-import PavilionSection from "@/components/facility/PavilionSection";
-import ChangingRoomsSection from "@/components/facility/ChangingRoomsSection";
-import CafeteriaSection from "@/components/facility/CafeteriaSection";
-import FacilitySquareCarousel from "@/components/facility/FacilitySquareCarousel";
-import FacilityFor from "@/components/facility/FacilityFor";
 import CollaborationSection from "@/components/shared/CollaborationSection";
-import TestimonialSection from "@/components/shared/TestimonialSection";
 
 export default function FacilityPage() {
   return (
     <div className="min-h-screen dark:bg-[#202020] bg-background text-foreground overflow-x-hidden">
       {/* Hero Section */}
-      <HeroBanner
-        imageSrc="/assets/350-1370.webp"
-        imageAlt="Facility"
-        heading="Facility"
-        overlayOpacity={40}
-        showWhatsApp={false}
-      />
+      <section className="relative h-screen w-full">
+        <video
+          src="/assets/facility/Facility Video.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="w-full h-full object-cover object-top"
+        />
+        {/* Black Overlay */}
+        <div
+          className="absolute inset-0 bg-black"
+          style={{ opacity: 0.4 }}
+        />
+        {/* Hero Content Overlay */}
+        <div className="absolute inset-0 flex items-end justify-start px-6 sm:px-12 md:px-16 lg:px-[108px] pb-8 md:pb-12">
+          <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-light">
+            Facility
+          </h1>
+        </div>
+      </section>
 
       {/* Main Content */}
       <main className="w-full max-w-[1280px] mx-auto flex flex-col items-start gap-[80px] pt-[79px] px-8 pb-20">
@@ -28,183 +33,135 @@ export default function FacilityPage() {
 
         <ImageTextSection
           imageLeft={false}
-          sectionTitle="Ground 1"
-          mainHeading="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
+          sectionTitle=""
+          mainHeading="Ground 1"
+          buttons={[]}
+          description="Our premier international-standard ground features a meticulously prepared square, lush outfield, and professional playing conditions. Designed to host top-level domestic and international matches, Ground 1 offers excellent sightlines, broadcast-ready infrastructure, and an exceptional experience for players, officials, and spectators alike."
+          imageSrc="/assets/facility/Ground 1.jpg"
           imageAlt="Ground 1"
-        />
-
-        <FacilityImageCarousel
-          images={[
-            {
-              src: "/assets/350-1412.webp",
-              alt: "Ground 1 - Cricket ground",
-              width: 1200, // Replace with actual image width
-              height: 800, // Replace with actual image height
-            },
-            {
-              src: "/assets/350-1413.webp",
-              alt: "Ground 1 - Practice nets",
-              width: 800, // Replace with actual image width
-              height: 1200, // Replace with actual image height
-            },
-            {
-              src: "/assets/350-826.webp",
-              alt: "Ground 1 - Stadium view",
-              width: 1000, // Replace with actual image width
-              height: 800, // Replace with actual image height
-            },
-          ]}
-        />
-
-        <ImageTextSection
-          imageLeft={false}
-          sectionTitle="Ground 2"
-          mainHeading="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
-          imageAlt="Ground 2"
         />
 
         <ImageTextSection
           imageLeft={true}
-          sectionTitle="Ground 3"
-          mainHeading="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
+          sectionTitle=""
+          mainHeading="Ground 2"
+          buttons={[]}
+          description="Ground 2 provides high-quality playing conditions ideal for league matches, training games, and tournaments. With a well-maintained pitch and outfield, it supports competitive cricket at all levels while offering a comfortable and accessible environment for teams and match officials."
+          imageSrc="/assets/facility/Ground 1_1.jpg"
+          imageAlt="Ground 2"
+        />
+
+        <ImageTextSection
+          imageLeft={false}
+          sectionTitle=""
+          mainHeading="Ground 3"
+          buttons={[]}
+          description="Ground 3 is a versatile facility suited for development matches, junior cricket, and practice games. Maintained to club standards, it offers consistent pitch conditions and ample space, making it perfect for nurturing talent and supporting the club's growing cricketing community."
+          imageSrc="/assets/facility/Ground 1_2.jpg"
           imageAlt="Ground 3"
         />
 
-        <NetsSection
-          headingLeft={true}
-          heading="Outdoor Nets"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
+        <ImageTextSection
+          imageLeft={true}
+          sectionTitle=""
+          mainHeading="Outdoor Nets"
+          buttons={[]}
+          description="Our outdoor net facilities allow players to train in natural conditions across multiple practice lanes. Ideal for batting, bowling, and fielding drills, the nets are designed to support structured coaching sessions and individual practice throughout the cricket season."
+          imageSrc="/assets/facility/Outdoor Nets.jpg"
           imageAlt="Outdoor Nets"
         />
 
-        <NetsSection
-          headingLeft={false}
-          heading="Indoor Nets"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
+        <ImageTextSection
+          imageLeft={false}
+          sectionTitle=""
+          mainHeading="Indoor Nets"
+          buttons={[]}
+          description="The indoor nets provide year-round training in a controlled environment, regardless of weather. Equipped with quality surfaces, lighting and even a bowling machine, they are perfect for focused skill development, coaching programs, and high-intensity practice sessions during the off-season."
+          imageSrc="/assets/facility/Indoor Nets.jpg"
           imageAlt="Indoor Nets"
         />
 
-        <PavilionSection
-          title="Pavilion"
-          subtitle="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
+        <ImageTextSection
+          imageLeft={true}
+          sectionTitle=""
+          mainHeading="Pavilion"
+          buttons={[]}
+          description="The pavilion is the social and operational heart of the club. Offering seating, viewing areas, and event space, it serves players, members, and guests alike, creating a welcoming atmosphere on match days, training evenings, and club events."
+          imageSrc="/assets/facility/Pavilion.jpg"
           imageAlt="Pavilion"
         />
 
-        <ChangingRoomsSection
-          title="Changing rooms"
-          subtitle="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          images={[
-            {
-              src: "/assets/350-1412.webp",
-              alt: "Changing Rooms 1",
-            },
-            {
-              src: "/assets/350-1413.webp",
-              alt: "Changing Rooms 2",
-            },
-            {
-              src: "/assets/350-1419.webp",
-              alt: "Changing Rooms 3",
-            },
-          ]}
+        <ImageTextSection
+          imageLeft={false}
+          sectionTitle=""
+          mainHeading="Changing rooms"
+          buttons={[]}
+          description="Spacious and well-equipped changing rooms provide comfort and convenience for players and officials. Featuring secure storage, showers, and modern amenities, they ensure teams can prepare and recover in a professional and relaxed environment before and after matches."
+          imageSrc="/assets/facility/Square Room.png"
+          imageAlt="Changing Rooms"
         />
 
-        <CafeteriaSection
-          title="Cafeteria"
-          subtitle="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/350-1412.webp"
+        <ImageTextSection
+          imageLeft={true}
+          sectionTitle=""
+          mainHeading="Cafeteria"
+          buttons={[]}
+          description="The cafeteria offers a relaxed space to enjoy refreshments, snacks, and light meals. Overlooking the grounds, it is a popular spot for players, families, and spectators to unwind, socialize, and enjoy the vibrant atmosphere of match days."
+          imageSrc="/assets/facility/Cafeteria.png"
           imageAlt="Cafeteria"
         />
 
-        <FacilitySquareCarousel
-          heading="Our Facility"
-          images={[
-            {
-              src: "/assets/350-1412.webp",
-              alt: "Facility 1",
-            },
-            {
-              src: "/assets/350-1413.webp",
-              alt: "Facility 2",
-            },
-            {
-              src: "/assets/350-1419.webp",
-              alt: "Facility 3",
-            },
-            {
-              src: "/assets/350-826.webp",
-              alt: "Facility 4",
-            },
-            {
-              src: "/assets/350-1879.webp",
-              alt: "Facility 5",
-            },
-          ]}
+        <ImageTextSection
+          imageLeft={false}
+          sectionTitle=""
+          mainHeading="Kitchen"
+          buttons={[]}
+          description="Our fully equipped kitchen supports match catering, events, and club functions. Designed for efficiency and hygiene, it enables the preparation of meals and refreshments, ensuring quality service for players, officials, members, and visiting teams."
+          imageSrc="/assets/facility/Kitchen.png"
+          imageAlt="Kitchen"
         />
 
+        <ImageTextSection
+          imageLeft={true}
+          sectionTitle=""
+          mainHeading="Bar"
+          buttons={[]}
+          description="The club bar is a welcoming social hub for members and guests. Offering a range of beverages in a friendly setting, it's the perfect place to celebrate victories, discuss the day's play, and strengthen the club's sense of community."
+          imageSrc="/assets/facility/Bar.png"
+          imageAlt="Bar"
+        />
 
-        <FacilityFor
-          title="Facility for"
-          items={[
-            {
-              subtitle: "Sport Events",
-              buttons: ["Accessibility", "Fitness", "Growth", "Resources"],
-              description:
-                "Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem.",
-              imageSrc: "/assets/350-1412.webp",
-              imageAlt: "Sport Events",
-              imageLeft: false,
-            },
-            {
-              subtitle: "Sport Clinics",
-              buttons: ["Comercial", "Durable", "Fast Charging", "Business Use"],
-              description:
-                "Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem.",
-              imageSrc: "/assets/350-1413.webp",
-              imageAlt: "Sport Clinics",
-              imageLeft: true,
-            },
-            {
-              subtitle: "Culture",
-              buttons: ["Accessibility", "Fitness", "Growth", "Resources"],
-              description:
-                "Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem.",
-              imageSrc: "/assets/350-1412.webp",
-              imageAlt: "Culture",
-              imageLeft: false,
-            },
-          ]}
+        <ImageTextSection
+          imageLeft={false}
+          sectionTitle=""
+          mainHeading="Sports Events"
+          buttons={["Tournaments", "Competition", "Matchday", "Excellence"]}
+          description="VRA Cricket Club offers world-class facilities ideal for hosting professional and amateur sports events. With international-standard grounds, modern infrastructure, and excellent spectator amenities, the venue supports tournaments, leagues, exhibitions, and multi-sport events in a well-managed, scenic environment."
+          imageSrc="/assets/facility/Ground 1_3.jpg"
+          imageAlt="Sport Events"
+        />
+
+        <ImageTextSection
+          imageLeft={true}
+          sectionTitle=""
+          mainHeading="Sports Clinics"
+          buttons={["Training", "Development", "Coaching", "Teamwork"]}
+          description="Our facilities provide an inspiring setting for sports clinics with schools, academies, and corporate groups. Featuring indoor and outdoor training areas, expert coaching spaces, and support amenities, VRA is perfect for skill development, team building, leadership programs, and structured sports education."
+          imageSrc="/assets/facility/Indoor Nets.jpg"
+          imageAlt="Sport Clinics"
+        />
+
+        <ImageTextSection
+          imageLeft={false}
+          sectionTitle=""
+          mainHeading="Cultural Events"
+          buttons={["Community", "Celebrations", "Festivals", "Gatherings"]}
+          description="Beyond sport, VRA Cricket Club is a versatile venue for cultural and community events. The grounds and pavilion can host festivals, performances, celebrations, and corporate gatherings, offering ample space, catering facilities, and a welcoming atmosphere that brings people together."
+          imageSrc="/assets/facility/Pavilion.jpg"
+          imageAlt="Cultural Events"
         />
 
         <CollaborationSection />
-
-        <TestimonialSection
-          quote="The team at this cyber security company transformed our security posture. Their expertise and dedication to our protection were unmatched."
-          profileImageSrc="/assets/350-983.webp"
-          profileImageAlt="Profile"
-          name="Name here"
-          designation="Designation"
-        />
       </main>
     </div>
   );

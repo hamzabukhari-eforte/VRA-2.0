@@ -1,10 +1,10 @@
 import {
-  Lightbulb,
-  TrendingUp,
-  Key,
+  Award,
   Users,
-  Target,
-  Smile,
+  Shield,
+  TrendingUp,
+  Leaf,
+  Zap,
   LucideIcon,
 } from "lucide-react";
 
@@ -17,46 +17,46 @@ interface Value {
 
 const values: Value[] = [
   {
-    Icon: Lightbulb,
-    title: "Innovation",
+    Icon: Award,
+    title: "Excellence",
     description:
-      "We embrace change and continuously seek new ways to improve and evolve our organization.",
+      "Striving for the highest standards in all aspects of the club, from on-field performance to off-field operations.",
     gradient: "from-white/80 to-yellow-600",
   },
   {
-    Icon: TrendingUp,
-    title: "Growth",
+    Icon: Users,
+    title: "Community",
     description:
-      "We are committed to the personal and professional development of our members and staff.",
-    gradient: "from-white/80 to-green-600",
+      "Fostering a strong, inclusive community where members feel valued and connected.",
+    gradient: "from-white/80 to-blue-600",
   },
   {
-    Icon: Key,
-    title: "Ownership",
+    Icon: Shield,
+    title: "Integrity",
     description:
-      "We take responsibility for our actions and decisions, and we hold ourselves accountable.",
+      "Upholding honesty, transparency, and respect in all interactions.",
     gradient: "from-white/80 to-purple-600",
   },
   {
-    Icon: Users,
-    title: "Team Work",
+    Icon: TrendingUp,
+    title: "Development",
     description:
-      "We believe in the power of collaboration and working together towards common goals.",
-    gradient: "from-white/80 to-orange-600",
-  },
-  {
-    Icon: Target,
-    title: "Commitment",
-    description:
-      "We are dedicated to our mission and to the success of our organization and members.",
-    gradient: "from-white/80 to-red-600",
-  },
-  {
-    Icon: Smile,
-    title: "Positivity",
-    description:
-      "We maintain an optimistic outlook and create a supportive environment for everyone.",
+      "Committing to the growth and development of players at all levels.",
     gradient: "from-white/80 to-green-600",
+  },
+  {
+    Icon: Leaf,
+    title: "Sustainability",
+    description:
+      "Ensuring the club's financial health and long-term success.",
+    gradient: "from-white/80 to-emerald-600",
+  },
+  {
+    Icon: Zap,
+    title: "Empowering",
+    description:
+      "Creating an environment where all members are encouraged to reach their full potential.",
+    gradient: "from-white/80 to-orange-600",
   },
 ];
 
