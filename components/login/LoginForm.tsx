@@ -4,46 +4,19 @@ import { useState } from "react";
 
 export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState<"signin" | "signup">("signin");
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 sm:p-6 md:p-8">
       <div className="w-full max-w-md">
-        
-
-        {/* Tab Switcher */}
-        <div className="flex bg-gray-700 rounded-full p-1 mb-4 sm:mb-5 md:mb-6">
-          <button
-            onClick={() => setActiveTab("signin")}
-            className={`flex-1 py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-xs sm:text-sm font-medium transition-colors ${
-              activeTab === "signin"
-                ? "bg-white text-black"
-                : "bg-transparent text-gray-400"
-            }`}
-          >
-            Sign In
-          </button>
-          <button
-            onClick={() => setActiveTab("signup")}
-            className={`flex-1 py-1.5 sm:py-2 px-3 sm:px-4 rounded-full text-xs sm:text-sm font-medium transition-colors ${
-              activeTab === "signup"
-                ? "bg-white text-black"
-                : "bg-transparent text-gray-400"
-            }`}
-          >
-            Become a Member
-          </button>
-        </div>
-
         {/* Email Input */}
         <div className="mb-3">
-          <label className="block text-white text-xs sm:text-sm font-medium mb-1.5">
+          <label className="block text-foreground dark:text-white text-xs sm:text-sm font-medium mb-1.5">
             Email Address
           </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2">
               <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -59,20 +32,20 @@ export default function LoginForm() {
             <input
               type="email"
               placeholder="you@example.com"
-              className="w-full h-10 pl-10 sm:pl-12 pr-3 sm:pr-4 bg-white rounded-lg text-gray-900 placeholder-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-10 pl-10 sm:pl-12 pr-3 sm:pr-4 bg-white dark:bg-white rounded-lg border border-gray-300 dark:border-transparent text-gray-900 placeholder-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
         </div>
 
         {/* Password Input */}
         <div className="mb-3">
-          <label className="block text-white text-xs sm:text-sm font-medium mb-1.5">
+          <label className="block text-foreground dark:text-white text-xs sm:text-sm font-medium mb-1.5">
             Password
           </label>
           <div className="relative">
             <div className="absolute left-3 top-1/2 -translate-y-1/2">
               <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -88,7 +61,7 @@ export default function LoginForm() {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
-              className="w-full h-10 pl-10 sm:pl-12 pr-10 sm:pr-12 bg-white rounded-lg text-gray-900 placeholder-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full h-10 pl-10 sm:pl-12 pr-10 sm:pr-12 bg-white dark:bg-white rounded-lg border border-gray-300 dark:border-transparent text-gray-900 placeholder-gray-400 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
             <button
               type="button"
@@ -96,7 +69,7 @@ export default function LoginForm() {
               className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2"
             >
               <svg
-                className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400"
+                className="w-4 h-4 sm:w-5 sm:h-5 text-gray-500 dark:text-gray-400"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -126,27 +99,27 @@ export default function LoginForm() {
           <label className="flex items-center gap-1.5 sm:gap-2 cursor-pointer">
             <input
               type="checkbox"
-              className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-gray-300"
+              className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded border-gray-300 dark:border-gray-600"
             />
-            <span className="text-white text-xs sm:text-sm">Remember me</span>
+            <span className="text-foreground dark:text-white text-xs sm:text-sm">Remember me</span>
           </label>
-          <a href="#" className="text-blue-500 text-xs sm:text-sm hover:text-blue-400">
+          <a href="#" className="text-blue-500 dark:text-blue-400 text-xs sm:text-sm hover:text-blue-600 dark:hover:text-blue-300">
             Forgot password?
           </a>
         </div>
 
         {/* Sign In Button */}
-        <button className="w-full h-10 bg-black text-white rounded-lg text-sm sm:text-base font-medium hover:bg-gray-900 transition-colors mb-4">
+        <button className="w-full h-10 bg-foreground dark:bg-black text-background dark:text-white rounded-lg text-sm sm:text-base font-medium hover:opacity-90 dark:hover:bg-gray-900 transition-colors mb-4">
           Sign In
         </button>
 
         {/* Divider */}
         <div className="relative mb-4">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-600"></div>
+            <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
           <div className="relative flex justify-center text-xs sm:text-sm">
-            <span className="px-3 sm:px-4 bg-[#2a2a2a] text-gray-400">
+            <span className="px-3 sm:px-4 bg-background dark:bg-[#2a2a2a] text-gray-500 dark:text-gray-400">
               OR CONTINUE WITH
             </span>
           </div>
@@ -154,7 +127,7 @@ export default function LoginForm() {
 
         {/* Social Login Buttons */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4">
-          <button className="flex items-center justify-center gap-1.5 sm:gap-2 h-10 bg-white rounded-lg hover:bg-gray-100 transition-colors">
+          <button className="flex items-center justify-center gap-1.5 sm:gap-2 h-10 bg-white dark:bg-white rounded-lg border border-gray-300 dark:border-transparent hover:bg-gray-100 dark:hover:bg-gray-100 transition-colors">
             <svg className="w-4 h-4 sm:w-5 sm:h-5" viewBox="0 0 24 24">
               <path
                 fill="#4285F4"
@@ -175,7 +148,7 @@ export default function LoginForm() {
             </svg>
             <span className="text-gray-900 text-xs sm:text-sm font-medium">Google</span>
           </button>
-          <button className="flex items-center justify-center gap-1.5 sm:gap-2 h-10 bg-white rounded-lg hover:bg-gray-100 transition-colors">
+          <button className="flex items-center justify-center gap-1.5 sm:gap-2 h-10 bg-white dark:bg-white rounded-lg border border-gray-300 dark:border-transparent hover:bg-gray-100 dark:hover:bg-gray-100 transition-colors">
             <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="#1877F2" viewBox="0 0 24 24">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
             </svg>

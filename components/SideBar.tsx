@@ -34,7 +34,7 @@ export default function SideBar({
             </button>
 
             <div className="flex flex-wrap gap-4 sm:gap-6 text-[#202020] text-base sm:text-lg">
-              <Link href="#membership" className="hover:underline">
+              <Link href="/membership" className="hover:underline">
                 Membership
               </Link>
 

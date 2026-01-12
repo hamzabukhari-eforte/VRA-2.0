@@ -484,11 +484,14 @@ export default function HomePageHeroSectionMask({
               </div>
 
               {/* Login Button */}
-              <button className="px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-gradient-to-b from-[#141414] to-black rounded-lg border border-white/10 flex items-center justify-center gap-2.5">
+              <Link
+                href="/login"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 md:px-6 md:py-3 bg-gradient-to-b from-[#141414] to-black rounded-lg border border-white/10 flex items-center justify-center gap-2.5"
+              >
                 <span className="text-white text-sm sm:text-base md:text-xl font-normal">
                   Login
                 </span>
-              </button>
+              </Link>
             </div>
           </div>
         </header>
