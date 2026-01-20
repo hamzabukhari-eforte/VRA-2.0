@@ -94,7 +94,9 @@ const vraTeams = [
 ] as const;
 
 export default function LandingPage() {
-  const [selectedTeamId, setSelectedTeamId] = useState<(typeof vraTeams)[number]["id"]>("vra1");
+  const [selectedTeamId, setSelectedTeamId] = useState<(typeof vraTeams)[number]["id"]>(
+    vraTeams[0].id
+  );
   const selectedTeam = vraTeams.find((team) => team.id === selectedTeamId) ?? vraTeams[0];
 
   return (
