@@ -57,7 +57,14 @@ export default function SideBar({
               href="/facility"
               className="block text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all"
             >
-              Facility
+              Facilities
+            </Link>
+
+            <Link
+              href="/indoor-net-booking"
+              className="block text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all"
+            >
+              Indoor Net Booking
             </Link>
 
             <Link
@@ -75,7 +82,9 @@ export default function SideBar({
             </Link>
 
             <Link
-              href="/shop"
+              href="https://www.gray-nicolls.co.uk/collections/vra-cricket-netherlands?filter.v.price.gte=&filter.v.price.lte=&sort_by=best-selling&filter.p.tag=clubtag_Match+Wear&view=club-grid"
+              target="_blank"
+              rel="noopener noreferrer"
               className="block text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all underline"
             >
               Shop

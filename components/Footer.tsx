@@ -2,7 +2,7 @@ import Container from "./Container";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { FaLinkedin, FaInstagram, FaFacebook, FaTwitter } from "react-icons/fa";
+import { FaLinkedin, FaInstagram, FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -145,7 +145,7 @@ export default function Footer() {
 
           <div className="flex items-center gap-6">
             <Link
-              href="#"
+              href="https://www.linkedin.com/company/vra-cricket/"
               className="text-[#202020] transition-transform hover:scale-110"
             >
               <FaLinkedin size={32} />
@@ -153,7 +153,7 @@ export default function Footer() {
             </Link>
 
             <Link
-              href="#"
+              href="https://www.instagram.com/vra_cricket_amsterdam?igsh=NnVqcXl6eXJpcm9o&utm_source=qr"
               className="text-[#202020] transition-transform hover:scale-110"
             >
               <FaInstagram size={32} />
@@ -161,19 +161,11 @@ export default function Footer() {
             </Link>
 
             <Link
-              href="#"
+              href="https://www.youtube.com/@VRACricketLive"
               className="text-[#202020] transition-transform hover:scale-110"
             >
-              <FaFacebook size={32} />
-              <span className="sr-only">Facebook</span>
-            </Link>
-
-            <Link
-              href="#"
-              className="text-[#202020] transition-transform hover:scale-110"
-            >
-              <FaTwitter size={32} />
-              <span className="sr-only">Twitter</span>
+              <FaYoutube size={32} />
+              <span className="sr-only">YouTube</span>
             </Link>
           </div>
         </div>

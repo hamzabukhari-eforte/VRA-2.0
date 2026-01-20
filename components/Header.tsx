@@ -23,6 +23,13 @@ export default function Header() {
             </Link>
 
             <Link
+              href="/indoor-net-booking"
+              className="text-white text-sm md:text-base lg:text-xl font-normal"
+            >
+              Indoor Net Booking
+            </Link>
+
+            <Link
               href="/facility"
               className="text-white text-sm md:text-base lg:text-xl font-normal"
             >

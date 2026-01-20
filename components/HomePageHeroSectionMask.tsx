@@ -414,6 +414,13 @@ export default function HomePageHeroSectionMask({
                 </Link>
 
                 <Link
+                  href="/indoor-net-booking"
+                  className="text-[#202020] text-sm md:text-base lg:text-xl font-normal"
+                >
+                  Indoor Net Booking
+                </Link>
+
+                <Link
                   href="/facility"
                   className="text-[#202020] text-sm md:text-base lg:text-xl font-normal"
                 >
