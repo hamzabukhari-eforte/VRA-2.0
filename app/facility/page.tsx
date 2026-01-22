@@ -137,7 +137,7 @@ export default function FacilityPage() {
           mainHeading="Sports Events"
           buttons={["Tournaments", "Competition", "Matchday", "Excellence"]}
           description="VRA Cricket Club offers world-class facilities ideal for hosting professional and amateur sports events. With international-standard grounds, modern infrastructure, and excellent spectator amenities, the venue supports tournaments, leagues, exhibitions, and multi-sport events in a well-managed, scenic environment."
-          imageSrc="/assets/facility/Ground 1_3.jpg"
+          imageSrc="/assets/facility/sports-events.jpg"
           imageAlt="Sport Events"
         />
 
@@ -147,7 +147,7 @@ export default function FacilityPage() {
           mainHeading="Sports Clinics"
           buttons={["Training", "Development", "Coaching", "Teamwork"]}
           description="Our facilities provide an inspiring setting for sports clinics with schools, academies, and corporate groups. Featuring indoor and outdoor training areas, expert coaching spaces, and support amenities, VRA is perfect for skill development, team building, leadership programs, and structured sports education."
-          imageSrc="/assets/facility/Indoor Nets.jpg"
+          imageSrc="/assets/facility/clinics.jpg"
           imageAlt="Sport Clinics"
         />
 
@@ -157,7 +157,7 @@ export default function FacilityPage() {
           mainHeading="Cultural Events"
           buttons={["Community", "Celebrations", "Festivals", "Gatherings"]}
           description="Beyond sport, VRA Cricket Club is a versatile venue for cultural and community events. The grounds and pavilion can host festivals, performances, celebrations, and corporate gatherings, offering ample space, catering facilities, and a welcoming atmosphere that brings people together."
-          imageSrc="/assets/facility/Pavilion.jpg"
+          imageSrc="/assets/facility/cultural-events.jpg"
           imageAlt="Cultural Events"
         />
 

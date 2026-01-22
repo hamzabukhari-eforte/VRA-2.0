@@ -1,181 +1,408 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { Check } from "lucide-react";
+import { useState, ChangeEvent, FormEvent } from "react";
+import { Calendar } from "lucide-react";
 
 interface NetBookingFormProps {
   totalLanes?: number;
 }
 
-export default function NetBookingForm({
-  totalLanes = 3,
-}: NetBookingFormProps) {
-  const [bookingType, setBookingType] = useState<"club" | "company">("club");
-  const [bowlingMachine, setBowlingMachine] = useState(true);
-  const [currentLane, setCurrentLane] = useState(1);
+interface FormData {
+  name: string;
+  email: string;
+  phoneNumber: string;
+  preferredDays: string[];
+  time: string;
+  duration: string;
+  numberOfPitches: number;
+  numberOfPeople: string;
+  bowlingMachine: boolean;
+  trainer: string;
+  remarks: string;
+}
+
+const timeSlots = Array.from({ length: 14 }, (_, i) => ({
+  value: `${i + 9}:00`,
+  label: `${i + 9}:00`,
+}));
+
+const durationOptions = Array.from({ length: 9 }, (_, i) => ({
+  value: String(i + 1),
+  label: `${i + 1} hour${i > 0 ? "s" : ""}`,
+}));
+
+const trainerOptions = [
+  { value: "senior", label: "Senior Trainer (€69/hour)" },
+  { value: "junior", label: "Junior Trainer (€40/hour)" },
+  { value: "none", label: "No Trainer" },
+];
+
+const initialState: FormData = {
+  name: "",
+  email: "",
+  phoneNumber: "",
+  preferredDays: [],
+  time: "",
+  duration: "",
+  numberOfPitches: 1,
+  numberOfPeople: "",
+  bowlingMachine: false,
+  trainer: "",
+  remarks: "",
+};
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function NetBookingForm(_props: NetBookingFormProps) {
+  const [form, setForm] = useState<FormData>(initialState);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+
+  // Calculate min and max dates (2 days from now to 30 days from now)
+  const getMinDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 2);
+    return date.toISOString().split("T")[0];
+  };
+
+  const getMaxDate = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + 30);
+    return date.toISOString().split("T")[0];
+  };
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value, type } = e.target;
+    setForm((f) => ({
+      ...f,
+      [name]:
+        type === "checkbox" ? (e.target as HTMLInputElement).checked : value,
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((e) => ({ ...e, [name]: "" }));
+    }
+  };
+
+  const handleDateChange = (date: string) => {
+    if (selectedDates.includes(date)) {
+      // Remove date if already selected
+      const newDates = selectedDates.filter((d) => d !== date);
+      setSelectedDates(newDates);
+      setForm((f) => ({ ...f, preferredDays: newDates }));
+    } else {
+      // Add date if not selected (max 3)
+      if (selectedDates.length >= 3) {
+        setErrors((e) => ({
+          ...e,
+          preferredDays: "Maximum 3 days allowed",
+        }));
+        return;
+      }
+      const newDates = [...selectedDates, date];
+      setSelectedDates(newDates);
+      setForm((f) => ({ ...f, preferredDays: newDates }));
+      setErrors((e) => ({ ...e, preferredDays: "" }));
+    }
+  };
+
+  const removeDate = (date: string) => {
+    const newDates = selectedDates.filter((d) => d !== date);
+    setSelectedDates(newDates);
+    setForm((f) => ({ ...f, preferredDays: newDates }));
+  };
+
+  const validateForm = () => {
+    const e: Record<string, string> = {};
+    if (!form.name) e.name = "Required";
+    if (!form.email) e.email = "Required";
+    if (!form.phoneNumber) e.phoneNumber = "Required";
+    if (form.preferredDays.length < 1)
+      e.preferredDays = "Select at least 1 day";
+    if (form.preferredDays.length > 3)
+      e.preferredDays = "Maximum 3 days allowed";
+    if (!form.time) e.time = "Required";
+    if (!form.duration) e.duration = "Required";
+    if (form.numberOfPitches < 1) e.numberOfPitches = "Minimum 1 pitch required";
+    if (form.numberOfPitches > 3)
+      e.numberOfPitches = "Maximum 3 pitches allowed";
+    if (!form.trainer) e.trainer = "Required";
+
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (validateForm()) {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || ""}/users/indoorNet`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token ? `Bearer ${token}` : "",
+            },
+            body: JSON.stringify({
+              ...form,
+              preferredDays: form.preferredDays,
+            }),
+          }
+        );
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.message || "Failed to create booking");
+        }
+        setForm(initialState);
+        setSelectedDates([]);
+        // Show success message or redirect
+        alert("Booking submitted successfully!");
+      } catch (err) {
+        console.error(err);
+        // Show error message
+        alert("Failed to submit booking. Please try again.");
+      }
+    }
+  };
 
   return (
-    <div className="flex flex-col gap-3 md:gap-4 lg:gap-4 h-full">
-      {/* Name Fields */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            placeholder="First Name"
-            className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <input
-            type="text"
-            placeholder="Last Name"
-            className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
-          />
-        </div>
+    <form onSubmit={handleSubmit} className="flex flex-col gap-3 md:gap-4 lg:gap-4 h-full">
+      {/* Full Name Field */}
+      <div className="flex flex-col gap-2">
+        <input
+          type="text"
+          name="name"
+          value={form.name}
+          onChange={handleChange}
+          placeholder="Full Name"
+          required
+          className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
+        />
+        {errors.name && (
+          <div className="text-red-400 text-xs mt-1 text-center">{errors.name}</div>
+        )}
       </div>
 
       {/* Email Field */}
       <div className="flex flex-col gap-2">
         <input
           type="email"
+          name="email"
+          value={form.email}
+          onChange={handleChange}
           placeholder="E-mail"
+          required
           className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
         />
+        {errors.email && (
+          <div className="text-red-400 text-xs mt-1 text-center">{errors.email}</div>
+        )}
       </div>
 
       {/* Phone Number Field */}
       <div className="flex flex-col gap-2">
         <input
           type="tel"
+          name="phoneNumber"
+          value={form.phoneNumber}
+          onChange={handleChange}
           placeholder="Phone Number"
+          required
           className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
         />
+        {errors.phoneNumber && (
+          <div className="text-red-400 text-xs mt-1 text-center">{errors.phoneNumber}</div>
+        )}
       </div>
 
-      {/* Date and Duration Fields */}
+      {/* Preferred Days - Date Picker */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2 justify-center">
+          <Calendar className="w-4 h-4 text-[#4A90E2]" />
+          <span className="text-foreground dark:text-white text-sm font-medium">
+            Preferred Days (max 3)
+          </span>
+        </div>
+        <input
+          type="date"
+          min={getMinDate()}
+          max={getMaxDate()}
+          onChange={(e) => handleDateChange(e.target.value)}
+          className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
+        />
+        {selectedDates.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2 justify-center">
+            {selectedDates.map((date) => (
+              <span
+                key={date}
+                className="px-3 py-1 bg-[#4A90E2] text-white text-xs rounded-full flex items-center gap-2"
+              >
+                {new Date(date).toLocaleDateString("en-US")}
+                <button
+                  type="button"
+                  onClick={() => removeDate(date)}
+                  className="hover:text-red-300"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+        {errors.preferredDays && (
+          <div className="text-red-400 text-xs mt-1 text-center">{errors.preferredDays}</div>
+        )}
+      </div>
+
+      {/* Time and Duration Fields */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <div className="flex flex-col gap-2">
+          <select
+            name="time"
+            value={form.time}
+            onChange={handleChange}
+            required
+            className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
+          >
+            <option value="">Preferred Time</option>
+            {timeSlots.map((slot) => (
+              <option key={slot.value} value={slot.value}>
+                {slot.label}
+              </option>
+            ))}
+          </select>
+          {errors.time && (
+            <div className="text-red-400 text-xs mt-1 text-center">{errors.time}</div>
+          )}
+        </div>
+        <div className="flex flex-col gap-2">
+          <select
+            name="duration"
+            value={form.duration}
+            onChange={handleChange}
+            required
+            className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
+          >
+            <option value="">Duration</option>
+            {durationOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+          {errors.duration && (
+            <div className="text-red-400 text-xs mt-1 text-center">{errors.duration}</div>
+          )}
+        </div>
+      </div>
+
+      {/* Number of Pitches and Number of People */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
         <div className="flex flex-col gap-2">
           <input
-            type="date"
-            placeholder="Select a Date"
+            type="number"
+            name="numberOfPitches"
+            min="1"
+            max="3"
+            value={form.numberOfPitches}
+            onChange={handleChange}
+            placeholder="Number of Pitches"
+            required
             className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
           />
+          {errors.numberOfPitches && (
+            <div className="text-red-400 text-xs mt-1 text-center">{errors.numberOfPitches}</div>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <input
-            type="text"
-            placeholder="Duration"
+            type="number"
+            name="numberOfPeople"
+            min="1"
+            value={form.numberOfPeople}
+            onChange={handleChange}
+            placeholder="Number of People (Optional)"
             className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
           />
         </div>
       </div>
 
-      {/* Club or Company/Business Toggle */}
+      {/* Trainer Field */}
       <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-4 py-1.5 px-2 border-b border-[#4A90E2] bg-[#F6F6F6] dark:bg-[#232323] rounded-t">
-          <button
-            onClick={() => setBookingType("club")}
-            className={`px-6 py-2 rounded-lg transition-colors ${
-              bookingType === "club"
-                ? "bg-[#4A90E2] text-white"
-                : "bg-transparent text-foreground/70 dark:text-white/70 hover:text-foreground dark:hover:text-white"
-            }`}
-          >
-            Club
-          </button>
-          <span className="text-foreground/50 dark:text-white/50">or</span>
-          <button
-            onClick={() => setBookingType("company")}
-            className={`px-6 py-2 rounded-lg transition-colors ${
-              bookingType === "company"
-                ? "bg-[#4A90E2] text-white"
-                : "bg-transparent text-foreground/70 dark:text-white/70 hover:text-foreground dark:hover:text-white"
-            }`}
-          >
-            Company/Business
-          </button>
-        </div>
+        <select
+          name="trainer"
+          value={form.trainer}
+          onChange={handleChange}
+          required
+          className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
+        >
+          <option value="">Select Trainer</option>
+          {trainerOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        {errors.trainer && (
+          <div className="text-red-400 text-xs mt-1 text-center">{errors.trainer}</div>
+        )}
       </div>
 
-      {/* Number of Persons Field */}
+      {/* Bowling Machine - Radio Buttons */}
       <div className="flex flex-col gap-2">
-        <input
-          type="number"
-          placeholder="Number of persons"
-          className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
-        />
-      </div>
-
-      {/* Lanes Selector */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-4 py-1.5 px-2 border-b border-[#4A90E2] bg-[#F6F6F6] dark:bg-[#232323] rounded-t">
-          <button
-            onClick={() => setCurrentLane(Math.max(1, currentLane - 1))}
-            className="w-8 h-8 flex items-center justify-center text-foreground dark:text-white hover:text-[#4A90E2] transition-colors"
-          >
-            <Image
-              src="/assets/363-1135.svg"
-              alt="Previous"
-              width={16}
-              height={16}
-              className="w-4 h-4"
-            />
-          </button>
-          <span className="text-foreground dark:text-white text-lg font-normal  flex-1 text-center">
-            {currentLane} of {totalLanes}
+        <div className="flex items-center gap-4 py-1.5 px-2 border-b border-[#4A90E2] bg-[#F6F6F6] dark:bg-[#232323] rounded-t justify-center">
+          <span className="text-foreground dark:text-white text-sm font-medium">
+            Bowling Machine Required:
           </span>
-          <button
-            onClick={() =>
-              setCurrentLane(Math.min(totalLanes, currentLane + 1))
-            }
-            className="w-8 h-8 flex items-center justify-center text-foreground dark:text-white hover:text-[#4A90E2] transition-colors"
-          >
-            <Image
-              src="/assets/363-1145.svg"
-              alt="Next"
-              width={16}
-              height={16}
-              className="w-4 h-4"
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="bowlingMachine"
+              checked={form.bowlingMachine === true}
+              onChange={() => setForm((f) => ({ ...f, bowlingMachine: true }))}
+              className="accent-[#4A90E2]"
             />
-          </button>
+            <span className="text-foreground dark:text-white text-sm">Yes</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="radio"
+              name="bowlingMachine"
+              checked={form.bowlingMachine === false}
+              onChange={() => setForm((f) => ({ ...f, bowlingMachine: false }))}
+              className="accent-[#4A90E2]"
+            />
+            <span className="text-foreground dark:text-white text-sm">No</span>
+          </label>
         </div>
       </div>
 
-      {/* Additional Note Field */}
+      {/* Remarks Field */}
       <div className="flex flex-col gap-2">
         <textarea
+          name="remarks"
+          value={form.remarks}
+          onChange={handleChange}
           rows={4}
-          placeholder="Additional note"
+          placeholder="Additional Remarks (Optional)"
           className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors resize-none rounded-t text-center"
         />
       </div>
 
-      {/* Bowling Machine Toggle */}
-      <div className="flex items-center justify-between py-2">
-        <span className="text-foreground dark:text-white text-base font-normal ">
-          Bowling machine Required
-        </span>
+      {/* Submit Button */}
+      <div className="flex justify-center mt-6">
         <button
-          onClick={() => setBowlingMachine(!bowlingMachine)}
-          className={`relative w-[52px] h-[28px] rounded-full transition-colors ${
-            bowlingMachine ? "bg-green-500" : "bg-foreground/20 dark:bg-white/20"
-          }`}
+          type="submit"
+          className="px-8 md:px-12 py-3 md:py-4 bg-black text-white dark:bg-foreground dark:text-black rounded-lg hover:bg-white/90 dark:hover:bg-foreground/90 transition-colors"
         >
-          <div
-            className={`absolute top-[2px] w-[24px] h-[24px] bg-white rounded-full transition-transform ${
-              bowlingMachine
-                ? "translate-x-[26px]"
-                : "translate-x-[2px]"
-            }`}
-          >
-            {bowlingMachine && (
-              <Check className="w-full h-full p-1 text-black" />
-            )}
-          </div>
+          <span className="text-base md:text-lg font-medium font-['Roboto']">
+            Book Now
+          </span>
         </button>
       </div>
-    </div>
+    </form>
   );
 }
-

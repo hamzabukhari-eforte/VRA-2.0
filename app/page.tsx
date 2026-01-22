@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Container from "@/components/Container";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import TestimonialSection from "@/components/shared/TestimonialSection";
 import { useState } from "react";
 

@@ -1,13 +1,11 @@
 import HeroBanner from "@/components/about/HeroBanner";
 import TeamsInVRA from "@/components/vra-cricket/TeamsInVRA";
 import ImageTextSectionAbout from "@/components/about/ImageTextSection";
-import ImageTextSection from "@/components/vra-cricket/ImageTextSection";
 import FixturesCards from "@/components/vra-cricket/FixturesCards";
 import StandingsTable from "@/components/vra-cricket/StandingsTable";
 import TopPlayers from "@/components/vra-cricket/TopPlayers";
 import JoinVRAToday from "@/components/vra-cricket/JoinVRAToday";
-import FacilityGrid from "@/components/vra-cricket/FacilityGrid";
-import QuoteSection from "@/components/vra-cricket/QuoteSection";
+import FacilityImageCarousel from "@/components/facility/FacilityImageCarousel";
 import CollaborationSection from "@/components/shared/CollaborationSection";
 
 export default function VRACricketPage() {
@@ -15,7 +13,7 @@ export default function VRACricketPage() {
     <div className="min-h-screen dark:bg-[#202020] bg-background text-foreground dark:text-white overflow-x-hidden">
       {/* Hero Section */}
       <HeroBanner
-        imageSrc="/assets/497-4123.webp"
+        imageSrc="/assets/vra-cricket/vra-cricket-banner.jpg"
         imageAlt="VRA Cricket"
         heading="VRA Cricket"
         overlayOpacity={40}
@@ -32,43 +30,43 @@ export default function VRACricketPage() {
           imageLeft={false}
           sectionTitle="Over Seas Cricket Talent"
           mainHeading=""
-          buttons={["Accessibility", "Opportunity", "Growth", "Resources"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/497-4310.webp"
-          imageAlt="Team"
+          buttons={["International", "Talent", "Excellence", "Opportunity"]}
+          description="VRA Cricket Club attracts top overseas cricket talent each season, providing a platform to compete, grow, and make a lasting impact. Our multicultural, high-performance environment combines quality facilities with strong support, enabling international players to showcase their skills while contributing to the club&apos;s continued success."
+          imageSrc="/assets/vra-cricket/overseas-talent.jpg"
+          imageAlt="Over Seas Cricket Talent"
         />
 
         {/* Stem Clinics Section */}
         <ImageTextSectionAbout
           imageLeft={true}
-          sectionTitle="Sport Clinics"
-          mainHeading=""
-          buttons={["Comercial", "Durable", "Fast Charging", "Business Use"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/497-4312.webp"
+          sectionTitle=""
+          mainHeading="Sports Clinics"
+          buttons={["Training", "Development", "Coaching", "Teamwork"]}
+          description="Our facilities provide an inspiring setting for sports clinics with schools, academies, and corporate groups. Featuring indoor and outdoor training areas, expert coaching spaces, and support amenities, VRA is perfect for skill development, team building, leadership programs, and structured sports education."
+          imageSrc="/assets/facility/clinics.jpg"
           imageAlt="Sport Clinics"
         />
 
         {/* Culture Section */}
         <ImageTextSectionAbout
           imageLeft={false}
-          sectionTitle="Culture"
-          mainHeading=""
-          buttons={["Accessibility", "Fitness", "Growth", "Resources"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/497-4310.webp"
-          imageAlt="Culture"
+          sectionTitle=""
+          mainHeading="Cultural Events"
+          buttons={["Community", "Celebrations", "Festivals", "Gatherings"]}
+          description="Beyond sport, VRA Cricket Club is a versatile venue for cultural and community events. The grounds and pavilion can host festivals, performances, celebrations, and corporate gatherings, offering ample space, catering facilities, and a welcoming atmosphere that brings people together."
+          imageSrc="/assets/facility/cultural-events.jpg"
+          imageAlt="Cultural Events"
         />
 
-        {/* Fixtures Building Section */}
+        {/* Sport Events Section */}
         <ImageTextSectionAbout
           imageLeft={true}
-          sectionTitle="Fixtures"
-          mainHeading="Sport Events"
-          buttons={["Accessibility", "Fitness", "Growth"]}
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/497-4367.webp"
-          imageAlt="Fixtures"
+          sectionTitle=""
+          mainHeading="Sports Events"
+          buttons={["Tournaments", "Competition", "Matchday", "Excellence"]}
+          description="VRA Cricket Club offers world-class facilities ideal for hosting professional and amateur sports events. With international-standard grounds, modern infrastructure, and excellent spectator amenities, the venue supports tournaments, leagues, exhibitions, and multi-sport events in a well-managed, scenic environment."
+          imageSrc="/assets/facility/sports-events.jpg"
+          imageAlt="Sport Events"
         />
 
         {/* Fixtures Cards Section */}
@@ -100,19 +98,25 @@ export default function VRACricketPage() {
         {/* Join VRA Today Section */}
         <JoinVRAToday />
 
-        {/* VRA Club Rules Section */}
-        <ImageTextSectionAbout
-          sectionTitle="VRA Club Rules"
-          mainHeading=""
-          description="Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem."
-          imageSrc="/assets/497-4444.svg"
-          imageAlt="VRA Club Rules"
-          buttons={["Transparency", "Togetherness", "Collaboration", "Growth"]}
-          imageLeft={true}
-        />
-
         {/* Our Facility Section */}
-        <FacilityGrid />
+        <section className="w-full">
+          <h2 className="text-foreground dark:text-white text-3xl md:text-4xl lg:text-[48px] font-light mb-6 md:mb-8">
+            Our Facility
+          </h2>
+          <FacilityImageCarousel
+            images={[
+              { src: "/assets/facility/Ground 1.jpg", alt: "Ground 1", width: 1920, height: 1080 },
+              { src: "/assets/facility/Ground 1_1.jpg", alt: "Ground 2", width: 1920, height: 1080 },
+              { src: "/assets/facility/Ground 1_2.jpg", alt: "Ground 3", width: 1920, height: 1080 },
+              { src: "/assets/facility/Outdoor Nets.jpg", alt: "Outdoor Nets", width: 1920, height: 1080 },
+              { src: "/assets/facility/Indoor Nets.jpg", alt: "Indoor Nets", width: 1920, height: 1080 },
+              { src: "/assets/facility/Pavilion.jpg", alt: "Pavilion", width: 1920, height: 1080 },
+              { src: "/assets/facility/clinics.jpg", alt: "Sports Clinics", width: 1920, height: 1080 },
+              { src: "/assets/facility/sports-events.jpg", alt: "Sports Events", width: 1920, height: 1080 },
+              { src: "/assets/facility/cultural-events.jpg", alt: "Cultural Events", width: 1920, height: 1080 },
+            ]}
+          />
+        </section>
 
 
         <CollaborationSection />

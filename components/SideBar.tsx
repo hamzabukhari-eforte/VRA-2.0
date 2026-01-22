@@ -74,12 +74,11 @@ export default function SideBar({
               VRA Cricket
             </Link>
 
-            <Link
-              href="/sponsors"
-              className="block text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all"
+            <span
+              className="block text-[#202020]/50 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] cursor-not-allowed opacity-50"
             >
               Sponsors
-            </Link>
+            </span>
 
             <Link
               href="https://www.gray-nicolls.co.uk/collections/vra-cricket-netherlands?filter.v.price.gte=&filter.v.price.lte=&sort_by=best-selling&filter.p.tag=clubtag_Match+Wear&view=club-grid"

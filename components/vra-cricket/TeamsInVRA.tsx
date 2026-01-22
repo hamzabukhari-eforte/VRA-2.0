@@ -14,13 +14,13 @@ interface TeamsInVRAProps {
 export default function TeamsInVRA({
   teams = [
     { name: "Senior Men's", count: 7, color: "red" },
-    { name: "Youth", count: 7, color: "yellow" },
-    { name: "Women's", count: 7, color: "blue" },
-    { name: "Zalmi XI's", count: 7, color: "white" },
+    { name: "Youth", count: 9, color: "yellow" },
+    { name: "Women's", count: 1, color: "blue" },
+    { name: "Zalmi XI's", count: 2, color: "white" },
   ],
-  totalCount = 21,
-  tags = ["Accessibility", "Opportunity", "Growth", "Resources"],
-  description = "Lorem ipsum dolor sit amet consectetur. Aenean tincidunt malesuada nec massa est imperdiet. Gravida arcu sed magnis urna natoque. Velit aliquam et varius lorem adipiscing quam et id vitae. Massa accumsan fringilla eros eleifend sit sem.",
+  totalCount = 19,
+  tags = ["Teams", "Community", "Development", "Performance"],
+  description = "VRA Cricket Club proudly fields 19 teams across men&apos;s, women&apos;s, youth, and Zalmis cricket, offering opportunities for every age and ambition. From elite competition to grassroots development, our teams reflect excellence, diversity, and a shared passion for the game, united as one strong cricket community",
 }: TeamsInVRAProps) {
   const colorClasses = {
     red: "text-red-500",
