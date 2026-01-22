@@ -119,6 +119,7 @@ export default function HomePageHeroSectionMask({
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const hasStartedRef = useRef(false);
   const initialScrollYRef = useRef(0);
+  const prevMenuOpenRef = useRef(isMenuOpen);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -264,6 +265,24 @@ export default function HomePageHeroSectionMask({
     };
   }, [replayId]);
 
+  // When menu closes, also close the masking effect if it's still active
+  useEffect(() => {
+    if (!timelineRef.current) return;
+    
+    // Check if menu transitioned from open to closed
+    const menuJustClosed = prevMenuOpenRef.current === true && isMenuOpen === false;
+    prevMenuOpenRef.current = isMenuOpen;
+    
+    // Only trigger if menu was just closed (not on initial mount)
+    if (!menuJustClosed) return;
+    if (!isActive) return; // Masking already closed, don't do anything
+    if (hasStartedRef.current) return; // Animation already started, don't restart
+
+    // Menu was just closed and masking is still active, so close the masking
+    hasStartedRef.current = true;
+    timelineRef.current.play();
+  }, [isMenuOpen, isActive]);
+
   // When the overlay is active and has not yet started its hide animation,
   // watch for the first user scroll (up or down) of more than a few pixels
   // and then play the timeline. While the menu is open, disable this trigger.
@@ -301,8 +320,36 @@ export default function HomePageHeroSectionMask({
       {/* Fixed full-screen overlay so it stays visible while the page scrolls */}
       <div
         ref={sectionRef}
-        className="fixed inset-0 w-full h-[100vh] z-4"
+        className="fixed inset-0 w-full h-[100vh] z-4 cursor-pointer"
         style={{ pointerEvents: isActive ? "auto" : "none" }}
+        onClick={(e) => {
+          // Don't process clicks when menu is open - let the SideBar handle them
+          // The menu close will trigger the masking close via useEffect
+          if (isMenuOpen) {
+            return;
+          }
+
+          // Only trigger if clicking on the overlay itself, not on interactive elements
+          const target = e.target as HTMLElement;
+          
+          // Check if the click is on an interactive element (button, link, input, etc.)
+          const isInteractiveElement = 
+            target.closest('button') || 
+            target.closest('a') || 
+            target.closest('input') || 
+            target.closest('select') || 
+            target.closest('textarea') ||
+            target.closest('nav');
+          
+          // Check if click is on SideBar (aside element) or elements with higher z-index
+          const isSideBarElement = target.closest('aside');
+          
+          // Only trigger hide animation if overlay is active, not started, menu is closed, and not clicking interactive elements or SideBar
+          if (!isInteractiveElement && !isSideBarElement && isActive && !hasStartedRef.current && timelineRef.current) {
+            hasStartedRef.current = true;
+            timelineRef.current.play();
+          }
+        }}
       >
         {/* Background layer with logo cutout - logo area is transparent */}
         <div

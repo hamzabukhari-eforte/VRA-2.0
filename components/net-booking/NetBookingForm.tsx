@@ -219,20 +219,58 @@ export default function NetBookingForm(_props: NetBookingFormProps) {
       </div>
 
       {/* Preferred Days - Date Picker */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2 justify-center">
+      <div className="flex flex-col">
+        <div className="flex items-center gap-2 justify-center bg-[#F6F6F6] dark:bg-[#232323] ">
           <Calendar className="w-4 h-4 text-[#4A90E2]" />
           <span className="text-foreground dark:text-white text-sm font-medium">
             Preferred Days (max 3)
           </span>
         </div>
-        <input
-          type="date"
-          min={getMinDate()}
-          max={getMaxDate()}
-          onChange={(e) => handleDateChange(e.target.value)}
-          className="bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-1.5 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center"
-        />
+        <div className="relative">
+          <input
+            type="date"
+            min={getMinDate()}
+            max={getMaxDate()}
+            onChange={(e) => handleDateChange(e.target.value)}
+            className="w-full bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-3 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center cursor-pointer text-base"
+            style={{
+              fontSize: '16px',
+              paddingRight: '40px',
+            }}
+          />
+          {/* Custom calendar icon overlay */}
+          <Calendar 
+            className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#4A90E2] pointer-events-none" 
+            style={{ zIndex: 1 }}
+          />
+          <style jsx>{`
+            input[type="date"]::-webkit-calendar-picker-indicator {
+              opacity: 0;
+              position: absolute;
+              right: 0;
+              width: 100%;
+              height: 100%;
+              cursor: pointer;
+              z-index: 2;
+            }
+            input[type="date"]::-webkit-calendar-picker-indicator:hover {
+              opacity: 0;
+            }
+            input[type="date"]::-webkit-inner-spin-button,
+            input[type="date"]::-webkit-clear-button {
+              display: none;
+            }
+            /* Make calendar popup larger */
+            input[type="date"] {
+              font-size: 16px !important;
+            }
+            @media (min-width: 768px) {
+              input[type="date"] {
+                font-size: 18px !important;
+              }
+            }
+          `}</style>
+        </div>
         {selectedDates.length > 0 && (
           <div className="flex flex-wrap gap-2 mt-2 justify-center">
             {selectedDates.map((date) => (
