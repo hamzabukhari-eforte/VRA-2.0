@@ -52,7 +52,7 @@ export default function SideBar({
           <nav className="flex flex-col gap-2 w-full max-w-64 mx-auto">
             <Link
               href="/about"
-              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold pb-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all ${
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold pb-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/about"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
@@ -66,7 +66,7 @@ export default function SideBar({
 
             <Link
               href="/facility"
-              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all ${
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/facility"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
@@ -80,7 +80,7 @@ export default function SideBar({
 
             <Link
               href="/indoor-net-booking"
-              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all ${
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/indoor-net-booking"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
@@ -94,7 +94,7 @@ export default function SideBar({
 
             <Link
               href="/vra-cricket"
-              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all ${
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/vra-cricket"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
@@ -116,7 +116,7 @@ export default function SideBar({
               href="https://www.gray-nicolls.co.uk/collections/vra-cricket-netherlands?filter.v.price.gte=&filter.v.price.lte=&sort_by=best-selling&filter.p.tag=clubtag_Match+Wear&view=club-grid"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all underline"
+              className="flex items-center gap-2 text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all underline"
             >
               Shop
               <ExternalLink className="w-5 h-5 shrink-0" />
@@ -124,7 +124,7 @@ export default function SideBar({
 
             <Link
               href="/donations"
-              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all ${
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/donations"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
@@ -138,7 +138,7 @@ export default function SideBar({
 
             <Link
               href="/contact"
-              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-4 transition-all ${
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/contact"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
