@@ -187,3 +187,10 @@
     }
   }
 }
+
+/* Membership application: ensure dropdown options are visible (dark bg + light text) */
+.membership-application-form select option,
+.membership-termination-form select option {
+  background: #111827;
+  color: #fff;
+}
