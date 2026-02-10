@@ -20,7 +20,7 @@ export default function TeamsInVRA({
   ],
   totalCount = 19,
   tags = ["Teams", "Community", "Development", "Performance"],
-  description = "VRA Cricket Club proudly fields 19 teams across men&apos;s, women&apos;s, youth, and Zalmis cricket, offering opportunities for every age and ambition. From elite competition to grassroots development, our teams reflect excellence, diversity, and a shared passion for the game, united as one strong cricket community",
+  description = "VRA Cricket Club proudly fields 19 teams across men's, women's, youth, and Zalmis cricket, offering opportunities for every age and ambition. From elite competition to grassroots development, our teams reflect excellence, diversity, and a shared passion for the game, united as one strong cricket community",
 }: TeamsInVRAProps) {
   const colorClasses = {
     red: "text-red-500",

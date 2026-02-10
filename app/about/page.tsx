@@ -29,6 +29,7 @@ export default function AboutPage() {
           description="VRA Cricket Club is dedicated to delivering a premier cricket experience by fostering talent at all levels, promoting diversity, and maintaining the highest standards of sport and service. We aim to build a thriving community where excellence is standard, membership is sought after, and financial success ensures our growth and sustainability."
           imageSrc="/assets/about/Mission.jpg"
           imageAlt="Mission"
+          sectionKey="mission"
         />
      
         <ImageTextSection
@@ -39,6 +40,7 @@ export default function AboutPage() {
           description="To be the leading cricket club in the Netherlands, recognized for excellence in sport and community. We strive to create a top-tier, multicultural environment that attracts top talent and passionate members, offering exceptional service, quality facilities, and financial sustainability for both the short and long term."
           imageSrc="/assets/about/Vision.jpg"
           imageAlt="Vision"
+          sectionKey="vision"
         />
         <StadiumDescription />
         <OurBoard />
@@ -52,6 +54,7 @@ export default function AboutPage() {
           description="Volunteer with VRA Cricket Club and be part of something special. Contribute your skills, meet passionate people, and help build a vibrant, inclusive cricket community. Whether on match days, events, or behind the scenes, your time makes a real impact on players, members, and the future of the club."
           imageSrc="/assets/about/Volunteer.jpg"
           imageAlt="Volunteers"
+          sectionKey="volunteer"
         />
         <BePartOfUs />
       </main>

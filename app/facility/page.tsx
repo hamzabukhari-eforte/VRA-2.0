@@ -39,6 +39,7 @@ export default function FacilityPage() {
           description="Our premier international-standard ground features a meticulously prepared square, lush outfield, and professional playing conditions. Designed to host top-level domestic and international matches, Ground 1 offers excellent sightlines, broadcast-ready infrastructure, and an exceptional experience for players, officials, and spectators alike."
           imageSrc="/assets/facility/Ground 1.jpg"
           imageAlt="Ground 1"
+          sectionKey="ground_1"
         />
 
         <ImageTextSection
@@ -49,6 +50,7 @@ export default function FacilityPage() {
           description="Ground 2 provides high-quality playing conditions ideal for league matches, training games, and tournaments. With a well-maintained pitch and outfield, it supports competitive cricket at all levels while offering a comfortable and accessible environment for teams and match officials."
           imageSrc="/assets/facility/Ground 1_1.jpg"
           imageAlt="Ground 2"
+          sectionKey="ground_2"
         />
 
         <ImageTextSection
@@ -59,6 +61,7 @@ export default function FacilityPage() {
           description="Ground 3 is a versatile facility suited for development matches, junior cricket, and practice games. Maintained to club standards, it offers consistent pitch conditions and ample space, making it perfect for nurturing talent and supporting the club's growing cricketing community."
           imageSrc="/assets/facility/Ground 1_2.jpg"
           imageAlt="Ground 3"
+          sectionKey="ground_3"
         />
 
         <ImageTextSection
@@ -69,6 +72,7 @@ export default function FacilityPage() {
           description="Our outdoor net facilities allow players to train in natural conditions across multiple practice lanes. Ideal for batting, bowling, and fielding drills, the nets are designed to support structured coaching sessions and individual practice throughout the cricket season."
           imageSrc="/assets/facility/Outdoor Nets.jpg"
           imageAlt="Outdoor Nets"
+          sectionKey="outdoor_nets"
         />
 
         <ImageTextSection
@@ -79,6 +83,7 @@ export default function FacilityPage() {
           description="The indoor nets provide year-round training in a controlled environment, regardless of weather. Equipped with quality surfaces, lighting and even a bowling machine, they are perfect for focused skill development, coaching programs, and high-intensity practice sessions during the off-season."
           imageSrc="/assets/facility/Indoor Nets.jpg"
           imageAlt="Indoor Nets"
+          sectionKey="indoor_nets"
         />
 
         <ImageTextSection
@@ -89,6 +94,7 @@ export default function FacilityPage() {
           description="The pavilion is the social and operational heart of the club. Offering seating, viewing areas, and event space, it serves players, members, and guests alike, creating a welcoming atmosphere on match days, training evenings, and club events."
           imageSrc="/assets/facility/Pavilion.jpg"
           imageAlt="Pavilion"
+          sectionKey="pavilion"
         />
 
         <ImageTextSection
@@ -139,6 +145,7 @@ export default function FacilityPage() {
           description="VRA Cricket Club offers world-class facilities ideal for hosting professional and amateur sports events. With international-standard grounds, modern infrastructure, and excellent spectator amenities, the venue supports tournaments, leagues, exhibitions, and multi-sport events in a well-managed, scenic environment."
           imageSrc="/assets/facility/sports-events.jpg"
           imageAlt="Sport Events"
+          sectionKey="sports_events"
         />
 
         <ImageTextSection
@@ -149,6 +156,7 @@ export default function FacilityPage() {
           description="Our facilities provide an inspiring setting for sports clinics with schools, academies, and corporate groups. Featuring indoor and outdoor training areas, expert coaching spaces, and support amenities, VRA is perfect for skill development, team building, leadership programs, and structured sports education."
           imageSrc="/assets/facility/clinics.jpg"
           imageAlt="Sport Clinics"
+          sectionKey="sports_clinics"
         />
 
         <ImageTextSection
@@ -159,6 +167,7 @@ export default function FacilityPage() {
           description="Beyond sport, VRA Cricket Club is a versatile venue for cultural and community events. The grounds and pavilion can host festivals, performances, celebrations, and corporate gatherings, offering ample space, catering facilities, and a welcoming atmosphere that brings people together."
           imageSrc="/assets/facility/cultural-events.jpg"
           imageAlt="Cultural Events"
+          sectionKey="cultural_events"
         />
 
         <CollaborationSection />

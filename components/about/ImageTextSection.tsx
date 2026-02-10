@@ -1,4 +1,5 @@
 import Image from "next/image";
+import CMSImage from "@/components/cms/CMSImage";
 
 interface ImageTextSectionProps {
   imageLeft?: boolean;
@@ -8,6 +9,8 @@ interface ImageTextSectionProps {
   description: string;
   imageSrc: string;
   imageAlt: string;
+  /** When set, image is loaded from CMS (admin); same key reuses one image everywhere. Fallback: imageSrc */
+  sectionKey?: string;
 }
 
 export default function ImageTextSection({
@@ -18,8 +21,16 @@ export default function ImageTextSection({
   description,
   imageSrc,
   imageAlt,
+  sectionKey,
 }: ImageTextSectionProps) {
-  const imageSection = (
+  const imageSection = sectionKey ? (
+    <CMSImage
+      sectionKey={sectionKey}
+      fallbackSrc={imageSrc}
+      alt={imageAlt}
+      className="rounded-lg object-cover object-top"
+    />
+  ) : (
     <div className="relative w-full h-[400px]">
       <Image
         src={imageSrc}
