@@ -38,10 +38,7 @@ export default function TeamsInVRA({
 
         <div className="flex flex-col gap-3 md:gap-16">
           {teams.map((team, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center"
-            >
+            <div key={index} className="flex justify-between items-center">
               <span className="text-foreground/70 dark:text-white/70 text-base md:text-4xl font-light md:pl-20">
                 {team.name}
               </span>
@@ -55,14 +52,16 @@ export default function TeamsInVRA({
         </div>
       </div>
 
-      <div className="flex flex-col justify-between gap-6 md:gap-8">
-        <div className="flex items-center justify-center w-full h-full max-h-70">
-          <div className="text-6xl md:text-8xl lg:text-9xl font-light text-foreground dark:text-white">
+      <div className="flex flex-col md:justify-between gap-4 md:gap-8 h-full">
+        {/* Total teams count */}
+        <div className="flex items-center justify-center md:justify-center md:items-center lg:justify-center flex-none md:flex-1">
+          <div className="text-5xl md:text-8xl lg:text-9xl font-light text-foreground dark:text-white">
             {totalCount}
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-4 md:gap-16">
+        {/* Tags and description */}
+        <div className="flex flex-col gap-3 md:gap-6">
           <div className="flex flex-wrap gap-2 md:gap-3">
             {tags.map((tag, index) => (
               <span
@@ -82,4 +81,3 @@ export default function TeamsInVRA({
     </section>
   );
 }
-
