@@ -192,7 +192,6 @@ export default function DonationForm() {
               </div>
             </button>
           </div>
-        </div>
 
         {/* Submit Button */}
         <div className="w-full max-w-[400px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[1200px] flex flex-col items-center gap-4">

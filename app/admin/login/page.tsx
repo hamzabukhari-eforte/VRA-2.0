@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function AdminLoginPage() {
+function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
@@ -97,5 +97,25 @@ export default function AdminLoginPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function AdminLoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-zinc-100 flex items-center justify-center px-4">
+          <div className="w-full max-w-sm rounded-xl border border-zinc-200 bg-white p-6 shadow-sm text-base animate-pulse">
+            <div className="h-8 bg-zinc-200 rounded w-32 mb-4" />
+            <div className="h-4 bg-zinc-100 rounded w-full mb-6" />
+            <div className="h-10 bg-zinc-100 rounded w-full mb-4" />
+            <div className="h-10 bg-zinc-100 rounded w-full mb-4" />
+            <div className="h-10 bg-zinc-200 rounded w-full" />
+          </div>
+        </div>
+      }
+    >
+      <AdminLoginForm />
+    </Suspense>
   );
 }

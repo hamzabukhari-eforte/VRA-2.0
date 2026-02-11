@@ -236,7 +236,9 @@ export default function AdminHomepagePage() {
           items={gallery}
           uploadingKey={uploading}
           onUploadSlot={uploadGalleryToSlot}
-          onDeleteSlot={(id) => setConfirmDelete({ type: "gallery", id })}
+          onDeleteSlot={async (id) => {
+            setConfirmDelete({ type: "gallery", id });
+          }}
         />
       )}
 
