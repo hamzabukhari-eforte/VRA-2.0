@@ -137,11 +137,14 @@ export default function StandingsTable({
   const [seasons, setSeasons] = useState<SeasonResponse[]>([]);
   const [grades, setGrades] = useState<GradeResponse[]>([]);
   const [ladderStandings, setLadderStandings] = useState<TeamStanding[]>([]);
+  const [isLoadingSeasons, setIsLoadingSeasons] = useState<boolean>(false);
+  const [isLoadingGrades, setIsLoadingGrades] = useState<boolean>(false);
   const [isLoadingLadder, setIsLoadingLadder] = useState<boolean>(false);
 
   // Fetch seasons from /api/seasons on mount
   useEffect(() => {
     const fetchSeasons = async () => {
+      setIsLoadingSeasons(true);
       try {
         const res = await fetch("/api/seasons");
         if (!res.ok) {
@@ -152,6 +155,8 @@ export default function StandingsTable({
         setSeasons(data);
       } catch (error) {
         console.error("Failed to fetch seasons", error);
+      } finally {
+        setIsLoadingSeasons(false);
       }
     };
 
@@ -164,6 +169,11 @@ export default function StandingsTable({
       return [...years].sort();
     }
 
+    // While seasons are being fetched, avoid falling back to static standings-based years.
+    if (isLoadingSeasons) {
+      return [];
+    }
+
     if (seasons.length > 0) {
       const fromSeasons = Array.from(
         new Set(seasons.map((s) => s.season_text.trim())),
@@ -174,14 +184,12 @@ export default function StandingsTable({
 
     const fromStandings = Array.from(
       new Set(
-        standings
-          .map((s) => s.year)
-          .filter((y): y is string => Boolean(y)),
+        standings.map((s) => s.year).filter((y): y is string => Boolean(y)),
       ),
     );
 
     return fromStandings.sort((a, b) => Number(b) - Number(a));
-  }, [standings, years, seasons]);
+  }, [standings, years, seasons, isLoadingSeasons]);
 
   // Use the first (latest) year as the effective default if none is selected yet.
   const effectiveYear = selectedYear || yearOptions[0] || "";
@@ -199,6 +207,7 @@ export default function StandingsTable({
     if (!seasonForYear) return;
 
     const fetchGrades = async () => {
+      setIsLoadingGrades(true);
       try {
         const res = await fetch(
           `/api/grades?seasonId=${seasonForYear.season_id}`,
@@ -225,6 +234,8 @@ export default function StandingsTable({
         setSelectedClass(firstGradeName);
       } catch (error) {
         console.error("Failed to fetch grades", error);
+      } finally {
+        setIsLoadingGrades(false);
       }
     };
 
@@ -234,6 +245,11 @@ export default function StandingsTable({
   const classOptions = useMemo(() => {
     if (classes && classes.length > 0) {
       return [...classes].sort();
+    }
+
+    // While grades are being fetched, avoid falling back to static standings-based classes.
+    if (isLoadingGrades) {
+      return [];
     }
 
     if (grades.length > 0) {
@@ -260,14 +276,19 @@ export default function StandingsTable({
     );
 
     return fromStandings.sort();
-  }, [standings, classes, grades, allowedGradeIds]);
+  }, [standings, classes, grades, allowedGradeIds, isLoadingGrades]);
 
   // Use the first class option as the effective default if none is selected yet.
   const effectiveClass = selectedClass || classOptions[0] || "";
 
   // Fetch ladder whenever both effective year and class are selected
   useEffect(() => {
-    if (!effectiveYear || !effectiveClass || seasons.length === 0 || grades.length === 0) {
+    if (
+      !effectiveYear ||
+      !effectiveClass ||
+      seasons.length === 0 ||
+      grades.length === 0
+    ) {
       setIsLoadingLadder(false);
       setLadderStandings([]);
       return;
@@ -277,9 +298,7 @@ export default function StandingsTable({
       (s) => s.season_text.trim() === effectiveYear,
     );
 
-    const gradeForClass = grades.find(
-      (g) => g.grade_name === effectiveClass,
-    );
+    const gradeForClass = grades.find((g) => g.grade_name === effectiveClass);
 
     if (!seasonForYear || !gradeForClass) {
       setIsLoadingLadder(false);
@@ -389,12 +408,19 @@ export default function StandingsTable({
               className="bg-[#1f1f1f] dark:bg-[#1f1f1f] border border-white/10 rounded-md px-3 py-2 text-xs md:text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/60"
               value={effectiveYear}
               onChange={(e) => setSelectedYear(e.target.value)}
+              disabled={isLoadingSeasons && (!years || years.length === 0)}
             >
-              {yearOptions.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
+              {isLoadingSeasons && (!years || years.length === 0) ? (
+                <option value="">Loading years...</option>
+              ) : yearOptions.length > 0 ? (
+                yearOptions.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))
+              ) : (
+                <option value="">No years available</option>
+              )}
             </select>
           </div>
           <div className="flex flex-col gap-1">
@@ -405,12 +431,19 @@ export default function StandingsTable({
               className="bg-[#1f1f1f] dark:bg-[#1f1f1f] border border-white/10 rounded-md px-3 py-2 text-xs md:text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/60"
               value={effectiveClass}
               onChange={(e) => setSelectedClass(e.target.value)}
+              disabled={isLoadingGrades && (!classes || classes.length === 0)}
             >
-              {classOptions.map((cls) => (
-                <option key={cls} value={cls}>
-                  {cls}
-                </option>
-              ))}
+              {isLoadingGrades && (!classes || classes.length === 0) ? (
+                <option value="">Loading classes...</option>
+              ) : classOptions.length > 0 ? (
+                classOptions.map((cls) => (
+                  <option key={cls} value={cls}>
+                    {cls}
+                  </option>
+                ))
+              ) : (
+                <option value="">No classes available</option>
+              )}
             </select>
           </div>
         </div>
@@ -448,7 +481,7 @@ export default function StandingsTable({
                     NR
                   </th>
                   <th className="text-center py-3 px-2 md:px-4 text-foreground/50 dark:text-white/50 text-xs md:text-sm font-normal">
-                    Pts
+                    PTS
                   </th>
                   <th className="text-center py-3 px-2 md:px-4 text-foreground/50 dark:text-white/50 text-xs md:text-sm font-normal">
                     NRR
@@ -535,4 +568,3 @@ export default function StandingsTable({
     </section>
   );
 }
-

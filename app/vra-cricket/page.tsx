@@ -31,7 +31,7 @@ export default function VRACricketPage() {
           sectionTitle="Over Seas Cricket Talent"
           mainHeading=""
           buttons={["International", "Talent", "Excellence", "Opportunity"]}
-          description="VRA Cricket Club attracts top overseas cricket talent each season, providing a platform to compete, grow, and make a lasting impact. Our multicultural, high-performance environment combines quality facilities with strong support, enabling international players to showcase their skills while contributing to the club&apos;s continued success."
+          description="VRA Cricket Club attracts top overseas cricket talent each season, providing a platform to compete, grow, and make a lasting impact. Our multicultural, high-performance environment combines quality facilities with strong support, enabling international players to showcase their skills while contributing to the club's continued success."
           imageSrc="/assets/vra-cricket/overseas-talent.jpg"
           imageAlt="Over Seas Cricket Talent"
           sectionKey="overseas_cricket_talent"
@@ -80,7 +80,7 @@ export default function VRACricketPage() {
         <StandingsTable />
 
         {/* Top Batsmen and Bowlers Section */}
-        <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+        {/* <section className="w-full grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
           <TopPlayers
             title="Top Batsmen"
             players={[
@@ -97,7 +97,7 @@ export default function VRACricketPage() {
               { rank: 3, name: "K. Johnson", stat: "25 wickets" },
             ]}
           />
-        </section>
+        </section> */}
 
         {/* Join VRA Today Section */}
         <JoinVRAToday />
@@ -109,24 +109,65 @@ export default function VRACricketPage() {
           </h2>
           <FacilityImageCarousel
             images={[
-              { src: "/assets/facility/Ground 1.jpg", alt: "Ground 1", width: 1920, height: 1080 },
-              { src: "/assets/facility/Ground 1_1.jpg", alt: "Ground 2", width: 1920, height: 1080 },
-              { src: "/assets/facility/Ground 1_2.jpg", alt: "Ground 3", width: 1920, height: 1080 },
-              { src: "/assets/facility/Outdoor Nets.jpg", alt: "Outdoor Nets", width: 1920, height: 1080 },
-              { src: "/assets/facility/Indoor Nets.jpg", alt: "Indoor Nets", width: 1920, height: 1080 },
-              { src: "/assets/facility/Pavilion.jpg", alt: "Pavilion", width: 1920, height: 1080 },
-              { src: "/assets/facility/clinics.jpg", alt: "Sports Clinics", width: 1920, height: 1080 },
-              { src: "/assets/facility/sports-events.jpg", alt: "Sports Events", width: 1920, height: 1080 },
-              { src: "/assets/facility/cultural-events.jpg", alt: "Cultural Events", width: 1920, height: 1080 },
+              {
+                src: "/assets/facility/Ground 1.jpg",
+                alt: "Ground 1",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/Ground 1_1.jpg",
+                alt: "Ground 2",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/Ground 1_2.jpg",
+                alt: "Ground 3",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/Outdoor Nets.jpg",
+                alt: "Outdoor Nets",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/Indoor Nets.jpg",
+                alt: "Indoor Nets",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/Pavilion.jpg",
+                alt: "Pavilion",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/clinics.jpg",
+                alt: "Sports Clinics",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/sports-events.jpg",
+                alt: "Sports Events",
+                width: 1920,
+                height: 1080,
+              },
+              {
+                src: "/assets/facility/cultural-events.jpg",
+                alt: "Cultural Events",
+                width: 1920,
+                height: 1080,
+              },
             ]}
           />
         </section>
 
-
         <CollaborationSection />
-
-
-       
       </main>
     </div>
   );

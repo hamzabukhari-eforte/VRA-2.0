@@ -151,11 +151,14 @@ export default function FixturesCards({
   const [seasons, setSeasons] = useState<SeasonResponse[]>([]);
   const [grades, setGrades] = useState<GradeResponse[]>([]);
   const [matches, setMatches] = useState<MatchResponse[]>([]);
+  const [isLoadingSeasons, setIsLoadingSeasons] = useState<boolean>(false);
+  const [isLoadingGrades, setIsLoadingGrades] = useState<boolean>(false);
   const [isLoadingMatches, setIsLoadingMatches] = useState<boolean>(false);
 
   // Fetch seasons from /api/seasons on mount
   useEffect(() => {
     const fetchSeasons = async () => {
+      setIsLoadingSeasons(true);
       try {
         const res = await fetch("/api/seasons");
         if (!res.ok) {
@@ -166,6 +169,8 @@ export default function FixturesCards({
         setSeasons(data);
       } catch (error) {
         console.error("Failed to fetch seasons", error);
+      } finally {
+        setIsLoadingSeasons(false);
       }
     };
 
@@ -176,6 +181,11 @@ export default function FixturesCards({
   const yearOptions = useMemo(() => {
     if (years && years.length > 0) {
       return [...years].sort();
+    }
+
+    // While seasons are being fetched, avoid falling back to fixture-based years.
+    if (isLoadingSeasons) {
+      return [];
     }
 
     if (seasons.length > 0) {
@@ -193,7 +203,7 @@ export default function FixturesCards({
     );
 
     return fromFixtures.sort((a, b) => Number(b) - Number(a));
-  }, [fixtures, years, seasons]);
+  }, [fixtures, years, seasons, isLoadingSeasons]);
 
   // Use the first (latest) year as the effective default if none is selected yet.
   const effectiveYear = selectedYear || yearOptions[0] || "";
@@ -211,6 +221,7 @@ export default function FixturesCards({
     if (!seasonForYear) return;
 
     const fetchGrades = async () => {
+      setIsLoadingGrades(true);
       try {
         const res = await fetch(
           `/api/grades?seasonId=${seasonForYear.season_id}`,
@@ -237,6 +248,8 @@ export default function FixturesCards({
         setSelectedClass(firstGradeName);
       } catch (error) {
         console.error("Failed to fetch grades", error);
+      } finally {
+        setIsLoadingGrades(false);
       }
     };
 
@@ -246,6 +259,11 @@ export default function FixturesCards({
   const classOptions = useMemo(() => {
     if (classes && classes.length > 0) {
       return [...classes].sort();
+    }
+
+    // While grades are being fetched, avoid falling back to fixture-based classes.
+    if (isLoadingGrades) {
+      return [];
     }
 
     if (grades.length > 0) {
@@ -268,7 +286,7 @@ export default function FixturesCards({
     );
 
     return fromFixtures.sort();
-  }, [fixtures, classes, grades, allowedGradeIds]);
+  }, [fixtures, classes, grades, allowedGradeIds, isLoadingGrades]);
 
   // Use the first class option as the effective default if none is selected yet.
   const effectiveClass = selectedClass || classOptions[0] || "";
@@ -351,12 +369,19 @@ export default function FixturesCards({
               className="bg-[#1f1f1f] dark:bg-[#1f1f1f] border border-white/10 rounded-md px-3 py-2 text-xs md:text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/60"
               value={effectiveYear}
               onChange={(e) => setSelectedYear(e.target.value)}
+              disabled={isLoadingSeasons && (!years || years.length === 0)}
             >
-              {yearOptions.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
+              {isLoadingSeasons && (!years || years.length === 0) ? (
+                <option value="">Loading years...</option>
+              ) : yearOptions.length > 0 ? (
+                yearOptions.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))
+              ) : (
+                <option value="">No years available</option>
+              )}
             </select>
           </div>
           <div className="flex flex-col gap-1">
@@ -367,12 +392,19 @@ export default function FixturesCards({
               className="bg-[#1f1f1f] dark:bg-[#1f1f1f] border border-white/10 rounded-md px-3 py-2 text-xs md:text-sm text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-primary/60"
               value={effectiveClass}
               onChange={(e) => setSelectedClass(e.target.value)}
+              disabled={isLoadingGrades && (!classes || classes.length === 0)}
             >
-              {classOptions.map((cls) => (
-                <option key={cls} value={cls}>
-                  {cls}
-                </option>
-              ))}
+              {isLoadingGrades && (!classes || classes.length === 0) ? (
+                <option value="">Loading classes...</option>
+              ) : classOptions.length > 0 ? (
+                classOptions.map((cls) => (
+                  <option key={cls} value={cls}>
+                    {cls}
+                  </option>
+                ))
+              ) : (
+                <option value="">No classes available</option>
+              )}
             </select>
           </div>
         </div>
