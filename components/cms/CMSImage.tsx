@@ -1,0 +1,85 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Image from "next/image";
+
+interface CMSImageProps {
+  sectionKey: string;
+  fallbackSrc: string;
+  alt: string;
+  fill?: boolean;
+  className?: string;
+  sizes?: string;
+}
+
+/**
+ * Renders image from CMS (presigned URL) when available, otherwise fallback.
+ * Used by ImageTextSection and other components that support admin-managed images.
+ */
+export default function CMSImage({
+  sectionKey,
+  fallbackSrc,
+  alt,
+  fill = true,
+  className = "rounded-lg object-cover object-top",
+  sizes,
+}: CMSImageProps) {
+  const [src, setSrc] = useState<string | null>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/cms/section/${encodeURIComponent(sectionKey)}`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (!cancelled && d?.imageUrl) setSrc(d.imageUrl);
+      })
+      .finally(() => {
+        if (!cancelled) setLoaded(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [sectionKey]);
+
+  const resolvedSrc = loaded && src ? src : fallbackSrc;
+  const isExternal = resolvedSrc.startsWith("http");
+
+  if (fill) {
+    return (
+      <div className="relative w-full h-[400px]">
+        {isExternal ? (
+          <img
+            src={resolvedSrc}
+            alt={alt}
+            className={className}
+            style={{ objectFit: "cover", objectPosition: "top", width: "100%", height: "100%" }}
+          />
+        ) : (
+          <Image
+            src={resolvedSrc}
+            alt={alt}
+            fill
+            className={className}
+            sizes={sizes ?? "50vw"}
+          />
+        )}
+      </div>
+    );
+  }
+
+  if (isExternal) {
+    return (
+      <img src={resolvedSrc} alt={alt} className={className} />
+    );
+  }
+  return (
+    <Image
+      src={resolvedSrc}
+      alt={alt}
+      width={800}
+      height={400}
+      className={className}
+    />
+  );
+}

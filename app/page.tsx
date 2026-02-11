@@ -4,7 +4,7 @@ import Image from "next/image";
 import Container from "@/components/Container";
 import { ChevronDown } from "lucide-react";
 import TestimonialSection from "@/components/shared/TestimonialSection";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const vraTeams = [
   {
@@ -93,11 +93,64 @@ const vraTeams = [
   },
 ] as const;
 
+const DEFAULT_GALLERY_IMAGES = [
+  "/assets/home/home-collage/1.jpg",
+  "/assets/home/home-collage/2.jpg",
+  "/assets/home/home-collage/3.jpg",
+  "/assets/home/home-collage/4.jpg",
+  "/assets/home/home-collage/5.jpg",
+  "/assets/home/home-collage/6.jpg",
+] as const;
+
 export default function LandingPage() {
   const [selectedTeamId, setSelectedTeamId] = useState<(typeof vraTeams)[number]["id"]>(
     vraTeams[0].id
   );
   const selectedTeam = vraTeams.find((team) => team.id === selectedTeamId) ?? vraTeams[0];
+  const [galleryImages, setGalleryImages] =
+    useState<string[]>(() => [...DEFAULT_GALLERY_IMAGES]);
+  const [crowdBanner, setCrowdBanner] = useState<{
+    imageUrl: string | null;
+    text: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    fetch("/api/homepage/gallery")
+      .then((r) => r.json())
+      .then((data) => {
+        const images: unknown = data?.images;
+        if (!Array.isArray(images)) return;
+        setGalleryImages(
+          DEFAULT_GALLERY_IMAGES.map((fallback, index) => {
+            const url = images[index];
+            return typeof url === "string" && url ? url : fallback;
+          }),
+        );
+      })
+      .catch(() => {
+        // silently keep defaults
+      });
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/admin/homepage/crowd")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data) return;
+        const imageUrl =
+          typeof data.imageUrl === "string" && data.imageUrl
+            ? data.imageUrl
+            : "/assets/home/home-img.jpg";
+        const text =
+          typeof data.description === "string" && data.description.trim()
+            ? data.description.trim()
+            : "Join us for an exciting summer of international cricket in 2026.";
+        setCrowdBanner({ imageUrl, text });
+      })
+      .catch(() => {
+        // keep defaults via null; JSX will fall back
+      });
+  }, []);
 
   return (
     <>
@@ -176,18 +229,20 @@ export default function LandingPage() {
             <div className="flex flex-col gap-4">
               <div className="w-full md:w-[400px] h-[338px] relative rounded-lg overflow-hidden">
                 <Image
-                  src="/assets/home/home-collage/1.jpg"
+                  src={galleryImages[0]}
                   alt=""
                   fill
+                  unoptimized
                   className="rounded-lg object-cover"
                 />
               </div>
 
               <div className="w-full md:w-[400px] h-[462px] relative rounded-lg overflow-hidden">
                 <Image
-                  src="/assets/home/home-collage/2.jpg"
+                  src={galleryImages[1]}
                   alt=""
                   fill
+                  unoptimized
                   className="rounded-lg object-cover"
                 />
               </div>
@@ -196,18 +251,20 @@ export default function LandingPage() {
             <div className="flex flex-col gap-4">
               <div className="w-full md:w-[400px] h-[528px] relative rounded-lg overflow-hidden">
                 <Image
-                  src="/assets/home/home-collage/3.jpg"
+                  src={galleryImages[2]}
                   alt=""
                   fill
+                  unoptimized
                   className="rounded-lg object-cover"
                 />
               </div>
 
               <div className="w-full md:w-[400px] h-[272px] relative rounded-lg overflow-hidden">
                 <Image
-                  src="/assets/home/home-collage/4.jpg"
+                  src={galleryImages[3]}
                   alt=""
                   fill
+                  unoptimized
                   className="rounded-lg object-cover"
                 />
               </div>
@@ -216,18 +273,20 @@ export default function LandingPage() {
             <div className="flex flex-col gap-4">
               <div className="w-full md:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
                 <Image
-                  src="/assets/home/home-collage/5.jpg"
+                  src={galleryImages[4]}
                   alt=""
                   fill
+                  unoptimized
                   className="rounded-lg object-cover"
                 />
               </div>
 
               <div className="w-full md:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
                 <Image
-                  src="/assets/home/home-collage/6.jpg"
+                  src={galleryImages[5]}
                   alt=""
                   fill
+                  unoptimized
                   className="rounded-lg object-cover"
                 />
               </div>
@@ -235,26 +294,24 @@ export default function LandingPage() {
           </section>
         </Container>
 
-        {/* Crowd Image Section */}
+        {/* Homepage banner (formerly crowd section) */}
         <Container className="px-4">
           <section className="flex flex-col items-center gap-20">
-            <div className="w-full md:w-[1280px] h-[650px] relative rounded-lg overflow-hidden">
-
-            <Image
-              src="/assets/home/home-img.jpg"
-              alt="Crowd"
-              width={1280}
-              height={483}
-              className="rounded-lg object-cover"
+            <div className="w-full md:w-screen h-[650px] relative rounded-lg overflow-hidden">
+              <Image
+                src={crowdBanner?.imageUrl ?? "/assets/home/home-img.jpg"}
+                alt="Homepage banner"
+                width={1280}
+                height={483}
+                className="rounded-lg object-cover"
+                unoptimized
               />
-
-              </div>
+            </div>
             <div className="w-full max-w-2xl flex flex-col items-center gap-9">
               <div className="text-center text-[#767676] text-lg sm:text-2xl md:text-3xl font-normal">
-              Join us for an exciting summer of international cricket in 2026. 
+                {crowdBanner?.text ??
+                  "Join us for an exciting summer of international cricket in 2026."}
               </div>
-
-            
             </div>
           </section>
         </Container>

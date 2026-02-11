@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 interface BoardMember {
   imageSrc: string;
@@ -6,8 +9,7 @@ interface BoardMember {
   height?: string;
 }
 
-const boardMembers: BoardMember[] = [
-
+const DEFAULT_BOARD_MEMBERS: BoardMember[] = [
   {
     imageSrc: "/assets/350-1420.webp",
     alt: "Board member",
@@ -37,6 +39,28 @@ const boardMembers: BoardMember[] = [
 ];
 
 export default function OurBoard() {
+  const [members, setMembers] = useState<BoardMember[]>(DEFAULT_BOARD_MEMBERS);
+
+  useEffect(() => {
+    fetch("/api/about/board")
+      .then((r) => r.json())
+      .then((data) => {
+        const images: unknown = data?.images;
+        if (!Array.isArray(images)) return;
+        setMembers(
+          DEFAULT_BOARD_MEMBERS.map((member, index) => {
+            const url = images[index];
+            return typeof url === "string" && url
+              ? { ...member, imageSrc: url }
+              : member;
+          }),
+        );
+      })
+      .catch(() => {
+        // keep defaults on error
+      });
+  }, []);
+
   return (
     <section className="w-full flex flex-col items-center gap-12">
       <h2 className="text-foreground dark:text-white text-[32px] font-medium">
@@ -44,7 +68,7 @@ export default function OurBoard() {
       </h2>
 
       <div className="columns-1 sm:columns-2 md:columns-3 gap-2 md:gap-2 w-full max-w-[900px]">
-        {boardMembers.map((member, index) => (
+        {members.map((member, index) => (
           <div key={index} className="p-2 break-inside-avoid mb-2">
             <div
               className={`relative w-full ${member.height || "h-[280px]"}`}
@@ -53,6 +77,7 @@ export default function OurBoard() {
                 src={member.imageSrc}
                 alt={member.alt}
                 fill
+                unoptimized
                 className="rounded-lg object-cover"
               />
             </div>

@@ -5,9 +5,7 @@ import ErrorBoundary from "@/components/ErrorBoundary";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import WhatsAppFloatingButton from "@/components/WhatsAppFloatingButton";
+import AppShell from "@/components/AppShell";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -56,12 +54,7 @@ export default function RootLayout({
           <ThemeProvider switchable={true}>
             <TooltipProvider>
               <Toaster />
-              <div className="bg-background text-foreground">
-                <Header />
-                {children}
-                <Footer />
-                <WhatsAppFloatingButton />
-              </div>
+              <AppShell>{children}</AppShell>
             </TooltipProvider>
           </ThemeProvider>
         </ErrorBoundary>
