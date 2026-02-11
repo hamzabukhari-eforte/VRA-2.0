@@ -14,7 +14,7 @@ export default function Header() {
           <MenuButton />
 
           {/* Navigation Links */}
-          <nav className="hidden md:flex items-center gap-4 lg:gap-6 p-2">
+          <nav className="hidden xl:flex items-center gap-4 lg:gap-6 p-2">
             <Link
               href="/membership"
               className="text-white text-sm md:text-base lg:text-xl font-normal"
@@ -46,7 +46,7 @@ export default function Header() {
         </div>
 
         {/* Center - Logo */}
-        <div className="hidden sm:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+        <div className="hidden xl:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
           <Image
             src="/assets/542-28725.svg"
             alt="VRA"

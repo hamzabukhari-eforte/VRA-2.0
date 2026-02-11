@@ -219,7 +219,7 @@ export default function LandingPage() {
       <main className="flex flex-col items-center gap-20 py-20">
         {/* Photo Gallery Grid */}
         <Container className="px-4">
-          <section className="relative w-full flex flex-col md:flex-row justify-between gap-4">
+          <section className="relative w-full flex flex-col lg:flex-row justify-between gap-4">
             {/* Top Fade */}
             <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent pointer-events-none z-1" />
 
@@ -227,7 +227,7 @@ export default function LandingPage() {
             <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none z-1" />
 
             <div className="flex flex-col gap-4">
-              <div className="w-full md:w-[400px] h-[338px] relative rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[320px] xl:w-[400px] h-[338px] relative rounded-lg overflow-hidden">
                 <Image
                   src={galleryImages[0]}
                   alt=""
@@ -237,7 +237,7 @@ export default function LandingPage() {
                 />
               </div>
 
-              <div className="w-full md:w-[400px] h-[462px] relative rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[320px] xl:w-[400px] h-[462px] relative rounded-lg overflow-hidden">
                 <Image
                   src={galleryImages[1]}
                   alt=""
@@ -249,7 +249,7 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="w-full md:w-[400px] h-[528px] relative rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[320px] xl:w-[400px] h-[528px] relative rounded-lg overflow-hidden">
                 <Image
                   src={galleryImages[2]}
                   alt=""
@@ -259,7 +259,7 @@ export default function LandingPage() {
                 />
               </div>
 
-              <div className="w-full md:w-[400px] h-[272px] relative rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[320px] xl:w-[400px] h-[272px] relative rounded-lg overflow-hidden">
                 <Image
                   src={galleryImages[3]}
                   alt=""
@@ -271,7 +271,7 @@ export default function LandingPage() {
             </div>
 
             <div className="flex flex-col gap-4">
-              <div className="w-full md:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[320px] xl:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
                 <Image
                   src={galleryImages[4]}
                   alt=""
@@ -281,7 +281,7 @@ export default function LandingPage() {
                 />
               </div>
 
-              <div className="w-full md:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
+              <div className="w-full lg:w-[320px] xl:w-[400px] h-[400px] relative rounded-lg overflow-hidden">
                 <Image
                   src={galleryImages[5]}
                   alt=""
@@ -297,13 +297,13 @@ export default function LandingPage() {
         {/* Homepage banner (formerly crowd section) */}
         <Container className="px-4">
           <section className="flex flex-col items-center gap-20">
-            <div className="w-full md:w-screen h-[650px] relative rounded-lg overflow-hidden">
+            <div className="w-full xl:w-[1280px] h-[650px] relative rounded-lg overflow-hidden">
               <Image
                 src={crowdBanner?.imageUrl ?? "/assets/home/home-img.jpg"}
                 alt="Homepage banner"
-                width={1280}
-                height={483}
-                className="rounded-lg object-cover"
+                width={100}
+                height={100}
+                className="w-full xl:w-[1280px] h-full xl:h-[650px] rounded-lg object-cover"
                 unoptimized
               />
             </div>
@@ -325,7 +325,7 @@ export default function LandingPage() {
               </h2>
             </div>
 
-            <div className="w-full flex flex-col md:flex-row justify-between items-stretch gap-6">
+            <div className="w-full flex flex-col lg:flex-row justify-between items-stretch gap-6">
               {/* International Games Card */}
               <div className="relative w-full md:w-auto max-w-[398px] mx-auto">
                 <Image
@@ -456,7 +456,7 @@ export default function LandingPage() {
         <Container className="px-4">
           <section className="py-10 bg-background rounded-lg flex flex-col gap-2.5">
             <div>
-              <div className="w-full h-[62px] flex items-center justify-between mb-[41px]">
+              <div className="w-full h-[62px] flex items-center justify-between flex-wrap gap-2 mb-[41px]">
                 <h2 className="text-foreground text-3xl sm:text-4xl md:text-[51px] font-normal">
                   {selectedTeam.heading}
                 </h2>
