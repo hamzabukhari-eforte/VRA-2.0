@@ -30,9 +30,24 @@ export default function CMSImage({
   useEffect(() => {
     let cancelled = false;
     fetch(`/api/cms/section/${encodeURIComponent(sectionKey)}`)
-      .then((r) => r.json())
+      .then(async (r) => {
+        // Safely handle non-OK or non-JSON/empty responses
+        if (!r.ok) return null;
+        const text = await r.text();
+        if (!text) return null;
+        try {
+          return JSON.parse(text);
+        } catch {
+          return null;
+        }
+      })
       .then((d) => {
-        if (!cancelled && d?.imageUrl) setSrc(d.imageUrl);
+        if (!cancelled && d && typeof d === "object" && "imageUrl" in d && d.imageUrl) {
+          setSrc((d as { imageUrl: string }).imageUrl);
+        }
+      })
+      .catch(() => {
+        // Ignore fetch/parse errors and fall back to default image
       })
       .finally(() => {
         if (!cancelled) setLoaded(true);
