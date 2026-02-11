@@ -1,5 +1,5 @@
-import chromium from "@sparticuz/chromium";
 import puppeteer, { Browser, Page } from "puppeteer-core";
+import chromium from "@sparticuz/chromium";
 
 // Shared utilities for API routes with retry logic and caching
 
@@ -17,7 +17,7 @@ const RETRY_CONFIG = {
 // Exponential backoff retry function
 export async function fetchWithRetry(
   url: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<Response> {
   let lastError: Error;
 
@@ -59,7 +59,7 @@ export async function fetchWithRetry(
     // Calculate delay with exponential backoff
     const delay = Math.min(
       RETRY_CONFIG.baseDelay * Math.pow(2, attempt),
-      RETRY_CONFIG.maxDelay
+      RETRY_CONFIG.maxDelay,
     );
 
     console.log(`Attempt ${attempt + 1} failed, retrying in ${delay}ms...`);
@@ -131,11 +131,10 @@ export class ApiHeaderFetcher {
 
   private async initializeBrowser(): Promise<void> {
     if (!this.browser) {
-      const isProd =
-        process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+      const isVercel = !!process.env.VERCEL || !!process.env.AWS_LAMBDA_FUNCTION_NAME;
 
       this.browser = await puppeteer.launch({
-        args: isProd
+        args: isVercel
           ? chromium.args
           : [
               "--no-sandbox",
@@ -143,11 +142,16 @@ export class ApiHeaderFetcher {
               "--disable-dev-shm-usage",
               "--disable-gpu",
             ],
-        // In production on Vercel, use the serverless Chromium binary.
-        // In local dev, rely on an installed Chrome via the "chrome" channel.
-        executablePath: isProd ? await chromium.executablePath() : undefined,
-        channel: isProd ? undefined : "chrome",
-        headless: isProd ? chromium.headless : true,
+        defaultViewport: { width: 1920, height: 1080 },
+        executablePath: isVercel
+          ? await chromium.executablePath()
+          : // For local development, try to find a local Chrome/Chromium
+            process.platform === "win32"
+            ? "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+            : process.platform === "darwin"
+              ? "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+              : "/usr/bin/google-chrome",
+        headless: true,
       });
       this.page = await this.browser.newPage();
       await this.page.setRequestInterception(true);

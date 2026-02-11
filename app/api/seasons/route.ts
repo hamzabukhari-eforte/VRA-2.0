@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { ApiHeaderFetcher, getFromCache, setCache } from "@/lib/api-utils";
 
+export const maxDuration = 30; // Allow up to 30s for Puppeteer cold starts
+
 export async function GET() {
   const cacheKey = "seasons";
 
