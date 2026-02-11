@@ -4,7 +4,6 @@ const cards = [
   { href: "/admin/sections", title: "Section images", description: "Shared ImageTextSection images (Overseas Talent, Sports Clinics, Culture, Mission, Vision, Volunteer, Grounds)" },
   { href: "/admin/homepage", title: "Homepage", description: "Photo gallery, Crowd section, VRA Teams, Our Sponsors" },
   { href: "/admin/about", title: "About", description: "Vision, Mission, Volunteer images; Our Board members" },
-  { href: "/admin/facility", title: "Facility", description: "Ground images and facility sections" },
   { href: "/admin/vra-cricket", title: "VRA Cricket", description: "Team counts, section images, Facility carousel" },
   { href: "/admin/submissions", title: "Submissions", description: "Contact, Membership, Termination, Donation, Net booking" },
 ];
