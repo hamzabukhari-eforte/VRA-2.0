@@ -8,8 +8,10 @@ export default function AdminDashboardLayout({
   return (
     <div className="min-h-screen bg-zinc-100 text-base">
       <AdminSidebar />
-      <main className="pl-56">
-        <div className="px-6 py-8">{children}</div>
+      <main className="pl-60">
+        <div className="px-8 py-8">
+          <div className="max-w-6xl mx-auto space-y-8">{children}</div>
+        </div>
       </main>
     </div>
   );

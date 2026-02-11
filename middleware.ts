@@ -42,16 +42,22 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Require auth for all other /admin routes: redirect to login if no valid session
   const email = process.env.ADMIN_EMAIL?.trim();
   const password = process.env.ADMIN_PASSWORD;
-  if (!email || !password) {
-    return NextResponse.next();
-  }
+  const hasAuthConfigured = Boolean(email && password);
 
-  const cookieValue = request.cookies.get(COOKIE_NAME)?.value;
-  const expectedToken = await hmacSha256Hex(SALT, `${email}:${password}`);
+  if (hasAuthConfigured) {
+    const cookieValue = request.cookies.get(COOKIE_NAME)?.value;
+    const expectedToken = await hmacSha256Hex(SALT, `${email}:${password}`);
 
-  if (!cookieValue || !timingSafeEqual(cookieValue, expectedToken)) {
+    if (!cookieValue || !timingSafeEqual(cookieValue, expectedToken)) {
+      const loginUrl = new URL("/admin/login", request.url);
+      loginUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(loginUrl);
+    }
+  } else {
+    // Auth not configured: still send to login page (it will show "not configured")
     const loginUrl = new URL("/admin/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);

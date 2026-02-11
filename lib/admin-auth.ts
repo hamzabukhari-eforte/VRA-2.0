@@ -5,7 +5,7 @@ const COOKIE_NAME = "admin_session";
 const SALT = "vra-admin-secret";
 
 function getExpectedToken(): string | null {
-  const email = process.env.ADMIN_EMAIL;
+  const email = process.env.ADMIN_EMAIL?.trim();
   const password = process.env.ADMIN_PASSWORD;
   if (!email || !password) return null;
   return createHmac("sha256", SALT).update(`${email}:${password}`).digest("hex");

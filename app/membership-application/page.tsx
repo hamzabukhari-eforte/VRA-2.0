@@ -2,6 +2,7 @@
 
 import { ChangeEvent, FormEvent, useState } from "react";
 import Image from "next/image";
+import { toast } from "sonner";
 
 type MembershipType = "senior" | "junior" | "nonPlaying" | "";
 
@@ -133,6 +134,7 @@ export default function MembershipApplicationPage() {
   const [form, setForm] = useState<MembershipForm>(initialForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const progressPercentage = Math.round((currentStep / totalSteps) * 100);
 
@@ -324,12 +326,36 @@ export default function MembershipApplicationPage() {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!validateStep(5)) return;
-    setSubmitted(true);
-    // Here we would send `form` to the backend API when available.
-    console.log("Membership application submitted:", form);
+    if (submitting) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/submissions/membership", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        const message =
+          (data && (data.error || data.message)) ||
+          "Failed to submit membership application.";
+        throw new Error(message);
+      }
+      setSubmitted(true);
+      toast.success("Membership application submitted. We will contact you shortly.");
+    } catch (err: unknown) {
+      console.error(err);
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Failed to submit membership application. Please try again.";
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const steps = [
@@ -1126,10 +1152,10 @@ export default function MembershipApplicationPage() {
             {currentStep === 5 && (
               <button
                 type="submit"
-                disabled={!isStepComplete(5)}
+                disabled={!isStepComplete(5) || submitting}
                 className="inline-flex items-center rounded-full bg-linear-to-b from-[#155dfc] to-[#0c3796] px-6 py-2.5 text-sm font-medium text-white shadow-sm hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-50"
               >
-                Submit application
+                {submitting ? "Submitting…" : "Submit application"}
               </button>
             )}
           </div>

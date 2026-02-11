@@ -2,6 +2,7 @@
 
 import { useState, ChangeEvent, FormEvent } from "react";
 import { Calendar } from "lucide-react";
+import { toast } from "sonner";
 
 interface NetBookingFormProps {
   totalLanes?: number;
@@ -56,6 +57,7 @@ export default function NetBookingForm(_props: NetBookingFormProps) {
   const [form, setForm] = useState<FormData>(initialState);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [submitting, setSubmitting] = useState(false);
 
   // Calculate min and max dates (2 days from now to 30 days from now)
   const getMinDate = () => {
@@ -135,36 +137,36 @@ export default function NetBookingForm(_props: NetBookingFormProps) {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (validateForm()) {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || ""}/users/indoorNet`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token ? `Bearer ${token}` : "",
-            },
-            body: JSON.stringify({
-              ...form,
-              preferredDays: form.preferredDays,
-            }),
-          }
-        );
-        if (!res.ok) {
-          const data = await res.json();
-          throw new Error(data.message || "Failed to create booking");
-        }
-        setForm(initialState);
-        setSelectedDates([]);
-        // Show success message or redirect
-        alert("Booking submitted successfully!");
-      } catch (err) {
-        console.error(err);
-        // Show error message
-        alert("Failed to submit booking. Please try again.");
+    if (!validateForm()) return;
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/submissions/net-booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          preferredDays: form.preferredDays,
+        }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        const message =
+          (data && (data.error || data.message)) ||
+          "Failed to submit booking. Please try again.";
+        throw new Error(message);
       }
+      setForm(initialState);
+      setSelectedDates([]);
+      toast.success("Indoor net booking submitted. We will contact you shortly.");
+    } catch (err: unknown) {
+      console.error(err);
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Failed to submit booking. Please try again.";
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -232,7 +234,7 @@ export default function NetBookingForm(_props: NetBookingFormProps) {
             min={getMinDate()}
             max={getMaxDate()}
             onChange={(e) => handleDateChange(e.target.value)}
-            className="w-full bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-3 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center cursor-pointer text-base"
+                className="w-full bg-[#F6F6F6] dark:bg-[#232323] border-b border-[#4A90E2] px-2 py-3 text-foreground dark:text-white placeholder:text-foreground/70 dark:placeholder:text-white/70 focus:outline-none focus:border-[#6BA3E8] transition-colors rounded-t text-center cursor-pointer text-base"
             style={{
               fontSize: '16px',
               paddingRight: '40px',

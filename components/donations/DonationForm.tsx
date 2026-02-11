@@ -1,10 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Check } from "lucide-react";
+import { toast } from "sonner";
 
 export default function DonationForm() {
   const [isAnonymous, setIsAnonymous] = useState(true);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const payload = Object.fromEntries(formData.entries());
+    try {
+      const res = await fetch("/api/submissions/donation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload, isAnonymous }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        const message =
+          (data && (data.error || data.message)) ||
+          "Failed to submit donation details.";
+        throw new Error(message);
+      }
+      e.currentTarget.reset();
+      toast.success("Thank you for your interest in supporting VRA.");
+    } catch (err: unknown) {
+      console.error(err);
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Failed to submit donation details. Please try again.";
+      toast.error(message);
+    }
+  };
 
   return (
     <section className="w-full px-4 md:px-6 lg:px-10 flex flex-col items-center gap-8 md:gap-12 lg:gap-16 xl:gap-20">
@@ -14,11 +44,15 @@ export default function DonationForm() {
         </h2>
 
         {/* Form */}
-        <div className="w-full flex flex-col items-center gap-4 md:max-w-[400px]">
+        <form
+          className="w-full flex flex-col items-center gap-4 md:max-w-[400px]"
+          onSubmit={handleSubmit}
+        >
           {/* First Name and Last Name */}
           <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
               <input
+                name="firstName"
                 type="text"
                 placeholder="First Name"
                 className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -26,6 +60,7 @@ export default function DonationForm() {
             </div>
             <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
               <input
+                name="lastName"
                 type="text"
                 placeholder="Last Name"
                 className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -37,6 +72,7 @@ export default function DonationForm() {
           <div className="w-full flex flex-col md:flex-row gap-4">
             <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
               <input
+                name="dob"
                 type="text"
                 placeholder="Date of Birth"
                 className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -44,6 +80,7 @@ export default function DonationForm() {
             </div>
             <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
               <input
+                name="nationality"
                 type="text"
                 placeholder="Nationality"
                 className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -54,6 +91,7 @@ export default function DonationForm() {
           {/* Gender */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="gender"
               type="text"
               placeholder="Gender"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -63,6 +101,7 @@ export default function DonationForm() {
           {/* E-mail */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="email"
               type="email"
               placeholder="E-mail"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -72,6 +111,7 @@ export default function DonationForm() {
           {/* Phone Number */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="phone"
               type="tel"
               placeholder="Phone Number"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -81,6 +121,7 @@ export default function DonationForm() {
           {/* Address */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="address"
               type="text"
               placeholder="Address"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -90,6 +131,7 @@ export default function DonationForm() {
           {/* How did you hear about us? */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="heardFrom"
               type="text"
               placeholder="How did you hear about us?"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -99,6 +141,7 @@ export default function DonationForm() {
           {/* Company/Collage name */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="company"
               type="text"
               placeholder="Company/Collage name"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -108,6 +151,7 @@ export default function DonationForm() {
           {/* Employment Type */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="employmentType"
               type="text"
               placeholder="Employment Type"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -117,6 +161,7 @@ export default function DonationForm() {
           {/* Designation and role */}
           <div className="w-full h-10 bg-[#F6F6F6] dark:bg-[#222222] rounded-lg border-b-2 border-[#233F84] flex items-center justify-center">
             <input
+              name="designation"
               type="text"
               placeholder="Designation and role"
               className="w-full bg-transparent text-center text-foreground dark:text-white text-base font-normal outline-none placeholder:text-foreground/70 dark:placeholder:text-white"
@@ -151,12 +196,16 @@ export default function DonationForm() {
 
         {/* Submit Button */}
         <div className="w-full max-w-[400px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[1200px] flex flex-col items-center gap-4">
-          <button className="w-full md:w-auto h-12 md:h-[52px] px-6 bg-linear-to-b from-[#141414] to-black dark:from-[#141414] dark:to-black rounded-[40px] border border-white/10 flex items-center justify-center gap-4">
+          <button
+            type="submit"
+            className="w-full md:w-auto h-12 md:h-[52px] px-6 bg-linear-to-b from-[#141414] to-black dark:from-[#141414] dark:to-black rounded-[40px] border border-white/10 flex items-center justify-center gap-4"
+          >
             <span className="text-white text-base md:text-lg lg:text-xl font-bold font-['Roboto']">
               Submit your Interest
             </span>
           </button>
         </div>
+      </form>
       </div>
     </section>
   );

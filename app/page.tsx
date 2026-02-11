@@ -297,7 +297,7 @@ export default function LandingPage() {
         {/* Homepage banner (formerly crowd section) */}
         <Container className="px-4">
           <section className="flex flex-col items-center gap-20">
-            <div className="w-full md:w-[1280px] h-[650px] relative rounded-lg overflow-hidden">
+            <div className="w-full md:w-screen h-[650px] relative rounded-lg overflow-hidden">
               <Image
                 src={crowdBanner?.imageUrl ?? "/assets/home/home-img.jpg"}
                 alt="Homepage banner"
