@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiHeaderFetcher, getFromCache, setCache } from "@/lib/api-utils";
 
+// Allow enough time for Puppeteer-based header fetching in production
+export const maxDuration = 60;
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const gradeid = searchParams.get("gradeid");

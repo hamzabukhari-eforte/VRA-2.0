@@ -1,4 +1,5 @@
-import puppeteer, { Browser, Page } from "puppeteer";
+import chromium from "@sparticuz/chromium";
+import puppeteer, { Browser, Page } from "puppeteer-core";
 
 // Shared utilities for API routes with retry logic and caching
 
@@ -130,14 +131,23 @@ export class ApiHeaderFetcher {
 
   private async initializeBrowser(): Promise<void> {
     if (!this.browser) {
+      const isProd =
+        process.env.VERCEL === "1" || process.env.NODE_ENV === "production";
+
       this.browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          "--no-sandbox",
-          "--disable-setuid-sandbox",
-          "--disable-dev-shm-usage",
-          "--disable-gpu",
-        ],
+        args: isProd
+          ? chromium.args
+          : [
+              "--no-sandbox",
+              "--disable-setuid-sandbox",
+              "--disable-dev-shm-usage",
+              "--disable-gpu",
+            ],
+        // In production on Vercel, use the serverless Chromium binary.
+        // In local dev, rely on an installed Chrome via the "chrome" channel.
+        executablePath: isProd ? await chromium.executablePath() : undefined,
+        channel: isProd ? undefined : "chrome",
+        headless: isProd ? chromium.headless : true,
       });
       this.page = await this.browser.newPage();
       await this.page.setRequestInterception(true);
