@@ -8,7 +8,6 @@ const nav = [
   { href: "/admin/sections", label: "Section images" },
   { href: "/admin/homepage", label: "Homepage" },
   { href: "/admin/about", label: "About" },
-  { href: "/admin/facility", label: "Facility" },
   { href: "/admin/vra-cricket", label: "VRA Cricket" },
   { href: "/admin/submissions", label: "Submissions" },
 ];

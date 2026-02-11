@@ -7,7 +7,6 @@ import {
   Image,
   Home,
   Users,
-  Building2,
   Trophy,
   FileText,
   ExternalLink,
@@ -19,7 +18,6 @@ const nav = [
   { href: "/admin/sections", label: "Section images", icon: Image },
   { href: "/admin/homepage", label: "Homepage", icon: Home },
   { href: "/admin/about", label: "About", icon: Users },
-  { href: "/admin/facility", label: "Facility", icon: Building2 },
   { href: "/admin/vra-cricket", label: "VRA Cricket", icon: Trophy },
   { href: "/admin/submissions", label: "Submissions", icon: FileText },
 ];
@@ -54,7 +52,7 @@ export default function AdminSidebar() {
           <p className="px-2 text-[11px] font-semibold uppercase tracking-[0.12em] text-zinc-500">
             Content
           </p>
-          {nav.slice(0, 6).map((item) => {
+          {nav.slice(0, 5).map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
             return (
@@ -82,7 +80,7 @@ export default function AdminSidebar() {
             Data
           </p>
           {nav
-            .slice(6)
+            .slice(5)
             .map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
