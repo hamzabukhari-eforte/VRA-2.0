@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ApiHeaderFetcher, getFromCache, setCache } from "@/lib/api-utils";
 
-// Allow enough time for Puppeteer-based header fetching in production
-export const maxDuration = 60;
+export const maxDuration = 30; // Allow up to 30s for Puppeteer cold starts
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);

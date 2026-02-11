@@ -10,8 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Required so Puppeteer + Chromium binaries are not bundled into the serverless function
-  serverExternalPackages: ["puppeteer-core", "@sparticuz/chromium"],
+  serverExternalPackages: ["@sparticuz/chromium"],
 };
 
 export default nextConfig;
