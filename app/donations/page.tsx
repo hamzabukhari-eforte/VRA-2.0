@@ -8,7 +8,7 @@ export default function DonationsPage() {
     <div className="min-h-screen dark:bg-[#202020] bg-background text-foreground dark:text-white overflow-x-hidden">
       {/* Hero Section */}
       <DonationHero
-        imageSrc="/assets/542-27974.webp"
+        imageSrc="/assets/donation/donation-banner.jpeg"
         imageAlt="Cricket player"
         heading="Donations"
         tagline='"Lets make cricket go Orange"'

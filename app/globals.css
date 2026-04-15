@@ -146,6 +146,14 @@
 }
 
 @layer components {
+  /* Admin dashboard: dark site theme sets light body text; force readable dark text in form fields */
+  .admin-dashboard-shell
+    input:not([type="file"]):not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+  .admin-dashboard-shell textarea,
+  .admin-dashboard-shell select {
+    @apply text-zinc-900 bg-white;
+  }
+
   /**
    * Custom container utility that centers content and adds responsive padding.
    *

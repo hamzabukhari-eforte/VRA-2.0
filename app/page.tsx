@@ -103,12 +103,14 @@ const DEFAULT_GALLERY_IMAGES = [
 ] as const;
 
 export default function LandingPage() {
-  const [selectedTeamId, setSelectedTeamId] = useState<(typeof vraTeams)[number]["id"]>(
-    vraTeams[0].id
-  );
-  const selectedTeam = vraTeams.find((team) => team.id === selectedTeamId) ?? vraTeams[0];
-  const [galleryImages, setGalleryImages] =
-    useState<string[]>(() => [...DEFAULT_GALLERY_IMAGES]);
+  const [selectedTeamId, setSelectedTeamId] = useState<
+    (typeof vraTeams)[number]["id"]
+  >(vraTeams[0].id);
+  const selectedTeam =
+    vraTeams.find((team) => team.id === selectedTeamId) ?? vraTeams[0];
+  const [galleryImages, setGalleryImages] = useState<string[]>(() => [
+    ...DEFAULT_GALLERY_IMAGES,
+  ]);
   const [crowdBanner, setCrowdBanner] = useState<{
     imageUrl: string | null;
     text: string | null;
@@ -155,10 +157,10 @@ export default function LandingPage() {
   return (
     <>
       <section className="relative h-[100vh] w-full">
-        <div className="absolute inset-0 [background:linear-gradient(to_bottom,transparent_0%,transparent_50%,var(--background)_100%)]"></div>
+        <div className="absolute inset-0 [background:linear-gradient(to_bottom,transparent_0%,transparent_30%,var(--background)_90%)]"></div>
 
         <video
-          src="/assets/hero-section-video.mp4"
+          src="/assets/home/homepage-banner.mp4"
           autoPlay
           loop
           muted
@@ -180,29 +182,25 @@ export default function LandingPage() {
                       498
                     </span>{" "}
                     The venue of the highest ever ODI total
-
                   </p>
                 </div>
 
                 <div className="flex items-center md:items-end gap-3">
-                
-
                   <p className="text-base sm:text-lg md:text-xl font-normal">
-                  <span className="text-4xl sm:text-[49px] font-normal leading-none tracking-normal">
+                    <span className="text-4xl sm:text-[49px] font-normal leading-none tracking-normal">
                       150+
                     </span>{" "}
-                  international games and counting
+                    international games and counting
                   </p>
                 </div>
 
                 <div className="flex items-center md:items-end gap-3">
-                 
-
                   <p className="text-base sm:text-lg md:text-xl font-normal">
-                 
-                  Proud to support <span className="text-4xl sm:text-[49px] font-normal leading-none tracking-normal">
+                    Proud to support{" "}
+                    <span className="text-4xl sm:text-[49px] font-normal leading-none tracking-normal">
                       21
-                    </span>{" "} teams across all levels
+                    </span>{" "}
+                    teams across all levels
                   </p>
                 </div>
               </div>
@@ -212,7 +210,6 @@ export default function LandingPage() {
 
         {/* Bottom Fade - Smooth blend to next section */}
         <div className="absolute bottom-0 left-0 right-0 h-[300px] bg-linear-to-b from-transparent via-transparent to-background pointer-events-none" />
-
       </section>
 
       {/* Main Content */}
@@ -329,11 +326,11 @@ export default function LandingPage() {
               {/* International Games Card */}
               <div className="relative w-full md:w-auto max-w-[398px] mx-auto">
                 <Image
-                  src="/assets/350-836.webp"
+                  src="/assets/home/international.jpg"
                   alt="International Games"
                   width={398}
                   height={360}
-                  className="rounded-lg object-cover"
+                  className="rounded-lg object-cover h-full"
                 />
 
                 <div className="absolute left-0 top-0 w-full h-full [background:linear-gradient(to_bottom,transparent_0%,transparent_50%,var(--background)_100%)]"></div>
@@ -368,7 +365,7 @@ export default function LandingPage() {
               {/* Club Sports Card */}
               <div className="relative w-full md:w-auto max-w-[397px] mx-auto">
                 <Image
-                  src="/assets/350-855.webp"
+                  src="/assets/home/club-sports.jpeg"
                   alt="Club sports"
                   width={397}
                   height={360}
@@ -413,7 +410,7 @@ export default function LandingPage() {
               {/* Social Card */}
               <div className="relative w-full md:w-auto max-w-[397px] mx-auto">
                 <Image
-                  src="/assets/350-874.webp"
+                  src="/assets/home/social.jpeg"
                   alt="Social"
                   width={397}
                   height={360}
@@ -458,7 +455,8 @@ export default function LandingPage() {
             <div>
               <div className="w-full h-[62px] flex items-center justify-between flex-wrap gap-2 mb-[41px]">
                 <h2 className="text-foreground text-3xl sm:text-4xl md:text-[51px] font-normal">
-                  {selectedTeam.heading}
+                  {/* {selectedTeam.heading} */}
+                  Our Teams
                 </h2>
 
                 <div className="flex items-center gap-2">
@@ -466,7 +464,9 @@ export default function LandingPage() {
                     <select
                       value={selectedTeamId}
                       onChange={(e) =>
-                        setSelectedTeamId(e.target.value as (typeof vraTeams)[number]["id"])
+                        setSelectedTeamId(
+                          e.target.value as (typeof vraTeams)[number]["id"],
+                        )
                       }
                       className="pl-4 pr-10 py-[8.5px] rounded-[40px] border border-foreground/20 bg-background text-foreground text-base font-bold appearance-none cursor-pointer"
                     >
@@ -648,7 +648,7 @@ export default function LandingPage() {
         </Container> */}
 
         {/* Our Sponsors Section */}
-        <Container>
+        {/* <Container>
           <section className="w-full flex flex-col items-center gap-6 py-10">
             <h2 className="text-foreground text-[49px] font-medium leading-[123%] tracking-normal text-center">
               Our Sponsors
@@ -704,16 +704,16 @@ export default function LandingPage() {
               />
             </div>
           </section>
-        </Container>
+        </Container> */}
 
         {/* Testimonial Section */}
-        <TestimonialSection
+        {/* <TestimonialSection
           quote="The team at this cyber security company transformed our security posture. Their expertise and dedication to our protection were unmatched."
           profileImageSrc="/assets/350-983.webp"
           profileImageAlt="Profile"
           name="Name here"
           designation="Designation"
-        />
+        /> */}
 
         {/* Map Section */}
         <Container className="px-4">

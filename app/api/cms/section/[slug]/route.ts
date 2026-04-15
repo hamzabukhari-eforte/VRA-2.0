@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getPresignedUrl } from "@/lib/supabase";
+import { normalizeSectionTags } from "@/lib/shared-section-payload";
 
 export const dynamic = "force-dynamic";
 
@@ -15,10 +16,25 @@ export async function GET(
     where: { slug },
   });
 
-  if (!section?.imagePath) {
-    return NextResponse.json({ imageUrl: null });
+  if (!section) {
+    return NextResponse.json({
+      imageUrl: null,
+      sectionTitle: null,
+      mainHeading: null,
+      description: null,
+      tags: null,
+    });
   }
 
-  const imageUrl = await getPresignedUrl(section.imagePath);
-  return NextResponse.json({ imageUrl });
+  const imageUrl = section.imagePath
+    ? await getPresignedUrl(section.imagePath)
+    : null;
+
+  return NextResponse.json({
+    imageUrl,
+    sectionTitle: section.sectionTitle,
+    mainHeading: section.mainHeading,
+    description: section.description,
+    tags: normalizeSectionTags(section.tags),
+  });
 }

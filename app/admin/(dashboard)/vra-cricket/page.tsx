@@ -122,8 +122,8 @@ export default function AdminVRACricketPage() {
     <div>
       <h1 className="text-3xl font-semibold text-zinc-900 mb-2">VRA Cricket</h1>
       <p className="text-zinc-600 mb-6 text-base">
-        Team counts (Men&apos;s, Women&apos;s, Youth, Zalmis XI) and facility carousel. Section images (e.g. Culture) are in{" "}
-        <Link href="/admin/sections" className="underline text-blue-600">Section images</Link>.
+        Team counts (Men&apos;s, Women&apos;s, Youth, Zalmis XI) and facility carousel. Culture and other shared blocks are in{" "}
+        <Link href="/admin/sections" className="underline text-blue-600">Shared sections</Link>.
       </p>
 
       <div className="flex gap-1 border border-zinc-200 rounded-lg p-1 mb-6">

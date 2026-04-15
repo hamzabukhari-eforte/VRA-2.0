@@ -474,12 +474,6 @@ export default function HomePageHeroSectionMask({
                   Facilities
                 </Link>
 
-                <Link
-                  href="/"
-                  className="text-[#202020] text-sm md:text-base lg:text-xl font-normal"
-                >
-                  Cricket Nest
-                </Link>
               </nav>
             </div>
 

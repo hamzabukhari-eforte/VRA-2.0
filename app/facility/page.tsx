@@ -1,7 +1,20 @@
 import ImageTextSection from "@/components/about/ImageTextSection";
 import CollaborationSection from "@/components/shared/CollaborationSection";
+import { prisma } from "@/lib/db";
 
-export default function FacilityPage() {
+export const dynamic = "force-dynamic";
+
+export default async function FacilityPage() {
+  let heroTitle = "Facility";
+  try {
+    const heroSection = await prisma.sharedSection.findUnique({
+      where: { slug: "facility_hero" },
+    });
+    heroTitle = heroSection?.mainHeading ?? "Facility";
+  } catch {
+    // DB unavailable (e.g. local without DATABASE_URL): use static default
+  }
+
   return (
     <div className="min-h-screen dark:bg-[#202020] bg-background text-foreground overflow-x-hidden">
       {/* Hero Section */}
@@ -22,14 +35,14 @@ export default function FacilityPage() {
         {/* Hero Content Overlay */}
         <div className="absolute inset-0 flex items-end justify-start px-6 sm:px-12 md:px-16 lg:px-[108px] pb-8 md:pb-12">
           <h1 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-light">
-            Facility
+            {heroTitle}
           </h1>
         </div>
       </section>
 
       {/* Main Content */}
       <main className="w-full max-w-[1280px] mx-auto flex flex-col items-start gap-[80px] pt-[79px] px-8 pb-20">
-      <CollaborationSection />
+        <CollaborationSection />
 
         <ImageTextSection
           imageLeft={false}
@@ -105,6 +118,7 @@ export default function FacilityPage() {
           description="Spacious and well-equipped changing rooms provide comfort and convenience for players and officials. Featuring secure storage, showers, and modern amenities, they ensure teams can prepare and recover in a professional and relaxed environment before and after matches."
           imageSrc="/assets/facility/Square Room.png"
           imageAlt="Changing Rooms"
+          sectionKey="changing_rooms"
         />
 
         <ImageTextSection
@@ -115,6 +129,7 @@ export default function FacilityPage() {
           description="The cafeteria offers a relaxed space to enjoy refreshments, snacks, and light meals. Overlooking the grounds, it is a popular spot for players, families, and spectators to unwind, socialize, and enjoy the vibrant atmosphere of match days."
           imageSrc="/assets/facility/Cafeteria.png"
           imageAlt="Cafeteria"
+          sectionKey="cafeteria"
         />
 
         <ImageTextSection
@@ -125,6 +140,7 @@ export default function FacilityPage() {
           description="Our fully equipped kitchen supports match catering, events, and club functions. Designed for efficiency and hygiene, it enables the preparation of meals and refreshments, ensuring quality service for players, officials, members, and visiting teams."
           imageSrc="/assets/facility/Kitchen.png"
           imageAlt="Kitchen"
+          sectionKey="kitchen"
         />
 
         <ImageTextSection
@@ -135,6 +151,7 @@ export default function FacilityPage() {
           description="The club bar is a welcoming social hub for members and guests. Offering a range of beverages in a friendly setting, it's the perfect place to celebrate victories, discuss the day's play, and strengthen the club's sense of community."
           imageSrc="/assets/facility/Bar.png"
           imageAlt="Bar"
+          sectionKey="bar"
         />
 
         <ImageTextSection

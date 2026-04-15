@@ -191,9 +191,9 @@ export default function AdminAboutPage() {
     <div>
       <h1 className="text-3xl font-semibold text-zinc-900 mb-2">About</h1>
       <p className="text-zinc-600 mb-6 text-base">
-        Mission, Vision, Volunteer images are in{" "}
+        Mission, Vision, Volunteer content is in{" "}
         <Link href="/admin/sections" className="underline text-blue-600">
-          Section images
+          Shared sections
         </Link>
         . Our Board images: fixed 6-slot grid that matches the About page layout.
       </p>

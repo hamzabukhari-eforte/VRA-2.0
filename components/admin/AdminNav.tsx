@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 
 const nav = [
   { href: "/admin", label: "Dashboard" },
-  { href: "/admin/sections", label: "Section images" },
+  { href: "/admin/sections", label: "Shared sections" },
   { href: "/admin/homepage", label: "Homepage" },
   { href: "/admin/about", label: "About" },
   { href: "/admin/vra-cricket", label: "VRA Cricket" },

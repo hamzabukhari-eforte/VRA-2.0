@@ -16,6 +16,10 @@ model SharedSection {
   id        String   @id @default(cuid())
   slug      String   @unique // e.g. overseas_cricket_talent, sports_clinics, cultural_events, mission, vision, volunteer, ground_1, ground_2, culture
   imagePath String?  // Supabase Storage path (bucket: cms)
+  sectionTitle String?
+  mainHeading  String?
+  description  String?
+  tags         Json? // string[] | null — null = use frontend default
   updatedAt DateTime @updatedAt
 }
 

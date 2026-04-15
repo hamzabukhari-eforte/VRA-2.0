@@ -11,6 +11,10 @@ export default function BankDetailsSection({
 }: BankDetailsSectionProps) {
   return (
     <section className="flex flex-col items-center gap-2.5 w-full">
+        <p className="text-foreground text-center dark:text-gray-400 text-base md:text-sm lg:text-lg font-normal leading-relaxed whitespace-pre-line wrap-break-word">
+          If you prefer to remain anonymous, you may use the bank details below
+          to make your donation.
+        </p>
       <div className="flex flex-col items-center gap-8 md:gap-12 lg:gap-16 xl:gap-20 w-full">
         <div className="flex flex-col items-center gap-6 md:gap-8 lg:gap-10 w-full px-4">
           <div className="w-full max-w-[658px] text-center text-foreground dark:text-white text-base md:text-lg lg:text-xl xl:text-[28px] font-normal leading-relaxed whitespace-pre-line wrap-break-word">
@@ -24,4 +28,3 @@ export default function BankDetailsSection({
     </section>
   );
 }
-

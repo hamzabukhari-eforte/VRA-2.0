@@ -6,7 +6,7 @@ export default function AdminDashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-zinc-100 text-base">
+    <div className="admin-dashboard-shell min-h-screen bg-zinc-100 text-base text-zinc-900">
       <AdminSidebar />
       <main className="pl-60">
         <div className="px-8 py-8">

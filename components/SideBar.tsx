@@ -42,7 +42,7 @@ export default function SideBar({
                 Membership
               </Link>
 
-              <Link href="#cricket-nest" className="hover:underline">
+              <Link href="/#cricket-nest" className="hover:underline">
                 Cricket Nest
               </Link>
             </div>
