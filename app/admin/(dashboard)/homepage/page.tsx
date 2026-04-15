@@ -211,8 +211,8 @@ export default function AdminHomepagePage() {
     <div>
       <h1 className="text-3xl font-semibold text-zinc-900 mb-2">Homepage</h1>
       <p className="text-zinc-600 mb-6 text-base">
-        Manage photo gallery, crowd section, VRA Teams, and sponsors. Section images (shared blocks) are in{" "}
-        <Link href="/admin/sections" className="underline text-blue-600">Section images</Link>.
+        Manage photo gallery, crowd section, VRA Teams, and sponsors. Shared section content is in{" "}
+        <Link href="/admin/sections" className="underline text-blue-600">Shared sections</Link>.
       </p>
 
       <div className="flex gap-1 border border-zinc-200 rounded-lg p-1 mb-6">

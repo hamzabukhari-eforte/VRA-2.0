@@ -15,7 +15,7 @@ import {
 
 const nav = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/sections", label: "Section images", icon: Image },
+  { href: "/admin/sections", label: "Shared sections", icon: Image },
   { href: "/admin/homepage", label: "Homepage", icon: Home },
   { href: "/admin/about", label: "About", icon: Users },
   { href: "/admin/vra-cricket", label: "VRA Cricket", icon: Trophy },

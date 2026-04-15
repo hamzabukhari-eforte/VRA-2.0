@@ -12,7 +12,7 @@ export default function AboutPage() {
     <div className="min-h-screen dark:bg-[#202020] bg-background text-foreground dark:text-white overflow-x-hidden">
       {/* Hero Section */}
       <HeroBanner
-        imageSrc="/assets/350-1370.webp"
+        imageSrc="/assets/about/about-banner.jpeg"
         imageAlt="Team"
         heading="About us"
         overlayOpacity={40}

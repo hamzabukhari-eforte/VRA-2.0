@@ -169,7 +169,7 @@ export default function DonationForm() {
           </div>
 
           {/* Option to be Anonymous */}
-          <div className="w-full flex items-center justify-between py-2">
+          {/* <div className="w-full flex items-center justify-between py-2">
             <span className="text-foreground dark:text-white text-base font-normal">
               Option to be Anonymous
             </span>
@@ -191,7 +191,7 @@ export default function DonationForm() {
                 )}
               </div>
             </button>
-          </div>
+          </div> */}
 
         {/* Submit Button */}
         <div className="w-full max-w-[400px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[1200px] flex flex-col items-center gap-4">

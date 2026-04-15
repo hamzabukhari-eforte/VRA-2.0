@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 const cards = [
-  { href: "/admin/sections", title: "Section images", description: "Shared ImageTextSection images (Overseas Talent, Sports Clinics, Culture, Mission, Vision, Volunteer, Grounds)" },
+  { href: "/admin/sections", title: "Shared sections", description: "Image, heading, description, and tags for shared blocks (Overseas Talent, clinics, culture, mission, vision, grounds, etc.)" },
   { href: "/admin/homepage", title: "Homepage", description: "Photo gallery, Crowd section, VRA Teams, Our Sponsors" },
   { href: "/admin/about", title: "About", description: "Vision, Mission, Volunteer images; Our Board members" },
   { href: "/admin/vra-cricket", title: "VRA Cricket", description: "Team counts, section images, Facility carousel" },

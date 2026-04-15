@@ -1,4 +1,6 @@
-import Image from "next/image";
+"use client";
+
+import ReactPlayer from "react-player";
 
 export default function History() {
   return (
@@ -7,12 +9,17 @@ export default function History() {
         History
       </h2>
 
-      <div className="relative w-full h-[80vh]">
-        <Image
-          src="/assets/350-1709.webp"
-          alt="History"
-          fill
-          className="rounded-lg object-cover"
+      <div className="relative w-full h-[80vh] overflow-hidden rounded-lg">
+        <ReactPlayer
+          src="https://www.youtube.com/watch?v=SWW6M0FunN8"
+          width="100%"
+          height="100%"
+          playing
+          loop
+          muted
+          controls
+          playsInline
+          className="absolute! inset-0!"
         />
       </div>
 

@@ -23,7 +23,7 @@ export default function ContactPage() {
     <div className="min-h-screen dark:bg-[#202020] bg-background text-foreground dark:text-white overflow-x-hidden">
       {/* Hero Section */}
       <HeroBanner
-        imageSrc="/assets/350-3209.webp"
+      imageSrc="/assets/contact/contact-banner.jpg"
         imageAlt="Cricket Field"
         heading="Get In Touch"
         overlayOpacity={40}

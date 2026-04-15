@@ -36,24 +36,20 @@ export default function Header() {
               Facilities
             </Link>
 
-            <Link
-              href="/"
-              className="text-white text-sm md:text-base lg:text-xl font-normal"
-            >
-              Cricket Nest
-            </Link>
           </nav>
         </div>
 
         {/* Center - Logo */}
         <div className="hidden xl:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-          <Image
-            src="/assets/542-28725.svg"
-            alt="VRA"
-            width={114}
-            height={40}
-            className="w-[96px] h-8 sm:w-[114.24px] sm:h-10"
-          />
+          <Link href="/" aria-label="Go to home page">
+            <Image
+              src="/assets/542-28725.svg"
+              alt="VRA"
+              width={114}
+              height={40}
+              className="w-[96px] h-8 sm:w-[114.24px] sm:h-10"
+            />
+          </Link>
         </div>
 
         {/* Right side - Language selector */}
