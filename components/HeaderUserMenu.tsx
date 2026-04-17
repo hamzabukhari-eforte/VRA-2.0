@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { User } from "lucide-react";
 import {
   DropdownMenu,
@@ -16,11 +16,15 @@ type MemberUser = { id: string; name: string; email: string };
 
 export default function HeaderUserMenu() {
   const router = useRouter();
+  const pathname = usePathname();
   const [user, setUser] = useState<MemberUser | null | undefined>(undefined);
 
   const loadUser = useCallback(async () => {
     try {
-      const res = await fetch("/api/auth/member/me", { credentials: "include" });
+      const res = await fetch("/api/auth/member/me", {
+        credentials: "include",
+        cache: "no-store",
+      });
       const data = await res.json().catch(() => ({}));
       setUser(data?.user ?? null);
     } catch {
@@ -30,7 +34,7 @@ export default function HeaderUserMenu() {
 
   useEffect(() => {
     void loadUser();
-  }, [loadUser]);
+  }, [loadUser, pathname]);
 
   const handleLogout = async () => {
     try {
