@@ -345,7 +345,9 @@ export default function MembershipApplicationPage() {
         throw new Error(message);
       }
       setSubmitted(true);
-      toast.success("Membership application submitted. We will contact you shortly.");
+      toast.success(
+        "Membership application submitted. Please check your email for payment instructions."
+      );
     } catch (err: unknown) {
       console.error(err);
       const message =

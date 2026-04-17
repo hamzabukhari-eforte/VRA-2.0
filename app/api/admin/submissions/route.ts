@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { MembershipSubmissionStatus } from "@prisma/client";
 import { prisma } from "@/lib/db";
+import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { provisionMemberFromSubmission } from "@/lib/membership";
 
 export const dynamic = "force-dynamic";
 
@@ -14,6 +17,11 @@ const TABLES = {
 export type SubmissionType = keyof typeof TABLES;
 
 export async function GET(request: Request) {
+  const authed = await isAdminAuthenticated();
+  if (!authed) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const type = searchParams.get("type") as SubmissionType | null;
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1", 10));
@@ -54,4 +62,59 @@ export async function GET(request: Request) {
     limit,
     totalPages: Math.ceil(total / limit),
   });
+}
+
+export async function PATCH(request: Request) {
+  const authed = await isAdminAuthenticated();
+  if (!authed) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const body = await request.json();
+    const type = body?.type as SubmissionType | undefined;
+    const submissionId =
+      typeof body?.submissionId === "string" ? body.submissionId : "";
+    const status =
+      typeof body?.status === "string" ? body.status.toUpperCase() : "";
+
+    if (type !== "membership") {
+      return NextResponse.json(
+        { error: "Only membership submissions are editable." },
+        { status: 400 }
+      );
+    }
+
+    if (!submissionId) {
+      return NextResponse.json(
+        { error: "Submission id is required." },
+        { status: 400 }
+      );
+    }
+
+    if (status === MembershipSubmissionStatus.PAID) {
+      const result = await provisionMemberFromSubmission(submissionId);
+      return NextResponse.json({ ok: true, item: result.submission });
+    }
+
+    if (status === MembershipSubmissionStatus.SUBMITTED) {
+      const item = await prisma.membershipSubmission.update({
+        where: { id: submissionId },
+        data: {
+          status: MembershipSubmissionStatus.SUBMITTED,
+          paidAt: null,
+        },
+      });
+
+      return NextResponse.json({ ok: true, item });
+    }
+
+    return NextResponse.json({ error: "Invalid membership status." }, { status: 400 });
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { error: "Failed to update membership submission." },
+      { status: 500 }
+    );
+  }
 }
