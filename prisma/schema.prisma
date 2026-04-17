@@ -100,6 +100,11 @@ model FacilityCarouselImage {
 }
 
 // ─── Form submissions (read-only in admin) ─────────────────────────────────
+enum MembershipSubmissionStatus {
+  SUBMITTED
+  PAID
+}
+
 model ContactSubmission {
   id        String   @id @default(cuid())
   payload   Json     // { name, email, subject, message, ... }
@@ -107,9 +112,17 @@ model ContactSubmission {
 }
 
 model MembershipSubmission {
-  id        String   @id @default(cuid())
-  payload   Json
-  createdAt DateTime @default(now())
+  id                String                     @id @default(cuid())
+  payload           Json
+  applicantName     String?
+  applicantEmail    String?
+  applicantPhone    String?
+  membershipType    String?
+  status            MembershipSubmissionStatus @default(SUBMITTED)
+  paidAt            DateTime?
+  credentialsSentAt DateTime?
+  memberAccount     MemberAccount?
+  createdAt         DateTime                   @default(now())
 }
 
 model MembershipTerminationSubmission {
@@ -128,4 +141,27 @@ model IndoorNetBookingSubmission {
   id        String   @id @default(cuid())
   payload   Json
   createdAt DateTime @default(now())
+}
+
+model MemberAccount {
+  id                     String               @id @default(cuid())
+  membershipSubmissionId String               @unique
+  membershipSubmission   MembershipSubmission @relation(fields: [membershipSubmissionId], references: [id], onDelete: Cascade)
+  email                  String               @unique
+  name                   String
+  passwordHash           String
+  profileOverrides       Json?
+  lastLoginAt            DateTime?
+  createdAt              DateTime             @default(now())
+  updatedAt              DateTime             @updatedAt
+  sessions               MemberSession[]
+}
+
+model MemberSession {
+  id              String        @id @default(cuid())
+  memberAccountId String
+  memberAccount   MemberAccount @relation(fields: [memberAccountId], references: [id], onDelete: Cascade)
+  tokenHash       String        @unique
+  expiresAt       DateTime
+  createdAt       DateTime      @default(now())
 }

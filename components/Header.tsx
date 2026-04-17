@@ -2,11 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import ThemeToggleButton from "./ThemeToggleButton";
 import MenuButton from "./MenuButton";
+import HeaderUserMenu from "./HeaderUserMenu";
 
 export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-3 h-[72px] sm:h-[84px] md:h-[100px]">
-      <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/0 backdrop-blur-[6px]" />
+      <div className="absolute inset-0 bg-linear-to-b from-black/50 to-black/0 backdrop-blur-[6px]" />
 
       <div className="relative h-full flex items-center justify-between px-4 sm:px-6 md:px-10 lg:px-[42px]">
         {/* Left side - Menu and Navigation */}
@@ -74,6 +75,8 @@ export default function Header() {
               EN
             </div>
           </div>
+
+          <HeaderUserMenu />
         </div>
       </div>
     </header>

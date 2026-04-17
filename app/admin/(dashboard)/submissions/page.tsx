@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { Filter, Search, Download, Inbox } from "lucide-react";
+import { toast } from "sonner";
 
 type SubmissionType = "contact" | "membership" | "termination" | "donation" | "net-booking";
+type MembershipStatus = "SUBMITTED" | "PAID";
 
 const TYPES: { value: SubmissionType; label: string }[] = [
   { value: "contact", label: "Contact" },
@@ -17,6 +19,11 @@ interface SubmissionRow {
   id: string;
   payload: Record<string, unknown>;
   createdAt: string;
+  status?: MembershipStatus;
+  applicantName?: string | null;
+  applicantEmail?: string | null;
+  paidAt?: string | null;
+  credentialsSentAt?: string | null;
 }
 
 function flattenPayload(p: Record<string, unknown>): Record<string, string> {
@@ -48,6 +55,7 @@ export default function AdminSubmissionsPage() {
   const [to, setTo] = useState("");
   const [query, setQuery] = useState("");
   const [pageSize, setPageSize] = useState(25);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams();
@@ -89,7 +97,61 @@ export default function AdminSubmissionsPage() {
   };
 
   const items = data?.items ?? [];
-  const payloadKeys = items.length ? Object.keys(flattenPayload(items[0].payload)) : [];
+  const payloadKeys = Array.from(
+    items.reduce((keys, item) => {
+      Object.keys(flattenPayload(item.payload)).forEach((key) => keys.add(key));
+      return keys;
+    }, new Set<string>())
+  );
+  const isMembership = type === "membership";
+
+  const updateMembershipStatus = async (
+    submissionId: string,
+    status: MembershipStatus
+  ) => {
+    setUpdatingId(submissionId);
+    try {
+      const res = await fetch("/api/admin/submissions", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "membership", submissionId, status }),
+      });
+      const response = await res.json().catch(() => null);
+
+      if (!res.ok) {
+        throw new Error(response?.error || "Failed to update membership status.");
+      }
+
+      const updated = response?.item as SubmissionRow | undefined;
+      if (updated) {
+        setData((prev) =>
+          prev
+            ? {
+                ...prev,
+                items: prev.items.map((item) =>
+                  item.id === updated.id ? { ...item, ...updated } : item
+                ),
+              }
+            : prev
+        );
+      }
+
+      toast.success(
+        status === "PAID"
+          ? "Membership marked as paid and welcome email sent."
+          : "Membership status updated."
+      );
+    } catch (error) {
+      console.error(error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Failed to update membership status."
+      );
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   const filteredItems = query.trim()
     ? items.filter((row) => {
@@ -105,8 +167,8 @@ export default function AdminSubmissionsPage() {
       <div>
         <h1 className="text-3xl font-semibold text-zinc-900 mb-2">Form submissions</h1>
         <p className="text-zinc-600 text-base">
-          Read-only list of all site forms. Filter by type, date, and search within results,
-          then export to CSV.
+          Browse site form submissions, export them to CSV, and manage payment status for
+          membership applications.
         </p>
       </div>
 
@@ -192,6 +254,16 @@ export default function AdminSubmissionsPage() {
                 <th className="text-left px-4 py-3 font-medium text-zinc-900">
                   Date
                 </th>
+                {isMembership && (
+                  <>
+                    <th className="text-left px-4 py-3 font-medium text-zinc-900">
+                      Status
+                    </th>
+                    <th className="text-left px-4 py-3 font-medium text-zinc-900">
+                      Action
+                    </th>
+                  </>
+                )}
                 {payloadKeys.map((k) => (
                   <th
                     key={k}
@@ -216,12 +288,51 @@ export default function AdminSubmissionsPage() {
                     <td className="px-4 py-3 text-zinc-600 whitespace-nowrap align-top">
                       {new Date(row.createdAt).toLocaleString()}
                     </td>
+                    {isMembership && (
+                      <>
+                        <td className="px-4 py-3 align-top whitespace-nowrap">
+                          <span
+                            className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+                              row.status === "PAID"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-amber-100 text-amber-700"
+                            }`}
+                          >
+                            {row.status === "PAID" ? "Paid" : "Submitted"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 align-top whitespace-nowrap">
+                          {row.status === "PAID" ? (
+                            <span className="text-xs text-zinc-500">
+                              {row.credentialsSentAt
+                                ? "Credentials sent"
+                                : "Paid"}
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled={updatingId === row.id}
+                              onClick={() =>
+                                updateMembershipStatus(row.id, "PAID")
+                              }
+                              className="inline-flex items-center rounded-full bg-blue-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                            >
+                              {updatingId === row.id
+                                ? "Updating..."
+                                : "Mark as paid"}
+                            </button>
+                          )}
+                        </td>
+                      </>
+                    )}
                     {payloadKeys.map((k) => (
                       <td
                         key={k}
-                        className="px-4 py-3 text-zinc-900 align-top max-w-xs"
+                        className="px-4 py-3 text-zinc-900 align-top min-w-[220px]"
                       >
-                        <span className="block truncate">{flat[k] ?? "—"}</span>
+                        <span className="block whitespace-pre-wrap wrap-break-word">
+                          {flat[k] ?? "—"}
+                        </span>
                       </td>
                     ))}
                   </tr>
