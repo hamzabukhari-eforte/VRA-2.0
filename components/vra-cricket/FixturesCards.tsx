@@ -14,6 +14,13 @@ interface Fixture {
   // Optional extra fields when coming from the API
   year?: string;
   className?: string; // "class" is reserved, so we use className
+  status?: "upcoming" | "result" | "draw";
+  /** KNCB `leader_text` shown in the card label */
+  labelText?: string | null;
+  winnerSide?: "home" | "away" | "draw" | null;
+  /** Formatted score from Innings, e.g. "172/3" */
+  team1Score?: string | null;
+  team2Score?: string | null;
 }
 
 interface FixturesCardsProps {
@@ -36,12 +43,39 @@ interface GradeResponse {
   grade_name: string;
 }
 
+interface MatchInnings {
+  runs?: number;
+  wickets?: number;
+  overs_bowled?: number | null;
+  close_type_abbrev?: string | null;
+  innings_number?: number;
+  innings_order?: number;
+}
+
+interface MatchTeam {
+  is_home?: boolean;
+  team_name?: string;
+  club_name?: string;
+  match_score_text?: string | null;
+  /** 2 = won, 1 = lost (KNCB sample) */
+  result_flag?: number | null;
+  Innings?: MatchInnings[] | null;
+}
+
 interface MatchResponse {
   date1: string | null;
   home_name: string;
   away_name: string;
   venue_name: string | null;
   grade_name: string;
+  /** Result summary from KNCB / ResultsVault (e.g. "VRA won by 6 wickets") */
+  leader_text?: string | null;
+  score_text?: string | null;
+  winner?: string | null;
+  winner_name?: string | null;
+  winning_team?: string | null;
+  winning_team_name?: string | null;
+  MatchTeams?: MatchTeam[] | null;
 }
 
 // Default list of grade_ids to show in the Class dropdown.
@@ -95,6 +129,146 @@ function getDivisionColor(gradeName: string): Fixture["divisionColor"] {
   return "purple";
 }
 
+function firstNonEmpty(...values: unknown[]): string | null {
+  for (const value of values) {
+    if (typeof value === "string" && value.trim()) return value.trim();
+  }
+  return null;
+}
+
+function namesMatch(a: string, b: string): boolean {
+  const left = a.trim().toLowerCase();
+  const right = b.trim().toLowerCase();
+  if (!left || !right) return false;
+  return left === right || left.startsWith(right) || right.startsWith(left);
+}
+
+function resolveWinnerSide(
+  home: string,
+  away: string,
+  resultText: string | null,
+  explicitWinner: string | null,
+): "home" | "away" | "draw" | null {
+  if (explicitWinner) {
+    if (namesMatch(explicitWinner, home)) return "home";
+    if (namesMatch(explicitWinner, away)) return "away";
+  }
+
+  if (!resultText) return null;
+
+  const text = resultText.toLowerCase();
+  if (/\b(draw|tie|tied|abandoned|no result|\bnr\b)\b/.test(text)) {
+    return "draw";
+  }
+
+  if (text.includes("won")) {
+    if (text.startsWith(home.trim().toLowerCase()) || text.includes(`${home.trim().toLowerCase()} won`)) {
+      return "home";
+    }
+    if (text.startsWith(away.trim().toLowerCase()) || text.includes(`${away.trim().toLowerCase()} won`)) {
+      return "away";
+    }
+  }
+
+  return null;
+}
+
+function formatInningsScore(team?: MatchTeam | null): string | null {
+  const inningsList = team?.Innings;
+  if (!inningsList || inningsList.length === 0) return null;
+
+  // Prefer batting order; fall back to first innings entry
+  const innings = [...inningsList].sort(
+    (a, b) => (a.innings_order ?? a.innings_number ?? 0) - (b.innings_order ?? b.innings_number ?? 0),
+  )[0];
+
+  if (typeof innings.runs !== "number") return null;
+
+  const wickets = typeof innings.wickets === "number" ? String(innings.wickets) : "-";
+  const overs =
+    typeof innings.overs_bowled === "number"
+      ? ` (${innings.overs_bowled})`
+      : "";
+
+  return `${innings.runs}/${wickets}${overs}`;
+}
+
+function getTeamScores(match: MatchResponse): {
+  team1Score: string | null;
+  team2Score: string | null;
+  winnerFromFlags: "home" | "away" | "draw" | null;
+} {
+  const teams = match.MatchTeams ?? [];
+  const home = teams.find((t) => t.is_home) ?? teams[0];
+  const away =
+    teams.find((t) => t.is_home === false) ??
+    teams.find((t) => t !== home) ??
+    teams[1];
+
+  let winnerFromFlags: "home" | "away" | "draw" | null = null;
+  if (home?.result_flag === 2) winnerFromFlags = "home";
+  else if (away?.result_flag === 2) winnerFromFlags = "away";
+
+  return {
+    team1Score: formatInningsScore(home),
+    team2Score: formatInningsScore(away),
+    winnerFromFlags,
+  };
+}
+
+function getMatchOutcome(match: MatchResponse): Pick<
+  Fixture,
+  "status" | "labelText" | "winnerSide" | "team1Score" | "team2Score"
+> {
+  const leaderText = firstNonEmpty(match.leader_text);
+  const { team1Score, team2Score, winnerFromFlags } = getTeamScores(match);
+
+  // No leader_text => still to be played
+  if (!leaderText) {
+    return {
+      status: "upcoming",
+      labelText: null,
+      winnerSide: null,
+      team1Score: null,
+      team2Score: null,
+    };
+  }
+
+  const explicitWinner = firstNonEmpty(
+    match.winner_name,
+    match.winning_team_name,
+    match.winning_team,
+    match.winner,
+  );
+
+  const winnerSide =
+    winnerFromFlags ??
+    resolveWinnerSide(
+      match.home_name,
+      match.away_name,
+      leaderText,
+      explicitWinner,
+    );
+
+  if (winnerSide === "draw") {
+    return {
+      status: "draw",
+      labelText: leaderText,
+      winnerSide,
+      team1Score,
+      team2Score,
+    };
+  }
+
+  return {
+    status: "result",
+    labelText: leaderText,
+    winnerSide,
+    team1Score,
+    team2Score,
+  };
+}
+
 export default function FixturesCards({
   fixtures = [
     {
@@ -107,6 +281,7 @@ export default function FixturesCards({
       venue: "VRA Ground 1",
       year: "2021",
       className: "Division 1",
+      status: "upcoming",
     },
     {
       division: "Division 2",
@@ -118,6 +293,7 @@ export default function FixturesCards({
       venue: "VRA Ground 2",
       year: "2021",
       className: "Division 2",
+      status: "upcoming",
     },
     {
       division: "Youth League",
@@ -129,6 +305,7 @@ export default function FixturesCards({
       venue: "VRA Ground 3",
       year: "2021",
       className: "Youth League",
+      status: "upcoming",
     },
     {
       division: "Women's League",
@@ -140,6 +317,11 @@ export default function FixturesCards({
       venue: "VRA Ground 1",
       year: "2021",
       className: "Women's League",
+      status: "result",
+      labelText: "VRA W1 won by 4 wickets",
+      winnerSide: "home",
+      team1Score: "145/6 (20)",
+      team2Score: "140/8 (19.2)",
     },
   ],
   years,
@@ -340,6 +522,7 @@ export default function FixturesCards({
     () =>
       matches.map((match) => {
         const { date, time } = formatMatchDateTime(match.date1);
+        const outcome = getMatchOutcome(match);
 
         return {
           division: match.grade_name,
@@ -349,6 +532,7 @@ export default function FixturesCards({
           date,
           time,
           venue: match.venue_name || "",
+          ...outcome,
         };
       }),
     [matches],
@@ -417,7 +601,20 @@ export default function FixturesCards({
           </div>
         ) : fixturesFromMatches.length > 0 ? (
           fixturesFromMatches.map((fixture, index) => (
-            <FixtureCard key={index} {...fixture} />
+            <FixtureCard
+              key={index}
+              divisionColor={fixture.divisionColor}
+              team1={fixture.team1}
+              team2={fixture.team2}
+              date={fixture.date}
+              time={fixture.time}
+              venue={fixture.venue}
+              status={fixture.status}
+              labelText={fixture.labelText}
+              winnerSide={fixture.winnerSide}
+              team1Score={fixture.team1Score}
+              team2Score={fixture.team2Score}
+            />
           ))
         ) : (
           <div className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 text-center text-foreground/60 dark:text-white/60 text-xs md:text-sm py-6">
