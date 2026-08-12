@@ -12,12 +12,14 @@ export default function SideBar({
   setIsMenuOpen: (isMenuOpen: boolean) => void;
 }) {
   const pathname = usePathname();
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <>
       {/* Overlay */}
       <div
         className={`fixed inset-0 z-5 ${isMenuOpen ? "block" : "hidden"} `}
-        onClick={() => setIsMenuOpen(false)}
+        onClick={closeMenu}
       />
 
       {/* Menu Drawer */}
@@ -30,7 +32,7 @@ export default function SideBar({
           {/* Close button and top nav */}
           <div className="flex items-center gap-4 sm:gap-6">
             <button
-              onClick={() => setIsMenuOpen(false)}
+              onClick={closeMenu}
               className="w-10 h-10 rounded-full flex items-center justify-center transition-colors border border-[#202020]"
               aria-label="Close menu"
             >
@@ -38,11 +40,11 @@ export default function SideBar({
             </button>
 
             <div className="flex flex-wrap gap-4 sm:gap-6 text-[#202020] text-base sm:text-lg">
-              <Link href="/membership" className="hover:underline">
+              <Link href="/membership" onClick={closeMenu} className="hover:underline">
                 Membership
               </Link>
 
-              <Link href="/#cricket-nest" className="hover:underline">
+              <Link href="/#cricket-nest" onClick={closeMenu} className="hover:underline">
                 Cricket Nest
               </Link>
             </div>
@@ -51,8 +53,24 @@ export default function SideBar({
           {/* Navigation Menu */}
           <nav className="flex flex-col gap-2 w-full max-w-64 mx-auto">
             <Link
-              href="/about"
+              href="/"
+              onClick={closeMenu}
               className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold pb-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
+                pathname === "/"
+                  ? "text-red-700 font-bold"
+                  : "text-[#202020]"
+              }`}
+            >
+              Home
+              {pathname === "/" && (
+                <span className="w-2 h-2 rounded-full bg-red-700 shrink-0 ml-2" />
+              )}
+            </Link>
+
+            <Link
+              href="/about"
+              onClick={closeMenu}
+              className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/about"
                   ? "text-red-700 font-bold"
                   : "text-[#202020]"
@@ -66,6 +84,7 @@ export default function SideBar({
 
             <Link
               href="/facility"
+              onClick={closeMenu}
               className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/facility"
                   ? "text-red-700 font-bold"
@@ -80,6 +99,7 @@ export default function SideBar({
 
             <Link
               href="/indoor-net-booking"
+              onClick={closeMenu}
               className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/indoor-net-booking"
                   ? "text-red-700 font-bold"
@@ -94,6 +114,7 @@ export default function SideBar({
 
             <Link
               href="/vra-cricket"
+              onClick={closeMenu}
               className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/vra-cricket"
                   ? "text-red-700 font-bold"
@@ -116,6 +137,7 @@ export default function SideBar({
               href="https://www.gray-nicolls.co.uk/collections/vra-cricket-netherlands?filter.v.price.gte=&filter.v.price.lte=&sort_by=best-selling&filter.p.tag=clubtag_Match+Wear&view=club-grid"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={closeMenu}
               className="flex items-center gap-2 text-[#202020] text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all underline"
             >
               Shop
@@ -124,6 +146,7 @@ export default function SideBar({
 
             <Link
               href="/donations"
+              onClick={closeMenu}
               className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/donations"
                   ? "text-red-700 font-bold"
@@ -138,6 +161,7 @@ export default function SideBar({
 
             <Link
               href="/contact"
+              onClick={closeMenu}
               className={`flex items-center gap-2 text-xl sm:text-2xl font-semibold py-3 border-b-[1.5px] border-[#202020] hover:pl-2 transition-all ${
                 pathname === "/contact"
                   ? "text-red-700 font-bold"
