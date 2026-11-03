@@ -1,50 +1,29 @@
 # VRA Admin Panel
 
-Admin panel for managing dynamic content and viewing form submissions. Uses **Supabase** (Postgres + Storage) with **Prisma**.
+Admin UI lives in `apps/web` at `/admin`. APIs live in `apps/api` under `/api/admin/*` (proxied from the web app).
 
-## Setup
+## Local setup
 
-1. **Supabase project**
-   - Create a project at [supabase.com](https://supabase.com).
-   - In **Settings → Database**, copy the connection string (URI). Use it as `DATABASE_URL` (replace `[YOUR-PASSWORD]` with your DB password).
-   - In **Settings → API**: copy `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`, and `anon` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`. For uploads from the server (e.g. admin image upload), use `service_role` key → `SUPABASE_SERVICE_ROLE_KEY`.
-
-2. **Storage bucket**
-   - In Supabase **Storage**, create a bucket named **`cms`** (private is fine). Admin uploads go here; presigned URLs are used on the frontend.
-
-3. **Environment**
-   - Copy `.env.example` to `.env` and set:
-     - `DATABASE_URL` (Postgres connection string)
-     - `NEXT_PUBLIC_SUPABASE_URL`
-     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-     - `SUPABASE_SERVICE_ROLE_KEY` (for server-side uploads)
-   - Optional: `ADMIN_PASSWORD` to protect `/admin` later.
-
-4. **Database**
-   - Run:
-     - `npm install`
-     - `npx prisma db push`
-   - This creates/updates tables in your Supabase Postgres.
-
-5. **Run**
-   - `npm run dev` and open **/admin**.
+1. Start VRA Supabase: `cd ../vra-supabase && supabase start` (API `54341`, DB `54342`, Studio `54343`).
+2. In root `.env` set:
+   - `NEXT_PUBLIC_SUPABASE_URL=http://127.0.0.1:54341`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` / `SUPABASE_SERVICE_ROLE_KEY` from `supabase status`
+   - `DATABASE_URL` / `DIRECT_URL` → `postgresql://postgres:postgres@127.0.0.1:54342/postgres`
+   - `BUCKET_NAME=vra`
+   - `ADMIN_EMAIL` / `ADMIN_PASSWORD`
+   - `WEB_PORT=7000`, `API_PORT=7001`, `API_PROXY_URL=http://localhost:7001`
+3. `pnpm install && pnpm db:push && pnpm db:seed`
+4. Ensure storage bucket `vra` exists (Studio → Storage).
+5. `pnpm dev` → open http://localhost:7000/admin
 
 ## What’s implemented
 
-- **Section images** (`/admin/sections`): One image per shared section key (e.g. `overseas_cricket_talent`, `sports_clinics`, `mission`, `ground_1`). Same key used on multiple pages reuses one image. Frontend falls back to existing `imageSrc` when no admin image is set.
-- **ImageTextSection**: Optional `sectionKey` prop. When set, the component fetches the image from the CMS and uses it if present; otherwise uses `imageSrc`.
-- **Submissions** (`/admin/submissions`): Read-only tables for Contact, Membership, Membership termination, Donation, Indoor net booking. Filters (date range), pagination, and CSV export.
-- **Form submission APIs**: `POST /api/submissions/contact`, `/membership`, `/termination`, `/donation`, `/net-booking` accept JSON and store in the database. Wire your forms to these endpoints to start collecting data.
-
-## Extending
-
-- **Homepage**: Gallery, Crowd section, Teams, Sponsors – add Prisma models and admin UI following the same pattern (Storage path in DB, presigned URL for display).
-- **About**: Board members – same pattern; optional `order` for sorting.
-- **VRA Cricket**: Team counts (single row: men, women, youth, zalmisXi), Facility carousel (ordered list of images).
-- **Auth**: Add middleware or layout check for `ADMIN_PASSWORD` (or Supabase Auth) and protect `/admin` and `/api/admin/*`.
+- Section images, homepage gallery/crowd/teams/sponsors, about board, VRA cricket carousel/counts
+- Submissions tables (contact, membership, termination, donation, net booking) with filters/export
+- Form POST endpoints under `/api/submissions/*`
+- Admin auth via `admin_session` cookie (HMAC of `ADMIN_EMAIL:ADMIN_PASSWORD`)
 
 ## Data rules
 
-- **No duplicate images**: One stored file per section key; all usages reference the same path.
-- **Fallback**: If no admin image exists, the existing frontend image (or content) is used.
-- **Updates**: Changing an image in the admin updates it everywhere that section is used.
+- One stored file per section key; frontend falls back to static assets when CMS image is missing
+- Updating an admin image updates every page that uses that section key

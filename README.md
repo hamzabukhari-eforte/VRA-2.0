@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# VRA 2.0 (pnpm monorepo)
 
-## Getting Started
+Next.js frontend + NestJS API + Prisma, against a dedicated local Supabase stack.
 
-First, run the development server:
+## Structure
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```text
+apps/web     Next.js (public site + /admin) — port 7000
+apps/api     NestJS (all /api/* routes) — port 7001
+libs/db      Prisma schema / client (@vra/db)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Sibling Supabase project: `../vra-supabase` (does not share Yuasa or eforte ports).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Ports
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Service | Port |
+|---|---|
+| Web | 7000 |
+| API | 7001 |
+| Supabase API | 54341 |
+| Supabase DB | 54342 |
+| Supabase Studio | 54343 |
+| Mailpit | 54344 |
 
-## Learn More
+> Note: 54331–54337 were already used by another local Supabase (`eforte`), so VRA uses **54341+**. Yuasa remains on **54321+**.
 
-To learn more about Next.js, take a look at the following resources:
+Browser calls stay same-origin (`http://localhost:7000/api/...`); Next rewrites them to Nest on 7001.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Prerequisites
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Node 20+
+- pnpm
+- Docker
+- Supabase CLI (`npm i -g supabase`)
 
-## Deploy on Vercel
+## Setup
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+# 1) Start local Supabase (from sibling folder)
+cd ../vra-supabase && supabase start
+# copy ANON_KEY + SERVICE_ROLE_KEY from the output into VRA-2.0/.env
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# 2) App env
+cd ../VRA-2.0
+cp .env.example .env   # then fill keys / admin password / SMTP as needed
+
+# 3) Install + DB
+pnpm install
+pnpm db:push
+pnpm db:seed
+
+# 4) Create storage bucket "vra" in Studio (http://127.0.0.1:54343) if missing
+#    (setup script also creates it via Storage API when keys are set)
+
+# 5) Dev
+pnpm dev
+```
+
+- Site: http://localhost:7000  
+- Admin: http://localhost:7000/admin  
+- API: http://localhost:7001/api  
+
+Useful scripts: `pnpm dev:web`, `pnpm dev:api`, `pnpm db:studio`, `pnpm supabase:status`.
+
+## Production
+
+Use a separate cloud/self-hosted Supabase project (not this local stack). Point `DATABASE_URL`, Supabase URL/keys, and `NEXT_PUBLIC_APP_URL` / API URLs accordingly.

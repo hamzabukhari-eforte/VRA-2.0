@@ -1,0 +1,31 @@
+{
+  "name": "@vra/db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "prisma generate && tsc -p tsconfig.json",
+    "prisma:generate": "dotenv -e ../../.env -- prisma generate && tsc -p tsconfig.json",
+    "prisma:db:push": "dotenv -e ../../.env -- prisma db push",
+    "prisma:db:seed": "dotenv -e ../../.env -- tsx prisma/seed.ts",
+    "prisma:studio": "dotenv -e ../../.env -- prisma studio",
+    "prisma:format": "dotenv -e ../../.env -- prisma format",
+    "prisma:validate": "dotenv -e ../../.env -- prisma validate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.2"
+  },
+  "devDependencies": {
+    "dotenv-cli": "^8.0.0",
+    "prisma": "^6.19.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5"
+  }
+}
