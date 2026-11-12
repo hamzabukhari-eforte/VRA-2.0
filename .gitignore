@@ -48,3 +48,7 @@ libs/db/dist/
 
 # pnpm
 .pnpm-store/
+
+#documents
+docs/
+HTML.zip

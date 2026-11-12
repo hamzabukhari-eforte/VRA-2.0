@@ -1,0 +1,97 @@
+---
+description: VRA static HTML theme — colors, type, buttons, layout from homepage
+globs: HTML/**/*
+alwaysApply: false
+---
+
+# VRA HTML theme (homepage source of truth)
+
+When building or redesigning pages under `HTML/`, match `HTML/index.html`. Do not invent new palettes, fonts, or button styles. `darkMode: "class"`; default theme is **light**.
+
+## Colors
+
+| Token | Hex | Use |
+|-------|-----|-----|
+| Deep navy / text | `#0D1B3E` | Light-mode text, borders, Contact btn fill |
+| Charcoal | `#202020` | Dark-mode page bg; dark surfaces |
+| VRA Red | `#DB3242` | Primary accent, Live, identity stripe start |
+| VRA Yellow | `#F3C628` | Energy accent, stripe mid, dark-mode labels |
+| VRA Navy | `#233F84` | Secondary accent, outlined CTAs, eyebrows |
+| White | `#FFFFFF` | Light page bg; text on dark/red/navy |
+| Mid grey | `#767676` | Footer legal only |
+| Soft panel | `#F7F7F7` / `#F5F5F5` | Light cards / footer bar |
+| Dark panel | `#2A2A2A` | Raised panels on charcoal |
+
+**CSS variables**
+
+```css
+:root { --background: #ffffff; --foreground: #0d1b3e; }
+.dark { --background: #202020; --foreground: #ffffff; }
+```
+
+**Seam / brand stripe** (underlines, strip accents, button sweep):  
+`linear-gradient(90deg, #db3242 0%, #f3c628 45%, #db3242 100%)`  
+Vertical rail: `linear-gradient(180deg, #db3242, #f3c628)`.
+
+**Dark mode accents:** eyebrows / meta → `#F3C628`; outlined CTAs → white border + white text; hover fill → white with `#202020` text. Do not use purple gradients or cream `#F4F1EA` themes.
+
+## Typography
+
+- **Body / UI:** `Inter` (300–700)
+- **Display / nums / brand marks:** `Oswald` (500–700) — nav mega nums, snapshot titles, hero brand marks
+- Do not use Inter/Roboto/Arial as the only stack for marketing heroes without Inter+Oswald loaded
+
+| Role | Size | Weight | Notes |
+|------|------|--------|-------|
+| Section title | `clamp(1.75rem, 3.4vw, 40px)` | 500 | `.section-title`, `color: var(--foreground)` |
+| Section eyebrow | `12px` / `0.62–0.72rem` | 600 | Uppercase, tracking `0.14–0.18em`, light→`#233F84`, dark→`#F3C628` |
+| Body / lead | `0.95–1.125rem` | 400 | Light muted: `#0D1B3E` ~70–78% or `dark:text-white/70` |
+| Header nav | `0.875 → 1rem → 1.25rem` | 400 | White on hero header; seam underline on hover — **no font-size zoom** |
+| Footer links | `1rem` | 400 | `#0D1B3E` + seam underline |
+| CTA label | `0.75–0.875rem` | 500–600 | Uppercase, tracking `0.04–0.05em` |
+| Meta / kicker | `0.58–0.72rem` | 600 | Uppercase; red or yellow |
+
+## Buttons / CTAs
+
+Reuse homepage patterns — do not invent new button systems.
+
+1. **Outlined CTA** (`.feed-cta--news`, `.cfa-cta`, `.btn-contact`):  
+   - Radius `8px`, border `1–1.5px`  
+   - Light: text/border `#233F84` or `#0D1B3E`  
+   - Dark: text/border white / `rgba(255,255,255,0.55)`  
+   - Hover: cricket **seam sweep** (`::before` fill slide + `::after` red/yellow skew) via `.btn-seam-inner`
+
+2. **Solid brand** (`.nav-card-shop`, Live): fill `#DB3242` (shop hover darker `#C42B39`)
+
+3. **Structure:** wrap label in `<span class="btn-seam-inner">…</span>`
+
+4. Radius everywhere interactive: **`8px`** (not pill/`rounded-full` unless floating round Live/WA).
+
+## Layout
+
+- Content width: `.container-vra` → `max-width: 1480px`, centered
+- Section rhythm: large vertical gaps (`gap-20` / ~80px bands)
+- Header: fixed, frosted dark gradient over media; height `56 / 64 / 72px`
+- Cards: prefer **no cards** on heroes; when needed, `8px` radius, light `#F7F7F7` / dark `#2A2A2A`, soft shadow only
+
+## Imagery / video
+
+- Full-bleed heroes; `object-fit: cover`; compress web images (~1920px max edge)
+- **Do not** put opacity / grey / black overlays on photos or hero videos (no `bg-black/40`, full-bleed dimmers, or `opacity` washes on `<img>` / `<video>`). Homepage hero is clean media — text readability comes from header gradient or local text shadow only, not a full-image filter
+- **Do not** reduce image/`img` opacity to mute photos; keep media at full strength
+- Soft gradients only at edges when needed for UI chrome (e.g. header `from-black/50` bar, stats bar fade) — never a flat veil over the whole frame
+
+## Motion
+
+- Prefer `cubic-bezier(0.22, 1, 0.36, 1)` for reveals / underlines
+- Respect `prefers-reduced-motion`
+- Intentional 2–3 motions per page max (seam, reveal, marquee) — not decoration spam
+
+## Theme JS
+
+- Light default; dark only if `localStorage.theme === "dark"`
+- Toggle `document.documentElement.classList` `"dark"`
+
+## When redesigning other HTML pages (e.g. venue)
+
+Bring them onto this system: same tokens, section titles, eyebrows, outlined+seam CTAs, container width, and light/dark behavior — do not keep one-off app styles that fight the homepage.

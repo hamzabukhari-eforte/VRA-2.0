@@ -1,0 +1,3743 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VRA — The Home to Dutch Cricket</title>
+    <script>
+      /* Light is the default; dark only when user previously chose it */
+      (function () {
+        try {
+          if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (e) {
+          document.documentElement.classList.remove("dark");
+        }
+      })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              background: "var(--background)",
+              foreground: "var(--foreground)",
+            },
+          },
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --background: #ffffff;
+        --foreground: #0d1b3e;
+      }
+      .dark {
+        --background: #202020;
+        --foreground: #ffffff;
+      }      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5.5rem;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        background: var(--background);
+        color: var(--foreground);
+      }
+      /* —— Floating nav card (replaces full-height drawer) —— */
+      /* Header nav — cricket seam underline on hover */
+      .header-nav-link {
+        position: relative;
+        display: inline-block;
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 400;
+        text-decoration: none;
+        padding-bottom: 0.2rem;
+        transition: opacity 0.25s ease;
+      }
+      @media (min-width: 768px) {
+        .header-nav-link {
+          font-size: 1rem;
+        }
+      }
+      @media (min-width: 1024px) {
+        .header-nav-link {
+          font-size: 1.25rem;
+        }
+      }
+      .header-nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 2px;
+        background: #fff;
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .header-nav-link.is-current::after,
+      .header-nav-link:hover::after,
+      .header-nav-link:focus-visible::after {
+        transform: scaleX(1);
+      }
+      .header-nav-link:hover,
+      .header-nav-link:focus-visible {
+        opacity: 0.95;
+        outline: none;
+      }
+      /* Theme + profile — size grow only */
+      .header-tool {
+        transition:
+          opacity 0.25s ease,
+          transform 0.3s ease;
+      }
+      .header-tool:hover,
+      .header-tool:focus-visible {
+        opacity: 0.95;
+        outline: none;
+        transform: scale(calc(1 + 2 / 41));
+      }
+      /* NL | EN — +2px font only */
+      .header-lang {
+        width: 49px;
+        height: 22px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        outline: none;
+      }
+      .header-lang-nl,
+      .header-lang-en {
+        transition: font-size 0.3s ease;
+      }
+      .header-lang:hover .header-lang-nl,
+      .header-lang:focus-visible .header-lang-nl {
+        font-size: calc(1.25rem + 2px);
+      }
+      .header-lang:hover .header-lang-en,
+      .header-lang:focus-visible .header-lang-en {
+        font-size: calc(0.75rem + 2px);
+      }
+      /* Footer Quick Links / Actions — same seam + +2px */
+      .footer-nav-link {
+        position: relative;
+        display: inline-block;
+        color: #0d1b3e;
+        text-decoration: none;
+        padding-bottom: 0.15rem;
+        font-size: 1rem;
+        transition: font-size 0.3s ease;
+      }
+      .footer-nav-link::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        height: 2px;
+        border-radius: 2px;
+        background: linear-gradient(
+          90deg,
+          #db3242 0%,
+          #f3c628 45%,
+          #db3242 100%
+        );
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .footer-nav-link:hover,
+      .footer-nav-link:focus-visible {
+        font-size: calc(1rem + 2px);
+        outline: none;
+      }
+      .footer-nav-link:hover::after,
+      .footer-nav-link:focus-visible::after {
+        transform: scaleX(1);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .header-nav-link::after,
+        .footer-nav-link::after {
+          transition: none;
+        }
+        .header-nav-link:hover::after,
+        .header-nav-link:focus-visible::after,
+        .footer-nav-link:hover::after,
+        .footer-nav-link:focus-visible::after {
+          transform: scaleX(1);
+        }
+        .header-tool:hover,
+        .header-tool:focus-visible {
+          transform: none;
+        }
+        .footer-nav-link {
+          transition: none;
+        }
+      }
+      .menu-trigger {
+        position: relative;
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 8px;
+        border: 1.5px solid rgba(255, 255, 255, 0.85);
+        background: rgba(32, 32, 32, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition:
+          background 0.25s ease,
+          border-color 0.25s ease,
+          transform 0.25s ease;
+      }
+      .menu-trigger:hover {
+        background: rgba(32, 32, 32, 0.45);
+        transform: scale(1.04);
+      }
+      .menu-trigger-bars {
+        position: relative;
+        width: 1rem;
+        height: 0.72rem;
+      }
+      .menu-trigger-bars span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1.5px;
+        border-radius: 8px;
+        background: #fff;
+        transition:
+          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          opacity 0.2s ease,
+          top 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .menu-trigger-bars span:nth-child(1) {
+        top: 0;
+      }
+      .menu-trigger-bars span:nth-child(2) {
+        top: 50%;
+        transform: translateY(-50%);
+        width: 70%;
+      }
+      .menu-trigger-bars span:nth-child(3) {
+        bottom: 0;
+        top: auto;
+      }
+      .menu-trigger.is-open {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: rgba(255, 255, 255, 0.95);
+      }
+      .menu-trigger.is-open .menu-trigger-bars span {
+        background: #202020;
+      }
+      .menu-trigger.is-open .menu-trigger-bars span:nth-child(1) {
+        top: 50%;
+        transform: translateY(-50%) rotate(45deg);
+      }
+      .menu-trigger.is-open .menu-trigger-bars span:nth-child(2) {
+        opacity: 0;
+        transform: translateY(-50%) scaleX(0);
+      }
+      .menu-trigger.is-open .menu-trigger-bars span:nth-child(3) {
+        top: 50%;
+        bottom: auto;
+        transform: translateY(-50%) rotate(-45deg);
+      }
+
+      .menu-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: rgba(32, 32, 32, 0.28);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          opacity 0.35s ease,
+          visibility 0.35s ease;
+      }
+      .dark .menu-overlay {
+        background: rgba(12, 14, 20, 0.45);
+      }
+      .menu-overlay.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      .nav-card {
+        /* left matches header padding: px-3 / sm:px-5 / md:px-8 / lg:px-10 */
+        --nav-inset: 0.75rem;
+        position: fixed;
+        top: calc(56px + 0.5rem);
+        left: var(--nav-inset);
+        z-index: 45;
+        width: min(92vw, 22rem);
+        max-height: min(78vh, 36rem);
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: visible;
+        background: #fff;
+        box-shadow:
+          0 24px 48px rgba(13, 27, 62, 0.14),
+          0 0 0 1px rgba(13, 27, 62, 0.06);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translate3d(-1.25rem, -0.75rem, 0) scale(0.94);
+        transform-origin: top left;
+        transition:
+          opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+          visibility 0.35s;
+      }
+      .dark .nav-card {
+        background: #0d1b3e;
+        box-shadow:
+          0 24px 56px rgba(0, 0, 0, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      @media (min-width: 640px) {
+        .nav-card {
+          --nav-inset: 1.25rem;
+          top: calc(64px + 0.5rem);
+          width: min(90vw, 23rem);
+        }
+      }
+      @media (min-width: 768px) {
+        .nav-card {
+          --nav-inset: 2rem;
+          top: calc(72px + 0.5rem);
+        }
+      }
+      @media (min-width: 1024px) {
+        .nav-card {
+          --nav-inset: 2.5rem;
+        }
+      }
+      .nav-card.is-open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      .nav-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: linear-gradient(180deg, #db3242 0%, #f3c628 100%);
+      }
+      .nav-card-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.15rem 1.2rem 0.75rem 1.35rem;
+      }
+      .nav-card-kicker {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .nav-card-eyebrow {
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #233f84;
+      }
+      .dark .nav-card-eyebrow {
+        color: #f3c628;
+      }
+      .nav-card-brand {
+        font-family: Oswald, Inter, sans-serif;
+        font-size: 1.65rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        color: #0d1b3e;
+      }
+      .dark .nav-card-brand {
+        color: #fff;
+      }
+      .nav-card-links {
+        flex: 1;
+        overflow: visible;
+        padding: 0.25rem 0.75rem 0.65rem 0.9rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+      .nav-card-item--mega {
+        position: relative;
+        width: 100%;
+      }
+      .nav-card-link {
+        position: relative;
+        display: grid;
+        grid-template-columns: 1.75rem 1fr auto;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.7rem 0.75rem;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #0d1b3e;
+        opacity: 0;
+        transform: translateX(-0.6rem);
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease;
+      }
+      /* News mega — desktop: align to full nav-card; mobile: expand under item */
+      .nav-mega {
+        position: absolute;
+        left: calc(100% + 2px);
+        top: 0;
+        z-index: 3;
+        width: min(72vw, 26rem);
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+        padding: 1.05rem 1.05rem 0.95rem;
+        border-radius: 8px;
+        background: #fff;
+        box-shadow:
+          0 24px 48px rgba(13, 27, 62, 0.14),
+          0 0 0 1px rgba(13, 27, 62, 0.06);
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateX(-0.35rem);
+        transition:
+          opacity 0.2s ease,
+          transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+          visibility 0.2s;
+      }
+      .nav-mega::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 8px 0 0 8px;
+        background: linear-gradient(180deg, #db3242 0%, #f3c628 100%);
+      }
+      /* Hover bridge — covers padding + tiny gap so mouse can reach the panel */
+      .nav-mega::after {
+        content: "";
+        position: absolute;
+        left: -1.75rem;
+        top: 0;
+        bottom: 0;
+        width: 1.75rem;
+      }
+      .dark .nav-mega {
+        background: #0d1b3e;
+        box-shadow:
+          0 24px 56px rgba(0, 0, 0, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.1);
+      }
+      @media (min-width: 768px) {
+        .nav-card-item--mega {
+          position: static;
+        }
+        .nav-mega {
+          top: 0;
+          bottom: 0;
+          min-height: 100%;
+        }
+        /* Full-height hover bridge in the seam between card and mega */
+        .nav-card-item--mega::after {
+          content: "";
+          position: absolute;
+          left: 100%;
+          top: 0;
+          bottom: 0;
+          width: 1.5rem;
+          z-index: 2;
+        }
+      }
+      .nav-card-item--mega.is-mega-open .nav-mega,
+      .nav-card-item--mega:focus-within .nav-mega {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+      }
+      .nav-card-item--mega.is-mega-open > .nav-card-link,
+      .nav-card-item--mega:focus-within > .nav-card-link {
+        background: rgba(219, 50, 66, 0.1);
+      }
+      .dark .nav-card-item--mega.is-mega-open > .nav-card-link,
+      .dark .nav-card-item--mega:focus-within > .nav-card-link {
+        background: rgba(219, 50, 66, 0.22);
+      }
+      .nav-mega-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding-left: 0.15rem;
+      }
+      .nav-mega-eyebrow {
+        margin: 0;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #233f84;
+      }
+      .dark .nav-mega-eyebrow {
+        color: #f3c628;
+      }
+      .nav-mega-feature {
+        position: relative;
+        display: block;
+        border-radius: 8px;
+        overflow: hidden;
+        text-decoration: none;
+        color: #fff;
+        min-height: 8.5rem;
+        isolation: isolate;
+      }
+      .nav-mega-feature img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+      .nav-mega-feature::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          to top,
+          rgba(13, 27, 62, 0.88) 0%,
+          rgba(13, 27, 62, 0.25) 55%,
+          transparent 100%
+        );
+      }
+      .nav-mega-feature-copy {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        gap: 0.2rem;
+        min-height: 8.5rem;
+        padding: 0.85rem 0.9rem;
+      }
+      .nav-mega-feature .nav-mega-kicker {
+        color: #f3c628;
+      }
+      .nav-mega-feature .nav-mega-title {
+        color: #fff;
+        font-size: 1.05rem;
+      }
+      .nav-mega-feature .nav-mega-meta {
+        color: rgba(255, 255, 255, 0.75);
+      }
+      .nav-mega-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+      }
+      .nav-mega-item {
+        display: grid;
+        grid-template-columns: 2.85rem 1fr;
+        gap: 0.7rem;
+        align-items: center;
+        padding: 0.4rem 0.45rem;
+        border-radius: 8px;
+        text-decoration: none;
+        color: #0d1b3e;
+        transition: background 0.2s ease;
+      }
+      .dark .nav-mega-item {
+        color: rgba(255, 255, 255, 0.92);
+      }
+      .nav-mega-item:hover,
+      .nav-mega-item:focus-visible {
+        background: rgba(35, 63, 132, 0.08);
+        outline: none;
+      }
+      .dark .nav-mega-item:hover,
+      .dark .nav-mega-item:focus-visible {
+        background: rgba(255, 255, 255, 0.1);
+      }
+      .nav-mega-thumb {
+        width: 2.85rem;
+        height: 2.85rem;
+        border-radius: 6px;
+        object-fit: cover;
+        display: block;
+        background: #202020;
+      }
+      .nav-mega-thumb--tone {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Oswald, Inter, sans-serif;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: #fff;
+      }
+      .nav-mega-thumb--dark {
+        background: #202020;
+      }
+      .nav-mega-thumb--navy {
+        background: #233f84;
+      }
+      .nav-mega-thumb--yellow {
+        background: #f3c628;
+        color: #0d1b3e;
+      }
+      .nav-mega-kicker {
+        margin: 0 0 0.12rem;
+        font-size: 0.58rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #db3242;
+      }
+      .dark .nav-mega-kicker {
+        color: #f3c628;
+      }
+      .nav-mega-title {
+        margin: 0;
+        font-size: 0.84rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+      }
+      .nav-mega-meta {
+        margin: 0.15rem 0 0;
+        font-size: 0.7rem;
+        line-height: 1.3;
+        color: rgba(13, 27, 62, 0.62);
+      }
+      .dark .nav-mega-meta {
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .nav-mega-all {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        flex-shrink: 0;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: none;
+        color: #233f84;
+        white-space: nowrap;
+      }
+      .dark .nav-mega-all {
+        color: #f3c628;
+      }
+      .nav-mega-all:hover,
+      .nav-mega-all:focus-visible {
+        color: #db3242;
+        outline: none;
+      }
+      @media (max-width: 767px) {
+        .nav-mega {
+          position: static;
+          width: 100%;
+          margin: 0.3rem 0 0.4rem;
+          transform: none;
+          box-shadow: none;
+          border: 1px solid rgba(13, 27, 62, 0.08);
+          display: none;
+          min-height: 0;
+        }
+        .nav-mega::before,
+        .nav-mega::after {
+          display: none;
+        }
+        .dark .nav-mega {
+          border-color: rgba(255, 255, 255, 0.12);
+        }
+        .nav-card-item--mega.is-mega-open .nav-mega {
+          display: flex;
+          opacity: 1;
+          visibility: visible;
+          pointer-events: auto;
+        }
+        .nav-mega-feature {
+          min-height: 7rem;
+        }
+        .nav-mega-feature-copy {
+          min-height: 7rem;
+        }
+      }
+      .dark .nav-card-link {
+        color: rgba(255, 255, 255, 0.9);
+      }
+      .nav-card.is-open .nav-card-link {
+        opacity: 1;
+        transform: none;
+        transition:
+          background 0.2s ease,
+          color 0.2s ease,
+          transform 0.2s ease,
+          opacity 0.4s ease calc(var(--i, 0) * 0.045s + 0.12s),
+          transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)
+            calc(var(--i, 0) * 0.045s + 0.12s);
+      }
+      .nav-card-link:hover,
+      .nav-card-link:focus-visible {
+        background: rgba(35, 63, 132, 0.08);
+        color: #0d1b3e;
+      }
+      .dark .nav-card-link:hover,
+      .dark .nav-card-link:focus-visible {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+      .nav-card-link.is-active {
+        background: rgba(219, 50, 66, 0.1);
+        color: #0d1b3e;
+      }
+      .dark .nav-card-link.is-active {
+        background: rgba(219, 50, 66, 0.22);
+        color: #fff;
+      }
+      .nav-card-link.is-active .nav-card-num {
+        color: #db3242;
+      }
+      .dark .nav-card-link.is-active .nav-card-num {
+        color: #f3c628;
+      }
+      .nav-card-num {
+        font-family: Oswald, Inter, sans-serif;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: rgba(13, 27, 62, 0.4);
+      }
+      .dark .nav-card-num {
+        color: rgba(255, 255, 255, 0.45);
+      }
+      .nav-card-label {
+        font-size: 0.98rem;
+        font-weight: 500;
+        letter-spacing: -0.01em;
+        line-height: 1.25;
+      }
+      .nav-card-arrow {
+        font-size: 0.9rem;
+        opacity: 0;
+        transform: translateX(-4px);
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+        color: #db3242;
+      }
+      .dark .nav-card-arrow {
+        color: #f3c628;
+      }
+      .nav-card-link:hover .nav-card-arrow,
+      .nav-card-link:focus-visible .nav-card-arrow,
+      .nav-card-link.is-active .nav-card-arrow {
+        opacity: 1;
+        transform: none;
+      }
+      .nav-card-foot {
+        padding: 0.9rem 1rem 1.1rem;
+        border-top: 1px solid rgba(13, 27, 62, 0.08);
+      }
+      .dark .nav-card-foot {
+        border-top-color: rgba(255, 255, 255, 0.12);
+      }
+      .nav-card-shop {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 0.9rem 1.05rem;
+        border-radius: 8px;
+        background: #db3242;
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        box-shadow: 0 8px 20px rgba(219, 50, 66, 0.28);
+        transition:
+          color 0.45s ease,
+          background 0.25s ease,
+          box-shadow 0.25s ease;
+      }
+      .nav-card-shop:hover,
+      .nav-card-shop:focus-visible {
+        background: #c42b39;
+        box-shadow: 0 10px 24px rgba(219, 50, 66, 0.35);
+        outline: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nav-card,
+        .nav-card-link,
+        .menu-trigger-bars span {
+          transition: none;
+        }
+        .nav-card.is-open .nav-card-link {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .container-vra {
+        width: 100%;
+        max-width: 1480px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      @media (min-width: 640px) {
+        .container-vra {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+      @media (min-width: 768px) {
+        .container-vra {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+      }
+      /* Varied section widths — “natural” scroll (Surrey-style) */
+      .w-narrow {
+        max-width: 720px;
+      }
+      .w-mid {
+        max-width: 960px;
+      }
+      .w-wide {
+        max-width: 1480px;
+      }
+      .w-fullbleed {
+        max-width: 100%;
+      }
+      /* Snapshots — same width as container-vra */
+      .snap-section {
+        width: 100%;
+        padding-top: 0.25rem;
+        padding-bottom: 0.5rem;
+      }
+      .snap-head {
+        max-width: 44rem;
+        margin-bottom: 1.75rem;
+      }
+      .snap-mosaic-wrap {
+        width: 100%;
+        max-width: 1480px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+      }
+      @media (min-width: 640px) {
+        .snap-mosaic-wrap {
+          padding-left: 1rem;
+          padding-right: 1rem;
+        }
+      }
+      @media (min-width: 768px) {
+        .snap-mosaic-wrap {
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+      }
+      .snap-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #233f84;
+      }
+      .dark .snap-eyebrow {
+        color: #f3c628;
+      }
+      .snap-eyebrow::before {
+        content: "";
+        width: 1.75rem;
+        height: 2px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #db3242, #f3c628);
+      }
+      .snap-title {
+        margin-top: 0.65rem;
+        font-size: clamp(1.75rem, 3.4vw, 40px);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: var(--foreground);
+      }
+      .snap-lead {
+        margin-top: 0.7rem;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: #0d1b3e;
+      }
+      .dark .snap-lead {
+        color: rgba(255, 255, 255, 0.72);
+      }
+      .snap-mosaic {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        width: 100%;
+      }
+      @media (min-width: 1024px) {
+        .snap-mosaic {
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: flex-start;
+          gap: 0.65rem;
+        }
+      }
+      .snap-col {
+        display: flex;
+        flex-direction: column;
+        gap: 0.65rem;
+        width: 100%;
+      }
+      @media (min-width: 1024px) {
+        .snap-col {
+          width: auto;
+          flex: 1 1 0;
+          min-width: 0;
+        }
+      }
+      .snap-cell {
+        position: relative;
+        margin: 0;
+        width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #202020;
+      }
+      .snap-cell img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition:
+          transform 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+          filter 0.35s ease;
+      }
+      .snap-cell:hover img,
+      .snap-cell:focus-visible img {
+        transform: scale(1.045);
+        filter: brightness(0.88);
+      }
+      .snap-h-338 {
+        height: 260px;
+      }
+      .snap-h-462 {
+        height: 320px;
+      }
+      .snap-h-528 {
+        height: 360px;
+      }
+      .snap-h-272 {
+        height: 220px;
+      }
+      .snap-h-400 {
+        height: 280px;
+      }
+      @media (min-width: 1024px) {
+        .snap-h-338 {
+          height: 338px;
+        }
+        .snap-h-462 {
+          height: 462px;
+        }
+        .snap-h-528 {
+          height: 528px;
+        }
+        .snap-h-272 {
+          height: 272px;
+        }
+        .snap-h-400 {
+          height: 400px;
+        }
+      }
+      /* Caption card — frosted glass like hero banner stats */
+      .snap-glass {
+        position: absolute;
+        left: 0.7rem;
+        right: 0.7rem;
+        bottom: 0.7rem;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.45rem;
+        padding: 0.95rem 1rem 1.05rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.40);
+        border: none;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+        pointer-events: none;
+        z-index: 1;
+      }
+      .snap-glass::before {
+        content: "";
+        width: 2rem;
+        height: 3px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #db3242, #f3c628);
+      }
+      .snap-glass span {
+        font-family: Oswald, Inter, sans-serif;
+        font-size: clamp(1.05rem, 1.7vw, 1.35rem);
+        font-weight: 500;
+        font-style: normal;
+        line-height: 1.2;
+        letter-spacing: 0.01em;
+        color: #0d1b3e;
+        text-wrap: balance;
+        transition: font-size 0.35s ease;
+      }
+      .snap-cell:hover .snap-glass span,
+      .snap-cell:focus-within .snap-glass span {
+        font-size: clamp(
+          calc(1.05rem + 2px),
+          calc(1.7vw + 2px),
+          calc(1.35rem + 2px)
+        );
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .snap-cell img {
+          transition: none;
+        }
+        .snap-glass span {
+          transition: none;
+        }
+        .snap-cell:hover img,
+        .snap-cell:focus-visible img {
+          transform: none;
+          filter: none;
+        }
+      }
+
+      /* Sponsors — infinite logo carousel */
+      .sponsors-section {
+        width: 100%;
+        padding: 0.5rem 0 0.25rem;
+      }
+      .sponsors-head {
+        margin-bottom: 1.75rem;
+      }
+      .sponsors-head .section-title {
+        margin-bottom: 0;
+      }
+      /* Shared section H2 — same as Snapshots (40px) */
+      .section-title {
+        text-align: left;
+        font-size: clamp(1.75rem, 3.4vw, 40px);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: var(--foreground);
+        margin-bottom: 1.75rem;
+      }
+      .sponsors-marquee {
+        overflow: hidden;
+        width: 100%;
+        mask-image: linear-gradient(
+          to right,
+          transparent 0%,
+          #000 5%,
+          #000 95%,
+          transparent 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent 0%,
+          #000 5%,
+          #000 95%,
+          transparent 100%
+        );
+      }
+      .sponsors-track {
+        display: flex;
+        align-items: center;
+        width: max-content;
+        gap: 2.75rem;
+        padding: 0.35rem 0;
+        animation: sponsorsMarquee 42s linear infinite;
+        will-change: transform;
+      }
+      .sponsors-marquee:hover .sponsors-track {
+        animation-play-state: paused;
+      }
+      @keyframes sponsorsMarquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      .sponsor-logo {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 5.5rem;
+        height: 2.5rem;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        padding: 0;
+      }
+      @media (min-width: 768px) {
+        .sponsor-logo {
+          width: 6.75rem;
+          height: 3rem;
+        }
+        .sponsors-track {
+          gap: 3.25rem;
+        }
+      }
+      .sponsor-logo img {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        object-position: center;
+        display: block;
+        background: transparent;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .sponsors-track {
+          animation: none;
+        }
+        .sponsors-marquee {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          mask-image: none;
+          -webkit-mask-image: none;
+        }
+      }
+
+      /* Floating actions — Live above WhatsApp; shown after a short scroll */
+      .float-actions {
+        position: fixed;
+        right: 1.25rem;
+        bottom: 3.5rem;
+        z-index: 50;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transform: translateY(0.75rem);
+        transition:
+          opacity 0.35s ease,
+          transform 0.35s ease,
+          visibility 0.35s;
+      }
+      .float-actions.is-visible {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: translateY(0);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .float-actions {
+          transition: none;
+          transform: none;
+        }
+      }
+      @media (min-width: 640px) {
+        .float-actions {
+          right: 2rem;
+          bottom: 2rem;
+        }
+      }
+      .float-live {
+        position: relative;
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background: #db3242;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.28rem;
+        text-decoration: none;
+        isolation: isolate;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease, background 0.2s ease;
+      }
+      .float-live::before,
+      .float-live::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        border: 2px solid rgba(219, 50, 66, 0.55);
+        z-index: -1;
+        pointer-events: none;
+        animation: floatLiveWave 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+      }
+      .float-live::after {
+        animation-delay: 1.1s;
+      }
+      .float-live:hover {
+        transform: scale(1.08);
+        background: #c42b39;
+      }
+      .float-live-dot {
+        width: 0.38rem;
+        height: 0.38rem;
+        border-radius: 50%;
+        background: #fff;
+        flex-shrink: 0;
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55);
+        animation: floatLiveDot 1.5s ease-out infinite;
+      }
+      .float-live-text {
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      @keyframes floatLiveDot {
+        0% {
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.55);
+        }
+        70% {
+          box-shadow: 0 0 0 6px rgba(255, 255, 255, 0);
+        }
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+        }
+      }
+      @keyframes floatLiveWave {
+        0% {
+          transform: scale(1);
+          opacity: 0.75;
+        }
+        100% {
+          transform: scale(1.55);
+          opacity: 0;
+        }
+      }
+      .float-wa {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: 50%;
+        background: linear-gradient(to bottom, #73ff44, #69d346);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s ease;
+      }
+      .float-wa:hover {
+        transform: scale(1.08);
+      }
+      /* Shared cricket seam sweep — page CTA buttons */
+      .btn-contact,
+      .feed-cta,
+      .cfa-cta,
+      .nav-card-shop {
+        --btn-fill: #233f84;
+        --btn-fill-fg: #fff;
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .btn-contact {
+        --btn-fill: #0d1b3e;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid #0d1b3e;
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #0d1b3e;
+        text-decoration: none;
+        transition:
+          color 0.45s ease,
+          border-color 0.45s ease;
+      }
+      .nav-card-shop {
+        --btn-fill: #c42b39;
+      }
+      .dark .feed-cta,
+      .dark .cfa-cta {
+        --btn-fill: #fff;
+        --btn-fill-fg: #202020;
+      }
+      .btn-contact::before,
+      .feed-cta::before,
+      .cfa-cta::before,
+      .nav-card-shop::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: var(--btn-fill);
+        transform: translateX(-101%);
+        transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .btn-contact::after,
+      .feed-cta::after,
+      .cfa-cta::after,
+      .nav-card-shop::after {
+        content: "";
+        position: absolute;
+        top: -30%;
+        left: 0;
+        width: 42%;
+        height: 160%;
+        z-index: 1;
+        pointer-events: none;
+        background: linear-gradient(
+          108deg,
+          transparent 38%,
+          rgba(219, 50, 66, 0.95) 46%,
+          rgba(243, 198, 40, 0.55) 50%,
+          rgba(219, 50, 66, 0.95) 54%,
+          transparent 62%
+        );
+        transform: translateX(-130%) skewX(-18deg);
+        transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+        opacity: 0;
+      }
+      .nav-card-shop::after {
+        background: linear-gradient(
+          108deg,
+          transparent 38%,
+          rgba(255, 255, 255, 0.55) 46%,
+          rgba(243, 198, 40, 0.85) 50%,
+          rgba(255, 255, 255, 0.55) 54%,
+          transparent 62%
+        );
+      }
+      .btn-seam-inner {
+        position: relative;
+        z-index: 2;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+        line-height: 1;
+      }
+      .nav-card-shop .btn-seam-inner {
+        width: 100%;
+        justify-content: space-between;
+        gap: 0.75rem;
+      }
+      .btn-contact:hover,
+      .btn-contact:focus-visible,
+      .feed-cta:hover,
+      .feed-cta:focus-visible,
+      .cfa-cta:hover,
+      .cfa-cta:focus-visible {
+        color: var(--btn-fill-fg);
+        outline: none;
+      }
+      .btn-contact:hover::before,
+      .btn-contact:focus-visible::before,
+      .feed-cta:hover::before,
+      .feed-cta:focus-visible::before,
+      .cfa-cta:hover::before,
+      .cfa-cta:focus-visible::before,
+      .nav-card-shop:hover::before,
+      .nav-card-shop:focus-visible::before {
+        transform: translateX(0);
+      }
+      .btn-contact:hover::after,
+      .btn-contact:focus-visible::after,
+      .feed-cta:hover::after,
+      .feed-cta:focus-visible::after,
+      .cfa-cta:hover::after,
+      .cfa-cta:focus-visible::after,
+      .nav-card-shop:hover::after,
+      .nav-card-shop:focus-visible::after {
+        opacity: 1;
+        transform: translateX(290%) skewX(-18deg);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .btn-contact::before,
+        .btn-contact::after,
+        .feed-cta::before,
+        .feed-cta::after,
+        .cfa-cta::before,
+        .cfa-cta::after,
+        .nav-card-shop::before,
+        .nav-card-shop::after {
+          transition: none;
+        }
+        .btn-contact:hover::before,
+        .btn-contact:focus-visible::before,
+        .feed-cta:hover::before,
+        .feed-cta:focus-visible::before,
+        .cfa-cta:hover::before,
+        .cfa-cta:focus-visible::before,
+        .nav-card-shop:hover::before,
+        .nav-card-shop:focus-visible::before {
+          transform: none;
+        }
+        .btn-contact:hover::after,
+        .btn-contact:focus-visible::after,
+        .feed-cta:hover::after,
+        .feed-cta:focus-visible::after,
+        .cfa-cta:hover::after,
+        .cfa-cta:focus-visible::after,
+        .nav-card-shop:hover::after,
+        .nav-card-shop:focus-visible::after {
+          opacity: 0;
+          transform: none;
+        }
+        .btn-contact:hover,
+        .btn-contact:focus-visible,
+        .feed-cta:hover,
+        .feed-cta:focus-visible,
+        .cfa-cta:hover,
+        .cfa-cta:focus-visible {
+          background: var(--btn-fill);
+          color: var(--btn-fill-fg);
+        }
+        .nav-card-shop:hover,
+        .nav-card-shop:focus-visible {
+          background: #c42b39;
+        }
+      }
+
+      .venue-eyebrow {
+        margin: 0 0 0.65rem;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #233f84;
+      }
+      .dark .venue-eyebrow {
+        color: #f3c628;
+      }
+      .venue-eyebrow::before {
+        content: "";
+        display: inline-block;
+        width: 1.35rem;
+        height: 2px;
+        margin-right: 0.5rem;
+        vertical-align: middle;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #db3242, #f3c628);
+      }
+      .venue-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-bottom: 1.75rem;
+      }
+      #venue .section-title,
+      #visit .section-title {
+        margin-bottom: 0;
+      }
+
+      /* Visit VRA — height crop */
+      .map-venue {
+        position: relative;
+        width: 100%;
+        height: clamp(16rem, 40vw, 23rem);
+        overflow: hidden;
+        border-radius: 8px;
+        background: #202020;
+      }
+      .map-venue img {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        width: 100%;
+        height: auto;
+        transform: translateY(-58%);
+        display: block;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .float-live-dot {
+          animation: none;
+        }
+        .float-live::before,
+        .float-live::after {
+          animation: none;
+          opacity: 0;
+        }
+      }
+      /* Hero right rail — independent vertical tabs, flush right */
+      .hero-side-ctas {
+        position: absolute;
+        right: 0;
+        left: auto;
+        top: 50%;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.65rem;
+        transform: translateY(-42%);
+        width: max-content;
+      }
+      .hero-side-cta {
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        justify-content: flex-start;
+        flex: 0 0 auto;
+        align-self: flex-end;
+        gap: 0.45rem;
+        width: 1.85rem;
+        min-height: 7.25rem;
+        padding: 0.55rem 0.2rem 0.7rem;
+        border-radius: 10px 0 0 10px;
+        color: #fff;
+        text-decoration: none;
+        box-shadow: -3px 6px 16px rgba(0, 0, 0, 0.28);
+        transform-origin: right center;
+        transition:
+          transform 0.2s ease,
+          filter 0.2s ease;
+      }
+      @media (min-width: 640px) {
+        .hero-side-cta {
+          width: 2.1rem;
+          min-height: 8.25rem;
+          gap: 0.5rem;
+          padding: 0.65rem 0.25rem 0.85rem;
+          border-radius: 12px 0 0 12px;
+        }
+      }
+      .hero-side-cta-icon {
+        width: 0.85rem;
+        height: 0.85rem;
+        flex-shrink: 0;
+        display: block;
+        transform: rotate(-90deg);
+      }
+      @media (min-width: 640px) {
+        .hero-side-cta-icon {
+          width: 0.95rem;
+          height: 0.95rem;
+        }
+      }
+      .hero-side-cta-label {
+        writing-mode: vertical-rl;
+        transform: rotate(180deg);
+        white-space: nowrap;
+        font-size: 0.58rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        line-height: 1;
+      }
+      @media (min-width: 640px) {
+        .hero-side-cta-label {
+          font-size: 0.62rem;
+          letter-spacing: 0.12em;
+        }
+      }
+      .hero-side-cta--live {
+        background: #db3242;
+      }
+      .hero-side-cta--sponsor {
+        background: #233f84;
+      }
+      .hero-side-cta:hover,
+      .hero-side-cta:focus-visible {
+        filter: brightness(1.1);
+        outline: none;
+        transform: scaleX(1.08);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero-side-cta {
+          transition: none;
+        }
+        .hero-side-cta:hover,
+        .hero-side-cta:focus-visible {
+          transform: none;
+        }
+      }
+      /* Banner stats — floating glass cards (sports / stadium UI) */
+      .hero-stats {
+        pointer-events: none;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.18) 0%,
+          transparent 70%
+        );
+      }
+      .hero-stats-wrap {
+        pointer-events: auto;
+        position: relative;
+      }
+      /* Below lg: horizontal carousel */
+      .hero-stats-track .hero-stat {
+        flex: 0 0 min(70vw, 210px);
+      }
+      @media (min-width: 640px) and (max-width: 1023px) {
+        .hero-stats-track .hero-stat {
+          flex: 0 0 min(40vw, 230px);
+        }
+      }
+      /* Continuous marquee below lg (duplicated track in JS) */
+      .hero-stats-marquee {
+        overflow: hidden;
+        width: 100%;
+        mask-image: linear-gradient(
+          to right,
+          transparent 0%,
+          #000 4%,
+          #000 96%,
+          transparent 100%
+        );
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent 0%,
+          #000 4%,
+          #000 96%,
+          transparent 100%
+        );
+      }
+      .hero-stats-track {
+        display: flex;
+        gap: 0.75rem;
+        width: max-content;
+        animation: heroStatsMarquee 45s linear infinite;
+        will-change: transform;
+      }
+      .hero-stats-marquee:hover .hero-stats-track,
+      .hero-stats-marquee:focus-within .hero-stats-track {
+        animation-play-state: paused;
+      }
+      @keyframes heroStatsMarquee {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .hero-stats-track {
+          animation: none;
+        }
+        .hero-stats-marquee {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+        }
+      }
+      /* lg+: all 9 in a row */
+      @media (min-width: 1024px) {
+        .hero-stats-marquee {
+          mask-image: none;
+          -webkit-mask-image: none;
+          overflow: visible;
+        }
+        .hero-stats-track {
+          display: grid;
+          grid-template-columns: repeat(9, 1fr);
+          gap: 0.5rem;
+          width: 100%;
+          animation: none;
+          transform: none;
+        }
+        .hero-stats-track .hero-stat-clone {
+          display: none;
+        }
+        .hero-stat-value {
+          font-size: clamp(1.35rem, 1.8vw, 2rem);
+        }
+        .hero-stat-label {
+          font-size: clamp(0.58rem, 0.72vw, 0.72rem);
+          max-width: none;
+        }
+        .hero-stat {
+          padding: 0.75rem 0.4rem 0.85rem;
+        }
+      }
+      .hero-stat {
+        position: relative;
+        text-align: center;
+        padding: 1rem 0.65rem 1.05rem;
+        border-radius: 8px;
+        background: linear-gradient(
+          155deg,
+          rgba(255, 255, 255, 0.22) 0%,
+          rgba(255, 255, 255, 0.08) 45%,
+          rgba(20, 28, 48, 0.35) 100%
+        );
+        backdrop-filter: blur(18px) saturate(160%);
+        -webkit-backdrop-filter: blur(18px) saturate(160%);
+        border: 1px solid rgba(255, 255, 255, 0.38);
+        box-shadow:
+          0 10px 28px rgba(0, 0, 0, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.35);
+        transition:
+          transform 0.25s ease,
+          box-shadow 0.25s ease,
+          border-color 0.25s ease;
+        overflow: hidden;
+      }
+      .hero-stat::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          120deg,
+          transparent 35%,
+          rgba(255, 255, 255, 0.18) 50%,
+          transparent 65%
+        );
+        transform: translateX(-120%);
+        transition: transform 0.7s ease;
+        pointer-events: none;
+      }
+      .hero-stat:hover {
+        transform: translateY(-4px);
+        border-color: rgba(243, 198, 40, 0.7);
+        box-shadow:
+          0 16px 36px rgba(0, 0, 0, 0.28),
+          0 0 0 1px rgba(243, 198, 40, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      }
+      .hero-stat:hover::before {
+        transform: translateX(120%);
+      }
+      .hero-stat-value {
+        font-family: Oswald, Inter, sans-serif;
+        font-size: clamp(1.85rem, 3.4vw, 2.85rem);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        color: #fff;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+      }
+      .hero-stat-accent {
+        width: 28px;
+        height: 3px;
+        margin: 0.55rem auto 0.5rem;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #f3c628, #db3242);
+        box-shadow: 0 0 12px rgba(243, 198, 40, 0.55);
+      }
+      .hero-stat-label {
+        font-size: clamp(0.68rem, 1vw, 0.82rem);
+        font-weight: 500;
+        line-height: 1.3;
+        color: rgba(255, 255, 255, 0.9);
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+        max-width: 9.5rem;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* —— Instagram + News (7 / 5), equal body height —— */
+      :root {
+        --feed-body-h: 360px;
+      }
+      @media (min-width: 640px) {
+        :root {
+          --feed-body-h: 420px;
+        }
+      }
+      @media (min-width: 1024px) {
+        :root {
+          --feed-body-h: 460px;
+        }
+      }
+      .feed-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+      }
+      @media (min-width: 1024px) {
+        .feed-grid {
+          grid-template-columns: repeat(12, 1fr);
+          gap: 1.5rem;
+          align-items: start;
+        }
+        .feed-ig {
+          grid-column: span 7;
+        }
+        .feed-news {
+          grid-column: span 5;
+        }
+      }
+      .feed-ig,
+      .feed-news {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+      }
+      .feed-head {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        min-height: 3.75rem;
+      }
+      .feed-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        padding: 0.55rem 1.1rem;
+        border-radius: 8px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition:
+          color 0.45s ease,
+          border-color 0.45s ease;
+      }
+      .feed-cta--news {
+        background: transparent;
+        color: #233f84;
+        border: 1.5px solid #233f84;
+      }
+      .dark .feed-cta--news {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.55);
+      }
+      .feed-cta--news:hover,
+      .feed-cta--news:focus-visible {
+        border-color: #233f84;
+      }
+      .dark .feed-cta--news:hover,
+      .dark .feed-cta--news:focus-visible {
+        color: #202020;
+        border-color: #fff;
+      }
+      .feed-cta svg {
+        display: block;
+        width: 14px;
+        height: 14px;
+        flex-shrink: 0;
+      }
+      .feed-cta .btn-seam-inner > span {
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+        transform: translateY(1px);
+      }
+
+      /* Instagram — one row, larger reels, drag + autoplay */
+      .ig-marquee {
+        overflow-x: auto;
+        overflow-y: hidden;
+        height: var(--feed-body-h);
+        border-radius: 8px;
+        cursor: grab;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: auto;
+        mask-image: linear-gradient(
+          to right,
+          transparent,
+          #000 1.5%,
+          #000 98.5%,
+          transparent
+        );
+        -webkit-mask-image: linear-gradient(
+          to right,
+          transparent,
+          #000 1.5%,
+          #000 98.5%,
+          transparent
+        );
+        user-select: none;
+      }
+      .ig-marquee::-webkit-scrollbar {
+        display: none;
+      }
+      .ig-marquee.is-dragging {
+        cursor: grabbing;
+      }
+      .ig-marquee.is-dragging .ig-reel {
+        pointer-events: none;
+      }
+      .ig-track {
+        display: flex;
+        align-items: stretch;
+        gap: 0.75rem;
+        width: max-content;
+        height: 100%;
+      }
+      .ig-reel {
+        position: relative;
+        flex: 0 0 auto;
+        height: 100%;
+        width: calc(var(--feed-body-h) * 9 / 16);
+        border-radius: 8px;
+        overflow: hidden;
+        background: #202020;
+        display: block;
+        text-decoration: none;
+        color: inherit;
+      }
+      .ig-reel > img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.35s ease;
+        pointer-events: none;
+      }
+      .ig-reel:hover > img {
+        transform: scale(1.04);
+      }
+      .ig-reel-top {
+        position: absolute;
+        inset: 0 0 auto 0;
+        padding: 0.7rem 0.65rem 1.6rem;
+        background: linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.55),
+          transparent
+        );
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        z-index: 2;
+        transition: opacity 0.25s ease;
+      }
+      .ig-reel-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        border: 1.5px solid #f3c628;
+        background: #fff;
+        object-fit: contain;
+        padding: 3px;
+        flex-shrink: 0;
+        display: block;
+      }
+      .ig-reel-user {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.15;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ig-reel-cap {
+        position: absolute;
+        inset: auto 0 0 0;
+        padding: 2.5rem 0.75rem 0.9rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        z-index: 2;
+        transition: opacity 0.25s ease;
+      }
+      .ig-reel-cap p {
+        margin: 0;
+        color: #fff;
+        font-size: 0.8rem;
+        font-weight: 600;
+        line-height: 1.35;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .ig-reel-cta {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, 0.42);
+        opacity: 0;
+        transition: opacity 0.25s ease;
+        pointer-events: none;
+      }
+      .ig-reel-cta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.65rem 1.15rem;
+        border-radius: 8px;
+        background: #fff;
+        color: #202020;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      }
+      .ig-reel:hover .ig-reel-cta {
+        opacity: 1;
+      }
+      .ig-reel:hover .ig-reel-top,
+      .ig-reel:hover .ig-reel-cap {
+        opacity: 0.35;
+      }
+
+      /* News — 2×2 grid, same height as IG row */
+      .news-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 0.65rem;
+        height: var(--feed-body-h);
+      }
+      .news-card {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 0;
+        height: 100%;
+        padding: 0.95rem 1rem;
+        transition: transform 0.25s ease;
+      }
+      .news-card:hover {
+        transform: translateY(-2px);
+      }
+      .news-card--dark {
+        background: #202020;
+        color: #fff;
+      }
+      .news-card--navy {
+        background: #233f84;
+        color: #fff;
+      }
+      .news-card--yellow {
+        background: #f3c628;
+        color: #0d1b3e;
+      }
+      .news-card--photo {
+        padding: 0;
+        color: #fff;
+      }
+      .news-card--photo img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .news-card--photo .news-card-body {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        padding: 0.95rem 1rem;
+        background: linear-gradient(
+          to top,
+          rgba(32, 32, 32, 0.9) 0%,
+          rgba(32, 32, 32, 0.35) 55%,
+          transparent 100%
+        );
+      }
+      .news-kicker {
+        font-size: 0.6rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin-bottom: 0.3rem;
+      }
+      .news-title {
+        font-size: 0.98rem;
+        font-weight: 500;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+      }
+      .news-excerpt {
+        margin-top: 0.35rem;
+        font-size: 0.72rem;
+        line-height: 1.35;
+        opacity: 0.85;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .news-link {
+        margin-top: 0.55rem;
+        display: inline-flex;
+        font-size: 0.65rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      /* —— Cricket for all — cinematic strips —— */
+      .cfa {
+        width: 100%;
+        padding: 1rem 0 0.5rem;
+      }
+      .cfa-intro {
+        width: 100%;
+        max-width: none;
+        margin-bottom: 2.75rem;
+      }
+      .cfa-intro .cfa-lead {
+        max-width: min(100%, 72rem);
+      }
+      .cfa-eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: #233f84;
+      }
+      .dark .cfa-eyebrow {
+        color: #f3c628;
+      }
+      .cfa-eyebrow::before {
+        content: "";
+        width: 1.75rem;
+        height: 2px;
+        border-radius: 8px;
+        background: linear-gradient(90deg, #db3242, #f3c628);
+      }
+      .cfa-title {
+        margin-top: 0.75rem;
+        font-size: clamp(1.75rem, 3.4vw, 40px);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        color: var(--foreground);
+      }
+      .cfa-lead {
+        margin-top: 1rem;
+        font-size: 0.95rem;
+        line-height: 1.55;
+        color: #0d1b3e;
+      }
+      .dark .cfa-lead {
+        color: rgba(255, 255, 255, 0.72);
+      }
+      .cfa-strips {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+      }
+      @media (min-width: 768px) {
+        .cfa-strips {
+          gap: 1.5rem;
+        }
+      }
+      .cfa-strip {
+        --cfa-accent: #db3242;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f7f7f7;
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .dark .cfa-strip {
+        background: #2a2a2a;
+      }
+      .cfa-strip.is-inview {
+        opacity: 1;
+        transform: none;
+      }
+      .cfa-strip--red {
+        --cfa-accent: #db3242;
+      }
+      .cfa-strip--navy {
+        --cfa-accent: #233f84;
+      }
+      .cfa-strip--yellow {
+        --cfa-accent: #f3c628;
+      }
+      .cfa-strip--charcoal {
+        --cfa-accent: #202020;
+      }
+      @media (min-width: 900px) {
+        .cfa-strip {
+          grid-template-columns: 1.25fr 1fr;
+          min-height: 300px;
+        }
+        .cfa-strip--flip {
+          grid-template-columns: 1fr 1.25fr;
+        }
+        .cfa-strip--flip .cfa-strip-media {
+          order: 2;
+        }
+        .cfa-strip--flip .cfa-strip-copy {
+          order: 1;
+        }
+        .cfa-strip--tall {
+          min-height: 360px;
+        }
+      }
+      .cfa-strip-media {
+        position: relative;
+        min-height: 210px;
+        overflow: hidden;
+        background: #202020;
+      }
+      @media (min-width: 900px) {
+        .cfa-strip-media {
+          min-height: 100%;
+        }
+      }
+      .cfa-strip-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transform: scale(1.04);
+        transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .cfa-strip:hover .cfa-strip-media img,
+      .cfa-strip:focus-within .cfa-strip-media img {
+        transform: scale(1);
+      }
+      .cfa-strip-copy {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.7rem;
+        padding: 1.45rem 1.35rem 1.55rem;
+        overflow: hidden;
+      }
+      @media (min-width: 900px) {
+        .cfa-strip-copy {
+          gap: 0.8rem;
+          padding: 2rem 2.5rem 2.1rem;
+        }
+      }
+      .cfa-strip-copy::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 1.6rem;
+        bottom: 1.6rem;
+        width: 4px;
+        border-radius: 8px;
+        background: var(--cfa-accent);
+        transform: scaleY(0);
+        transform-origin: top center;
+        transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+      }
+      .cfa-strip.is-inview .cfa-strip-copy::before {
+        transform: scaleY(1);
+      }
+      @media (min-width: 900px) {
+        .cfa-strip-copy::before {
+          top: 2.25rem;
+          bottom: 2.25rem;
+        }
+        .cfa-strip--flip .cfa-strip-copy::before {
+          left: auto;
+          right: 0;
+        }
+      }
+      .cfa-strip-num {
+        position: absolute;
+        right: 0.6rem;
+        top: 0.2rem;
+        font-family: Oswald, Inter, sans-serif;
+        font-size: clamp(4.5rem, 10vw, 7.5rem);
+        font-weight: 700;
+        line-height: 0.85;
+        letter-spacing: -0.04em;
+        color: var(--foreground);
+        opacity: 0.06;
+        pointer-events: none;
+        user-select: none;
+      }
+      .cfa-strip--flip .cfa-strip-num {
+        right: auto;
+        left: 0.6rem;
+      }
+      .cfa-meta {
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--cfa-accent);
+      }
+      .cfa-strip--yellow .cfa-meta {
+        color: #a07d00;
+      }
+      .dark .cfa-strip--yellow .cfa-meta {
+        color: #f3c628;
+      }
+      .cfa-heading {
+        font-size: clamp(1.85rem, 3.4vw, 2.85rem);
+        font-weight: 500;
+        letter-spacing: -0.025em;
+        line-height: 1.12;
+        color: var(--foreground);
+        max-width: 18ch;
+      }
+      .cfa-body {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #0d1b3e;
+        max-width: 46ch;
+      }
+      .dark .cfa-body {
+        color: rgba(255, 255, 255, 0.72);
+      }
+      @media (min-width: 900px) {
+        .cfa-heading {
+          max-width: 20ch;
+        }
+        .cfa-body {
+          max-width: 52ch;
+        }
+      }
+      .cfa-cta {
+        display: inline-flex;
+        align-items: center;
+        align-self: flex-start;
+        margin-top: 0.35rem;
+        padding: 0.65rem 1.2rem;
+        border-radius: 8px;
+        border: 1.5px solid #233f84;
+        color: #233f84;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition:
+          color 0.45s ease,
+          border-color 0.45s ease;
+      }
+      .dark .cfa-cta {
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.55);
+      }
+      .cfa-cta:hover,
+      .cfa-cta:focus-visible {
+        border-color: #233f84;
+      }
+      .dark .cfa-cta:hover,
+      .dark .cfa-cta:focus-visible {
+        color: #202020;
+        border-color: #fff;
+      }
+      .cfa-pair {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+      }
+      @media (min-width: 768px) {
+        .cfa-pair {
+          grid-template-columns: 1fr 1fr;
+          gap: 1.5rem;
+        }
+      }
+      .cfa-tile {
+        --cfa-accent: #233f84;
+        display: flex;
+        flex-direction: column;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #f7f7f7;
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .dark .cfa-tile {
+        background: #2a2a2a;
+      }
+      .cfa-tile.is-inview {
+        opacity: 1;
+        transform: none;
+      }
+      .cfa-tile--yellow {
+        --cfa-accent: #f3c628;
+      }
+      .cfa-tile--charcoal {
+        --cfa-accent: #db3242;
+      }
+      .cfa-tile-media {
+        position: relative;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background: #202020;
+      }
+      .cfa-tile-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transform: scale(1.04);
+        transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .cfa-tile:hover .cfa-tile-media img,
+      .cfa-tile:focus-within .cfa-tile-media img {
+        transform: scale(1);
+      }
+      .cfa-tile-copy {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+        padding: 1.1rem 1.25rem 1.25rem;
+      }
+      .cfa-tile-copy::before {
+        content: "";
+        position: absolute;
+        left: 1.35rem;
+        right: 1.35rem;
+        top: 0;
+        height: 3px;
+        border-radius: 8px;
+        background: var(--cfa-accent);
+        transform: scaleX(0);
+        transform-origin: left center;
+        transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+      }
+      .cfa-tile.is-inview .cfa-tile-copy::before {
+        transform: scaleX(1);
+      }
+      .cfa-tile .cfa-heading {
+        max-width: none;
+        font-size: clamp(1.35rem, 2vw, 1.7rem);
+      }
+      .cfa-tile .cfa-body {
+        max-width: none;
+        font-size: 18px;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .cfa-strip,
+        .cfa-tile {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        .cfa-strip-copy::before,
+        .cfa-tile-copy::before {
+          transform: none;
+          transition: none;
+        }
+        .cfa-strip-media img,
+        .cfa-tile-media img {
+          transform: none !important;
+          transition: none;
+        }
+      }
+    </style>
+  </head>
+  <body class="antialiased overflow-x-hidden bg-background text-foreground">
+    <!-- Header (menu left) -->
+    <header class="fixed top-0 left-0 right-0 z-[46] h-[56px] sm:h-[64px] md:h-[72px]">
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-black/50 to-black/0 backdrop-blur-[6px]"
+      ></div>
+      <div
+        class="relative h-full flex items-center justify-between px-3 sm:px-5 md:px-8 lg:px-10"
+      >
+        <div class="flex items-center gap-[21px]">
+          <button
+            id="menu-open"
+            type="button"
+            class="menu-trigger"
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="sidebar"
+          >
+            <span class="menu-trigger-bars" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+          <nav class="hidden xl:flex items-center gap-4 lg:gap-6 p-2">
+            <a href="membership.html" class="header-nav-link">Membership</a>
+            <a href="venue.html" class="header-nav-link">Venue &amp; Facilities</a>
+            <a href="#home" class="header-nav-link is-current">Home</a>
+          </nav>
+        </div>
+
+        <div
+          class="hidden xl:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+        >
+          <a href="index.html" aria-label="Go to home page">
+            <img
+              src="assets/logo-header.svg"
+              alt="VRA"
+              class="w-[96px] h-8 sm:w-[114.24px] sm:h-10"
+            />
+          </a>
+        </div>
+
+        <div class="flex items-center gap-3 sm:gap-4 md:gap-6 p-2.5">
+          <button
+            id="theme-toggle"
+            type="button"
+            class="header-tool w-[41px] h-[41px] relative cursor-pointer"
+            aria-label="Toggle theme"
+          >
+            <img
+              id="icon-sun"
+              src="assets/icon-sun.svg"
+              alt="Sun"
+              class="w-full h-full absolute inset-0 transition-opacity duration-300 opacity-0"
+            />
+            <img
+              id="icon-moon"
+              src="assets/icon-moon.svg"
+              alt="Moon"
+              class="w-full h-full absolute inset-0 transition-opacity duration-300 opacity-100"
+            />
+          </button>
+          <button
+            type="button"
+            class="header-lang relative"
+            aria-label="Language"
+          >
+            <span
+              class="header-lang-nl absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xl font-normal pr-10"
+              >NL</span
+            >
+            <img
+              src="assets/icon-lang-divider.svg"
+              alt=""
+              class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-3.5"
+            />
+            <span
+              class="header-lang-en absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white/50 text-xs font-normal pl-8"
+              >EN</span
+            >
+          </button>
+          <a
+            href="contact.html"
+            class="header-tool w-10 h-10 rounded-[8px] border border-white/80 flex items-center justify-center text-white"
+            aria-label="Contact"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Floating nav card -->
+    <div id="menu-overlay" class="menu-overlay" hidden></div>
+    <aside
+      id="sidebar"
+      class="nav-card"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Site menu"
+      hidden
+    >
+      <div class="nav-card-head">
+        <div class="nav-card-kicker">
+          <span class="nav-card-eyebrow">Navigate</span>
+          <span class="nav-card-brand">VRA</span>
+        </div>
+      </div>
+      <nav class="nav-card-links" aria-label="Primary">
+        <a href="#home" class="nav-card-link is-active" style="--i: 0">
+          <span class="nav-card-num">01</span>
+          <span class="nav-card-label">Homepage</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <div class="nav-card-item--mega" data-nav-mega>
+          <a
+            href="news.html"
+            class="nav-card-link"
+            style="--i: 1"
+            aria-haspopup="true"
+            aria-expanded="false"
+            data-nav-mega-trigger
+          >
+            <span class="nav-card-num">02</span>
+            <span class="nav-card-label">News</span>
+            <span class="nav-card-arrow" aria-hidden="true">→</span>
+          </a>
+          <div class="nav-mega" role="region" aria-label="Latest news">
+            <div class="nav-mega-head">
+              <p class="nav-mega-eyebrow">Latest news</p>
+              <a href="news.html" class="nav-mega-all"
+                >All news <span aria-hidden="true">→</span></a
+              >
+            </div>
+            <a href="news-article.html?id=alv-2026" class="nav-mega-feature">
+              <img src="assets/home/home-collage/2.jpg" alt="" />
+              <span class="nav-mega-feature-copy">
+                <span class="nav-mega-kicker">Invitation</span>
+                <span class="nav-mega-title">Invitation to ALV</span>
+                <span class="nav-mega-meta">23 april 2026 · Clubhuis · 20:00</span>
+              </span>
+            </a>
+            <div class="nav-mega-list">
+              <a href="news-article.html?id=legend" class="nav-mega-item">
+                <span class="nav-mega-thumb nav-mega-thumb--tone nav-mega-thumb--dark"
+                  >IM</span
+                >
+                <span>
+                  <p class="nav-mega-kicker">In memoriam</p>
+                  <p class="nav-mega-title">Remembering a club legend</p>
+                  <p class="nav-mega-meta">Board notice</p>
+                </span>
+              </a>
+              <a href="news-article.html?id=board-member" class="nav-mega-item">
+                <span class="nav-mega-thumb nav-mega-thumb--tone nav-mega-thumb--navy"
+                  >Board</span
+                >
+                <span>
+                  <p class="nav-mega-kicker">Board</p>
+                  <p class="nav-mega-title">New board member</p>
+                  <p class="nav-mega-meta">Welcome note</p>
+                </span>
+              </a>
+              <a href="news-article.html?id=membership-2026" class="nav-mega-item">
+                <span
+                  class="nav-mega-thumb nav-mega-thumb--tone nav-mega-thumb--yellow"
+                  >2026</span
+                >
+                <span>
+                  <p class="nav-mega-kicker">Membership</p>
+                  <p class="nav-mega-title">2026 membership open</p>
+                  <p class="nav-mega-meta">Join VRA</p>
+                </span>
+              </a>
+            </div>
+          </div>
+        </div>
+        <a href="membership.html" class="nav-card-link" style="--i: 2">
+          <span class="nav-card-num">03</span>
+          <span class="nav-card-label">Membership</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="venue.html" class="nav-card-link" style="--i: 3">
+          <span class="nav-card-num">04</span>
+          <span class="nav-card-label">Venue / Facility</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="fixtures.html" class="nav-card-link" style="--i: 4">
+          <span class="nav-card-num">05</span>
+          <span class="nav-card-label">Fixtures</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="indoor-net-booking.html" class="nav-card-link" style="--i: 5">
+          <span class="nav-card-num">06</span>
+          <span class="nav-card-label">Book a lane</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="about.html" class="nav-card-link" style="--i: 6">
+          <span class="nav-card-num">07</span>
+          <span class="nav-card-label">About Us</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="support.html" class="nav-card-link" style="--i: 7">
+          <span class="nav-card-num">08</span>
+          <span class="nav-card-label">Support Us</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="contact.html" class="nav-card-link" style="--i: 8">
+          <span class="nav-card-num">09</span>
+          <span class="nav-card-label">Contact</span>
+          <span class="nav-card-arrow" aria-hidden="true">→</span>
+        </a>
+      </nav>
+      <div class="nav-card-foot">
+        <a
+          class="nav-card-shop"
+          href="https://www.gray-nicolls.co.uk/collections/vra-cricket-netherlands"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <span class="btn-seam-inner">
+            <span>Cricket Shop</span>
+            <span aria-hidden="true">↗</span>
+          </span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- HERO: clean video + glass stats bar at bottom (no full-image grey filter) -->
+    <section id="home" class="relative h-[100vh] w-full overflow-hidden">
+      <video
+        src="assets/home/homepage-banner.mp4"
+        autoplay
+        loop
+        muted
+        playsinline
+        class="absolute inset-0 w-full h-full object-cover"
+      ></video>
+
+      <div class="hero-side-ctas" aria-label="Banner actions">
+        <a
+          class="hero-side-cta hero-side-cta--live"
+          href="https://www.youtube.com/@VRACricketLive"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg
+            class="hero-side-cta-icon"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path
+              d="M8 5.14v13.72a1 1 0 001.5.86l11-6.86a1 1 0 000-1.72l-11-6.86a1 1 0 00-1.5.86z"
+            />
+          </svg>
+          <span class="hero-side-cta-label">Watch Live</span>
+        </a>
+        <a class="hero-side-cta hero-side-cta--sponsor" href="support.html#ball-checkout">
+          <svg
+            class="hero-side-cta-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="12" r="9" />
+            <!-- Cricket seam (figure-8 stitches) -->
+            <path d="M9.2 4.6c2.2 2.4 2.2 12.4 0 14.8" />
+            <path d="M14.8 4.6c-2.2 2.4-2.2 12.4 0 14.8" />
+            <path
+              d="M8.6 7.2l1.2.9M8.4 9.6l1.4.5M8.4 12l1.4 0M8.4 14.4l1.4-.5M8.6 16.8l1.2-.9"
+            />
+            <path
+              d="M15.4 7.2l-1.2.9M15.6 9.6l-1.4.5M15.6 12l-1.4 0M15.6 14.4l-1.4-.5M15.4 16.8l-1.2-.9"
+            />
+          </svg>
+          <span class="hero-side-cta-label">Sponsor a ball</span>
+        </a>
+      </div>
+
+      <!-- Floating glass scoreboard — 9 panels; carousel below lg -->
+      <div class="absolute inset-x-0 bottom-0 z-[2] hero-stats">
+        <div
+          class="container-vra pt-6 pb-4 sm:pt-7 sm:pb-5 md:pt-8 md:pb-6"
+        >
+          <div class="hero-stats-wrap">
+            <div
+              class="hero-stats-marquee"
+              role="region"
+              aria-label="VRA club facts"
+            >
+              <div class="hero-stats-track" id="hero-stats-track">
+                <!-- filled by JS from PDF copy -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="flex flex-col items-center gap-20 py-12 sm:py-16 pb-24">
+      <!-- Instagram (7) + Featured news (5) -->
+      <section class="container-vra w-full" id="news">
+        <div class="feed-grid">
+          <!-- Instagram (7) — one row, larger reels -->
+          <div class="feed-ig">
+            <div class="feed-head">
+              <div>
+                <h2 class="text-foreground text-2xl sm:text-3xl font-light">
+                  Instagram
+                </h2>
+                <p class="text-[#0D1B3E] dark:text-white/70 text-sm mt-1">@vra_cricket_amsterdam</p>
+              </div>
+              <a
+                href="https://www.instagram.com/vra_cricket_amsterdam"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="feed-cta feed-cta--news"
+              >
+                <span class="btn-seam-inner">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                      d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                    />
+                  </svg>
+                  <span>Follow</span>
+                </span>
+              </a>
+            </div>
+            <div class="ig-marquee" id="ig-marquee" aria-label="Instagram posts">
+              <div class="ig-track" id="ig-track"></div>
+            </div>
+          </div>
+
+          <!-- Featured news (5) — 2×2, same height as IG -->
+          <div class="feed-news">
+            <div class="feed-head">
+              <div>
+                <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#233f84]">
+                  Club notices
+                </p>
+                <h2 class="text-foreground text-2xl sm:text-3xl font-light mt-1">
+                  Featured news
+                </h2>
+              </div>
+              <a href="news.html" class="feed-cta feed-cta--news">
+                <span class="btn-seam-inner">
+                  All news
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.2"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+            <div class="news-grid">
+              <a href="#" class="news-card news-card--photo">
+                <img src="assets/home/home-collage/2.jpg" alt="" />
+                <div class="news-card-body">
+                  <p class="news-kicker" style="color: #f3c628">Invitation</p>
+                  <h3 class="news-title">Invitation to ALV</h3>
+                  <p class="news-excerpt">
+                    ALV · VRA Clubhuis · 23 april 2026 · 20:00
+                  </p>
+                  <span class="news-link">Lees verder →</span>
+                </div>
+              </a>
+
+              <a href="#" class="news-card news-card--dark">
+                <div>
+                  <p class="news-kicker">In memoriam</p>
+                  <h3 class="news-title">Remembering a club legend</h3>
+                  <p class="news-excerpt">
+                    Placeholder notice — content from the board.
+                  </p>
+                </div>
+                <span class="news-link" style="color: #f3c628">Read more →</span>
+              </a>
+
+              <a href="#" class="news-card news-card--navy">
+                <div>
+                  <p class="news-kicker" style="color: #f3c628">Board</p>
+                  <h3 class="news-title">New board member</h3>
+                  <p class="news-excerpt">
+                    Welcome note and short bio placeholder.
+                  </p>
+                </div>
+                <span class="news-link" style="color: #f3c628">Meet the board →</span>
+              </a>
+
+              <a href="membership.html" class="news-card news-card--yellow">
+                <div>
+                  <p class="news-kicker" style="opacity: 0.7">Membership</p>
+                  <h3 class="news-title">2026 membership open</h3>
+                  <p class="news-excerpt">Join the #1 cricket club in NL.</p>
+                </div>
+                <span class="news-link">Join VRA →</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CRICKET FOR ALL — cinematic story strips -->
+      <section class="container-vra w-full cfa" id="cricket-for-all" aria-label="Cricket for all">
+        <header class="cfa-intro">
+          <p class="cfa-eyebrow">High Performance Centre · Amsterdamse Bos</p>
+          <h2 class="cfa-title">Cricket for all</h2>
+          <p class="cfa-lead">
+            At our High Performance Centre in the ‘Amsterdamse Bos’ we host
+            cricket formats for all. From International matches, competitive,
+            youth to social and fixtures. All year round training facilities in
+            the #1 cricket club in the Netherlands.
+          </p>
+        </header>
+
+        <div class="cfa-strips">
+          <article class="cfa-strip cfa-strip--red cfa-strip--tall" data-cfa-reveal>
+            <div class="cfa-strip-media">
+              <img
+                src="assets/home/international.jpg"
+                alt="International cricket at VRA"
+              />
+            </div>
+            <div class="cfa-strip-copy">
+              <span class="cfa-strip-num" aria-hidden="true">01</span>
+              <p class="cfa-meta">ODI · T20I · Women’s</p>
+              <h3 class="cfa-heading">Internationals</h3>
+              <p class="cfa-body">
+                VRA is the favourite location for the major international
+                matches of the Dutch national teams, like the West-Indies and
+                England in 2022.
+              </p>
+            </div>
+          </article>
+
+          <article class="cfa-strip cfa-strip--navy cfa-strip--flip" data-cfa-reveal>
+            <div class="cfa-strip-media">
+              <img
+                src="assets/home/club-sports.jpeg"
+                alt="Club competitions at VRA"
+              />
+            </div>
+            <div class="cfa-strip-copy">
+              <span class="cfa-strip-num" aria-hidden="true">02</span>
+              <p class="cfa-meta">Seniors · Women’s · Youth</p>
+              <h3 class="cfa-heading">Club competitions</h3>
+              <p class="cfa-body">
+                VRA is represented at all levels of Dutch cricket. Our first XI
+                competes in the highest domestic competition. We field 8 mens
+                and 1 women's team and various youth teams in all age
+                categories.
+              </p>
+            </div>
+          </article>
+
+          <article class="cfa-strip cfa-strip--yellow" data-cfa-reveal>
+            <div class="cfa-strip-media">
+              <img
+                src="assets/home/social.jpeg"
+                alt="Social cricket at VRA"
+              />
+            </div>
+            <div class="cfa-strip-copy">
+              <span class="cfa-strip-num" aria-hidden="true">03</span>
+              <p class="cfa-meta">Zami · Midweek T20</p>
+              <h3 class="cfa-heading">Social cricket</h3>
+              <p class="cfa-body">
+                In the social cricket league we host 2 teams on the Saturday
+                afternoons and a T20 competition on Wednesdays.
+              </p>
+            </div>
+          </article>
+
+          <div class="cfa-pair">
+            <article class="cfa-tile cfa-tile--yellow" data-cfa-reveal>
+              <div class="cfa-tile-media">
+                <img
+                  src="assets/home/home-collage/4.jpg"
+                  alt="Business cricket events"
+                />
+              </div>
+              <div class="cfa-tile-copy">
+                <p class="cfa-meta">Corporate · Expat community</p>
+                <h3 class="cfa-heading">Business</h3>
+                <p class="cfa-body">
+                  The club is connected to the international business community
+                  in Amsterdam and its expat community. We host several business
+                  cricket events each year.
+                </p>
+              </div>
+            </article>
+
+            <article class="cfa-tile cfa-tile--charcoal" data-cfa-reveal>
+              <div class="cfa-tile-media">
+                <img
+                  src="assets/home/home-collage/1.jpg"
+                  alt="Fixtures and touring sides at VRA"
+                />
+              </div>
+              <div class="cfa-tile-copy">
+                <p class="cfa-meta">Touring sides · World welcome</p>
+                <h3 class="cfa-heading">Fixtures</h3>
+                <p class="cfa-body">
+                  VRA has a long history on hosting fixtures. We’ve welcomed
+                  teams from all over the world. Come play at the best site in
+                  the Netherlands.
+                </p>
+                <a class="cfa-cta" href="fixtures.html">
+                  <span class="btn-seam-inner">
+                    Fixtures &amp; tables
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.2"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14M13 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- SNAPSHOTS — head aligns with container-vra; mosaic keeps own width -->
+      <section class="snap-section" id="snapshots" aria-label="Snapshots of VRA">
+        <div class="container-vra">
+          <header class="snap-head">
+            <p class="snap-eyebrow">Snapshots of VRA</p>
+            <h2 class="snap-title">
+              Play &amp; perform at the most<br />
+              beautiful ground in the Netherlands
+            </h2>
+            <p class="snap-lead">
+              From internationals to U9s — real moments at the Amsterdamse Bos.
+            </p>
+          </header>
+        </div>
+
+        <div class="snap-mosaic-wrap">
+        <div class="snap-mosaic">
+          <div class="snap-col">
+            <figure class="snap-cell snap-h-338">
+              <img
+                id="snap-men"
+                src="assets/home/home-collage/1.jpg"
+                alt="VRA First XI"
+              />
+              <figcaption class="snap-glass">
+                <span>First XI</span>
+              </figcaption>
+            </figure>
+            <figure class="snap-cell snap-h-462">
+              <img
+                src="assets/home/home-collage/2.jpg"
+                alt="Triple A ground at the Amsterdamse Bos"
+              />
+              <figcaption class="snap-glass">
+                <span>Triple A Ground</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="snap-col">
+            <figure class="snap-cell snap-h-528">
+              <img
+                src="assets/home/home-collage/3.jpg"
+                alt="Social cricket at VRA"
+              />
+              <figcaption class="snap-glass">
+                <span>35-Over Social</span>
+              </figcaption>
+            </figure>
+            <figure class="snap-cell snap-h-272">
+              <img
+                id="snap-women"
+                src="assets/home/home-collage/4.jpg"
+                alt="VRA Women"
+              />
+              <figcaption class="snap-glass">
+                <span>Women’s XI</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="snap-col">
+            <figure class="snap-cell snap-h-400">
+              <img
+                src="assets/home/home-collage/5.jpg"
+                alt="Business cricket event"
+              />
+              <figcaption class="snap-glass">
+                <span>Business Event</span>
+              </figcaption>
+            </figure>
+            <figure class="snap-cell snap-h-400">
+              <img
+                id="snap-youth"
+                src="assets/home/home-collage/6.jpg"
+                alt="VRA youth pathway"
+              />
+              <figcaption class="snap-glass">
+                <span>Youth · U9</span>
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+        </div>
+      </section>
+
+      <!-- OUR SPONSORS — infinite logo carousel -->
+      <section class="sponsors-section" id="support" aria-label="Our Sponsors">
+        <div class="container-vra">
+          <header class="sponsors-head venue-section-head">
+            <div>
+              <p class="venue-eyebrow">Partners</p>
+              <h2 class="section-title">Our Sponsors</h2>
+            </div>
+            <a href="support.html#ball-checkout" class="feed-cta feed-cta--news">
+              <span class="btn-seam-inner">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.75"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="9" />
+                  <path d="M9.2 4.6c2.2 2.4 2.2 12.4 0 14.8" />
+                  <path d="M14.8 4.6c-2.2 2.4-2.2 12.4 0 14.8" />
+                  <path
+                    d="M8.6 7.2l1.2.9M8.4 9.6l1.4.5M8.4 12l1.4 0M8.4 14.4l1.4-.5M8.6 16.8l1.2-.9"
+                  />
+                  <path
+                    d="M15.4 7.2l-1.2.9M15.6 9.6l-1.4.5M15.6 12l-1.4 0M15.6 14.4l-1.4-.5M15.4 16.8l-1.2-.9"
+                  />
+                </svg>
+                <span>Sponsor a ball</span>
+              </span>
+            </a>
+          </header>
+        </div>
+        <div class="sponsors-marquee" aria-hidden="false">
+          <div class="sponsors-track" id="sponsors-track">
+            <!-- logos duplicated in JS for seamless loop -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Map / Visit tease -->
+      <div id="venue" class="container-vra w-full">
+        <header class="venue-section-head">
+          <div>
+            <p class="venue-eyebrow">Find us</p>
+            <h2 class="section-title">Visit VRA</h2>
+          </div>
+        </header>
+        <section class="map-venue" aria-label="VRA Cricket Amsterdam location">
+          <img
+            src="assets/map-venue.jpg"
+            alt="Satellite map of VRA Cricket Amsterdam"
+          />
+        </section>
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer id="contact" class="w-full">
+      <div class="bg-white px-6 py-12 md:px-12 lg:px-16">
+        <div class="container-vra">
+          <div class="flex flex-col lg:flex-row justify-between gap-10 lg:gap-8">
+            <div
+              class="flex flex-col items-center lg:items-start gap-4 w-full lg:w-1/3"
+            >
+              <img
+                width="220"
+                height="70"
+                src="assets/logo-footer.png"
+                alt="VRA Cricket Amsterdam"
+                class="w-52 sm:w-56"
+              />
+              <address class="not-italic text-center lg:text-left text-[#0D1B3E] leading-relaxed">
+                VRA Cricket<br />
+                Nieuwe Kalfjeslaan 21B,<br />
+                1182 AA Amstelveen
+              </address>
+            </div>
+
+            <div class="w-full lg:w-1/3 flex flex-col sm:flex-row justify-center gap-8 sm:gap-12">
+              <div class="text-center sm:text-left">
+                <h3 class="mb-6 text-lg font-semibold text-[#0D1B3E]">Quick Links</h3>
+                <ul class="space-y-4">
+                  <li><a href="#home" class="footer-nav-link">Homepage</a></li>
+                  <li><a href="news.html" class="footer-nav-link">News</a></li>
+                  <li><a href="membership.html" class="footer-nav-link">Membership</a></li>
+                  <li><a href="venue.html" class="footer-nav-link">Venue / Facility</a></li>
+                  <li><a href="fixtures.html" class="footer-nav-link">Fixtures</a></li>
+                  <li><a href="about.html" class="footer-nav-link">About Us</a></li>
+                  <li><a href="support.html" class="footer-nav-link">Support Us</a></li>
+                  <li><a href="contact.html" class="footer-nav-link">Contact</a></li>
+                </ul>
+              </div>
+              <div class="text-center sm:text-left">
+                <h3 class="mb-6 text-lg font-semibold text-[#0D1B3E]">Actions</h3>
+                <ul class="space-y-4">
+                  <li>
+                    <a
+                      href="https://www.gray-nicolls.co.uk/collections/vra-cricket-netherlands"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="footer-nav-link"
+                      >Cricket Shop</a
+                    >
+                  </li>
+                  <li><a href="membership.html" class="footer-nav-link">Become a member</a></li>
+                  <li><a href="indoor-net-booking.html" class="footer-nav-link">Book a lane</a></li>
+                  <li><a href="support.html#ball-checkout" class="footer-nav-link">Sponsor a ball</a></li>
+                  <li>
+                    <a
+                      href="https://www.youtube.com/@VRACricketLive"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="footer-nav-link"
+                      >Watch live</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="w-full lg:w-1/3">
+              <h3 class="mb-4 text-2xl font-semibold text-[#0D1B3E] leading-tight">
+                Contact us for enquiries
+              </h3>
+              <div class="flex justify-center lg:justify-start">
+                <a href="contact.html" class="btn-contact"><span class="btn-seam-inner">Contact Us</span></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="about" class="grid grid-cols-1 md:grid-cols-3">
+        <div class="h-48 bg-[#db3242]"></div>
+        <div class="flex h-48 flex-col items-center justify-center bg-[#f3c628]">
+          <h4 class="mb-6 text-xl font-semibold text-[#0D1B3E]">Follow Us on</h4>
+          <div class="flex items-center gap-6">
+            <a
+              href="https://www.linkedin.com/company/vra-cricket/"
+              class="text-[#0D1B3E] hover:scale-110 transition-transform"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.instagram.com/vra_cricket_amsterdam"
+              class="text-[#0D1B3E] hover:scale-110 transition-transform"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"
+                />
+              </svg>
+            </a>
+            <a
+              href="https://www.youtube.com/@VRACricketLive"
+              class="text-[#0D1B3E] hover:scale-110 transition-transform"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
+        <div class="h-48 bg-[#233f84]"></div>
+      </div>
+
+      <div
+        class="bg-[#f5f5f5] text-[#767676] text-xs px-6 py-3 flex flex-wrap gap-4 justify-center"
+      >
+        <span>© VRA Cricket · All rights reserved</span>
+        <a href="#" class="hover:text-[#202020]">Privacy Policy</a>
+        <a href="#" class="hover:text-[#202020]">Terms and Conditions</a>
+      </div>
+    </footer>
+
+    <div class="float-actions">
+      <a
+        class="float-live"
+        href="https://www.youtube.com/@VRACricketLive"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Watch live"
+      >
+        <span class="float-live-dot" aria-hidden="true"></span>
+        <span class="float-live-text">Live</span>
+      </a>
+      <a
+        class="float-wa"
+        href="https://wa.me/917755916072"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="WhatsApp"
+      >
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+          />
+        </svg>
+      </a>
+    </div>
+
+    <script>
+      /* PDF fact panels — all 9; smooth marquee below lg */
+      const heroFacts = [
+        { n: "498", l: "Highest International ODI Score" },
+        { n: "21", l: "Proud to host 21 teams in 2026" },
+        { n: "1914", l: "Merger of 3 Amsterdam Cricket Clubs" },
+        { n: "12", l: "Touring teams in 2026" },
+        { n: "T20", l: "First XI champion in 2025" },
+        { n: "16", l: "Nationalities play at VRA" },
+        { n: "100", l: "International matches since 1960" },
+        { n: "400+", l: "Members in 2026" },
+        { n: "1882", l: "Volharding CC" },
+      ];
+      const heroStatsTrack = document.getElementById("hero-stats-track");
+
+      function factCardHtml(f, clone) {
+        return `<div class="hero-stat${clone ? " hero-stat-clone" : ""}"${clone ? ' aria-hidden="true"' : ""}>
+          <div class="hero-stat-value">${f.n}</div>
+          <div class="hero-stat-accent" aria-hidden="true"></div>
+          <p class="hero-stat-label">${f.l}</p>
+        </div>`;
+      }
+
+      /* Duplicate set for seamless infinite loop below lg */
+      heroStatsTrack.innerHTML =
+        heroFacts.map((f) => factCardHtml(f, false)).join("") +
+        heroFacts.map((f) => factCardHtml(f, true)).join("");
+
+      /* Cricket for all — scroll reveal */
+      /* Sponsors carousel — duplicate logos for seamless loop */
+      (function initSponsorsCarousel() {
+        const track = document.getElementById("sponsors-track");
+        if (!track) return;
+        const sponsors = [
+          {
+            src: "assets/sponsors/gulpener.png",
+            alt: "Gulpener",
+          },
+          {
+            src: "assets/sponsors/hanos.png",
+            alt: "HANOS",
+          },
+          {
+            src: "assets/sponsors/apollo.png",
+            alt: "Apollo Tyres",
+          },
+        ];
+        // Repeat enough cards so the marquee feels full (matches ref row)
+        const sequence = [...sponsors, ...sponsors, ...sponsors];
+        const logoHtml = (s, clone) =>
+          `<div class="sponsor-logo"${clone ? ' aria-hidden="true"' : ""}>
+            <img src="${s.src}" alt="${clone ? "" : s.alt}" loading="lazy" />
+          </div>`;
+        track.innerHTML =
+          sequence.map((s) => logoHtml(s, false)).join("") +
+          sequence.map((s) => logoHtml(s, true)).join("");
+      })();
+
+      (function initCfaReveal() {
+        const nodes = document.querySelectorAll("[data-cfa-reveal]");
+        if (!nodes.length) return;
+        const reduce = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+        if (reduce || !("IntersectionObserver" in window)) {
+          nodes.forEach((n) => n.classList.add("is-inview"));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add("is-inview");
+              io.unobserve(entry.target);
+            });
+          },
+          { threshold: 0.22, rootMargin: "0px 0px -8% 0px" }
+        );
+        nodes.forEach((n) => io.observe(n));
+      })();
+
+      /* Instagram reels — drag + autoplay + hover CTA */
+      const igPosts = [
+        {
+          src: "assets/home/home-collage/1.jpg",
+          cap: "Matchday at the Amsterdamse Bos — packed terrace, big moments, and club energy under the lights.",
+        },
+        {
+          src: "assets/home/home-collage/2.jpg",
+          cap: "In conversation: VRA Women share the journey behind another strong season on and off the field.",
+        },
+        {
+          src: "assets/home/home-collage/3.jpg",
+          cap: "From the boundary — atmosphere, colours, and cricket at the Amsterdamse Bos.",
+        },
+        {
+          src: "assets/home/international.jpg",
+          cap: "International cricket at VRA — the favourite venue for Dutch national sides and touring teams.",
+        },
+        {
+          src: "assets/home/club-sports.jpeg",
+          cap: "Club competitions · First XI — competing at the highest level of Dutch domestic cricket.",
+        },
+        {
+          src: "assets/home/social.jpeg",
+          cap: "Social cricket & events bringing members, guests, and the Amsterdam community together.",
+        },
+        {
+          src: "assets/home/home-collage/4.jpg",
+          cap: "Youth starting with U9 carousel — pathways from soft ball to hard ball across every age group.",
+        },
+        {
+          src: "assets/home/home-collage/5.jpg",
+          cap: "Training at the High Performance Centre — indoor and outdoor sessions all year round.",
+        },
+        {
+          src: "assets/home/home-collage/6.jpg",
+          cap: "Life at VRA Cricket — matches, mentorship, and moments that define the club.",
+        },
+        {
+          src: "assets/home/home-img.jpg",
+          cap: "Play & perform at the most beautiful ground in the Netherlands — the Amsterdamse Bos.",
+        },
+      ];
+
+      function igReelHtml(p, clone) {
+        return `<a href="https://www.instagram.com/vra_cricket_amsterdam" target="_blank" rel="noopener noreferrer" class="ig-reel"${clone ? ' aria-hidden="true" tabindex="-1"' : ""}>
+          <img src="${p.src}" alt="${clone ? "" : p.cap}" draggable="false" />
+          <div class="ig-reel-top">
+            <img
+              class="ig-reel-avatar"
+              src="assets/logo-footer.png"
+              alt=""
+              draggable="false"
+            />
+            <span class="ig-reel-user">vra_cricket_amsterdam</span>
+          </div>
+          <div class="ig-reel-cap"><p>${p.cap}</p></div>
+          <div class="ig-reel-cta" aria-hidden="true"><span>Show post</span></div>
+        </a>`;
+      }
+
+      const igMarquee = document.getElementById("ig-marquee");
+      const igTrack = document.getElementById("ig-track");
+      if (igMarquee && igTrack) {
+        igTrack.innerHTML =
+          igPosts.map((p) => igReelHtml(p, false)).join("") +
+          igPosts.map((p) => igReelHtml(p, true)).join("");
+
+        let igHalf = 0;
+        let igOffset = 0;
+        function measureIg() {
+          igHalf = igTrack.scrollWidth / 2;
+          if (igHalf > 0) igOffset = igOffset % igHalf;
+        }
+        measureIg();
+        window.addEventListener("resize", measureIg);
+        igTrack.querySelectorAll("img").forEach((img) => {
+          if (!img.complete) img.addEventListener("load", measureIg, { once: true });
+        });
+
+        /* Autoplay — accumulate float offset (scrollLeft alone truncates sub-pixels) */
+        let igPaused = false;
+        let igRaf = 0;
+        const IG_SPEED = 0.35;
+        function igTick() {
+          if (!igPaused && igHalf > 0) {
+            igOffset += IG_SPEED;
+            if (igOffset >= igHalf) igOffset -= igHalf;
+            igMarquee.scrollLeft = igOffset;
+          }
+          igRaf = requestAnimationFrame(igTick);
+        }
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduceMotion) igRaf = requestAnimationFrame(igTick);
+
+        igMarquee.addEventListener("mouseenter", () => {
+          igPaused = true;
+        });
+        igMarquee.addEventListener("mouseleave", () => {
+          if (!drag.active) {
+            igOffset = igMarquee.scrollLeft;
+            igPaused = false;
+          }
+        });
+
+        /* Drag to scroll */
+        const drag = { active: false, startX: 0, startScroll: 0, moved: false };
+        igMarquee.addEventListener("pointerdown", (e) => {
+          if (e.button !== 0) return;
+          drag.active = true;
+          drag.moved = false;
+          drag.startX = e.clientX;
+          drag.startScroll = igMarquee.scrollLeft;
+          igPaused = true;
+          igMarquee.classList.add("is-dragging");
+          igMarquee.setPointerCapture(e.pointerId);
+        });
+        igMarquee.addEventListener("pointermove", (e) => {
+          if (!drag.active) return;
+          const dx = e.clientX - drag.startX;
+          if (Math.abs(dx) > 4) drag.moved = true;
+          let next = drag.startScroll - dx;
+          if (igHalf > 0) {
+            while (next >= igHalf) next -= igHalf;
+            while (next < 0) next += igHalf;
+          }
+          igOffset = next;
+          igMarquee.scrollLeft = next;
+        });
+        function endIgDrag(e) {
+          if (!drag.active) return;
+          drag.active = false;
+          igMarquee.classList.remove("is-dragging");
+          igOffset = igMarquee.scrollLeft;
+          try {
+            igMarquee.releasePointerCapture(e.pointerId);
+          } catch (_) {}
+          /* Resume autoplay shortly after drag */
+          setTimeout(() => {
+            if (!igMarquee.matches(":hover")) igPaused = false;
+          }, 400);
+        }
+        igMarquee.addEventListener("pointerup", endIgDrag);
+        igMarquee.addEventListener("pointercancel", endIgDrag);
+
+        /* Don't open link if user was dragging */
+        igTrack.addEventListener("click", (e) => {
+          if (drag.moved) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        });
+      }
+
+      const snapMen = document.getElementById("snap-men");
+      if (snapMen) snapMen.src = encodeURI("assets/teams/VRA_Men_1&2.jpg");
+      const snapWomen = document.getElementById("snap-women");
+      if (snapWomen) snapWomen.src = encodeURI("assets/teams/VRA Women 1st XI.jpg");
+      const snapYouth = document.getElementById("snap-youth");
+      if (snapYouth) snapYouth.src = encodeURI("assets/teams/VRA U9_s.jpg");
+
+      /* Floating Live + WhatsApp — appear after a short scroll */
+      (function initFloatActions() {
+        const el = document.querySelector(".float-actions");
+        if (!el) return;
+        const THRESHOLD = 160;
+        function update() {
+          el.classList.toggle("is-visible", window.scrollY > THRESHOLD);
+        }
+        update();
+        window.addEventListener("scroll", update, { passive: true });
+      })();
+
+      /* Theme — default light; dark only if saved preference is dark */
+      const root = document.documentElement;
+      const sun = document.getElementById("icon-sun");
+      const moon = document.getElementById("icon-moon");
+      function applyTheme(theme) {
+        const dark = theme === "dark";
+        root.classList.toggle("dark", dark);
+        sun.classList.toggle("opacity-100", dark);
+        sun.classList.toggle("opacity-0", !dark);
+        moon.classList.toggle("opacity-100", !dark);
+        moon.classList.toggle("opacity-0", dark);
+        localStorage.setItem("theme", theme);
+      }
+      const savedTheme = localStorage.getItem("theme");
+      applyTheme(savedTheme === "dark" ? "dark" : "light");
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        applyTheme(root.classList.contains("dark") ? "light" : "dark");
+      });
+
+      /* Menu — floating nav card */
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.getElementById("menu-overlay");
+      const menuBtn = document.getElementById("menu-open");
+      const navMega = sidebar.querySelector("[data-nav-mega]");
+      const navMegaTrigger = sidebar.querySelector("[data-nav-mega-trigger]");
+      const navMegaPanel = sidebar.querySelector(".nav-mega");
+      const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+      let navMegaCloseTimer = null;
+      function setNavMegaOpen(open) {
+        if (!navMega || !navMegaTrigger) return;
+        clearTimeout(navMegaCloseTimer);
+        navMegaCloseTimer = null;
+        navMega.classList.toggle("is-mega-open", open);
+        navMegaTrigger.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+      function scheduleNavMegaClose() {
+        clearTimeout(navMegaCloseTimer);
+        navMegaCloseTimer = setTimeout(() => setNavMegaOpen(false), 220);
+      }
+      function bindNavMegaHover() {
+        if (!navMega || !navMegaPanel || !finePointer.matches) return;
+        const keepOpen = () => setNavMegaOpen(true);
+        const maybeClose = () => scheduleNavMegaClose();
+        navMega.addEventListener("mouseenter", keepOpen);
+        navMega.addEventListener("mouseleave", maybeClose);
+        navMegaPanel.addEventListener("mouseenter", keepOpen);
+        navMegaPanel.addEventListener("mouseleave", maybeClose);
+        sidebar.querySelectorAll(".nav-card-link:not([data-nav-mega-trigger])").forEach((link) => {
+          link.addEventListener("mouseenter", () => setNavMegaOpen(false));
+        });
+      }
+      bindNavMegaHover();
+      finePointer.addEventListener("change", () => {
+        if (finePointer.matches) bindNavMegaHover();
+      });
+      function openMenu() {
+        sidebar.hidden = false;
+        overlay.hidden = false;
+        requestAnimationFrame(() => {
+          sidebar.classList.add("is-open");
+          overlay.classList.add("is-open");
+          menuBtn.classList.add("is-open");
+          menuBtn.setAttribute("aria-expanded", "true");
+          menuBtn.setAttribute("aria-label", "Close menu");
+        });
+      }
+      function closeMenu() {
+        sidebar.classList.remove("is-open");
+        overlay.classList.remove("is-open");
+        menuBtn.classList.remove("is-open");
+        menuBtn.setAttribute("aria-expanded", "false");
+        menuBtn.setAttribute("aria-label", "Open menu");
+        setNavMegaOpen(false);
+        const hide = () => {
+          if (!sidebar.classList.contains("is-open")) {
+            sidebar.hidden = true;
+            overlay.hidden = true;
+          }
+        };
+        sidebar.addEventListener("transitionend", hide, { once: true });
+        setTimeout(hide, 420);
+      }
+      function toggleMenu() {
+        if (sidebar.classList.contains("is-open")) closeMenu();
+        else openMenu();
+      }
+      menuBtn.addEventListener("click", toggleMenu);
+      overlay.addEventListener("click", closeMenu);
+      if (navMegaTrigger) {
+        navMegaTrigger.addEventListener("click", (e) => {
+          if (finePointer.matches) return;
+          e.preventDefault();
+          setNavMegaOpen(!navMega.classList.contains("is-mega-open"));
+        });
+      }
+      sidebar.querySelectorAll("a").forEach((a) => {
+        a.addEventListener("click", () => {
+          if (
+            a.hasAttribute("data-nav-mega-trigger") &&
+            !finePointer.matches
+          ) {
+            return;
+          }
+          closeMenu();
+        });
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && sidebar.classList.contains("is-open")) closeMenu();
+      });
+    
+
+      /* Smooth in-page section scroll (header-aware) */
+      (function initSmoothSectionScroll() {
+        const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        document.addEventListener("click", (e) => {
+          const link = e.target.closest('a[href^="#"]');
+          if (!link) return;
+          const id = link.getAttribute("href");
+          if (!id || id === "#") return;
+          // ignore pure hash placeholders
+          if (id.length < 2) return;
+          const target = document.querySelector(id);
+          if (!target) return;
+          e.preventDefault();
+          target.scrollIntoView({
+            behavior: reduce ? "auto" : "smooth",
+            block: "start",
+          });
+          if (history.pushState) history.pushState(null, "", id);
+        });
+      })();
+
+</script>
+  </body>
+</html>
